@@ -16,8 +16,8 @@
         client_header_buffer_size    1k; #设定请求缓冲
         large_client_header_buffers  4 4k;
 
-        include     /etc/nginx/conf.d/*.conf;
-        include     /etc/nginx/sites-enabled/*;
+        // include     /etc/nginx/conf.d/*.conf;
+        // include     /etc/nginx/sites-enabled/*;
 
         #设定负载均衡的服务器列表
         # 默认:轮询
@@ -60,6 +60,12 @@
                 fastcgi_param   SCRIPT_FILENAME  $document_root/$fastcgi_script_name; 
                 include         /etc/nginx/fastcgi_params;
             }
+            location /static {
+                # 访问{server_name}:{listen}/static/ 目录时候可以使用两种方式
+                # root   /usr/html/;
+                alias    /usr/html/static/; #定义服务器静态资源文件位置,注意alias与root的区别
+                autoindex on; #动态生成目录树
+            }            
             # 反向代理
             location /proxy {
                 #Proxy Settings
