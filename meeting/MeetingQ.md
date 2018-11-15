@@ -1,6 +1,9 @@
 ## 面试碰到过的问题
 * 多重注解
 * int.class,Integer.TYPE==int.class,表示的就是int类型（实际是int类型的字节码）
+* Integer.valueOf(i)方法,
+    * -128 >= i >= 127范围内,都被放在一个Integer[] cache的数组内,所以可以用地址比较符(==)比较,返回是true
+    * 超过上述范围,都是new Integer(),地址比较符(==)返回不同的比较地址,所以是false 
 * 代理模式和适配器模式
 * springboot 内置tomcat如何启动
 * 一个请求流程,如何在tomcat服务器内执行
