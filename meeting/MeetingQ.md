@@ -8,6 +8,18 @@
 * springboot 内置tomcat如何启动
 * 一个请求流程,如何在tomcat服务器内执行
 * nio/bio
+* ClassLoader,就是加载.class文件的java程序或C++程序,分为两类:
+    * 一类是`BootStrap`,由C++实现,是虚拟机的一部分
+    * 另外一类是`其他加载器`,也是java程序,并全部继承java.lang.ClassLoader,`这些加载器`的启动`由BootStrap加载器`先`加载`到内存后才能去加载其他的类.
+        * BootStrap ClassLoader:负责加载`JDK/jre/lib`目录下的二进制Class文件
+        * Extension ClassLoader:负责加载`JDK/jre/lib/ext`目录下的二进制Class文件
+        * Application ClassLoader:负责加载`ClassPath`目录下的二进制Class文件,一般用户开发使用的都是该类加载器,由IDE生成对应的classpath路径,使Application ClassLoader能够根据路径加载程序,一般是默认的类加载器.
+* Java Application ,java应用程序,为什么说tomcat是应用服务器呢?因为它就是java写的,eclipse也是,启动这两个程序需要运行Java程序中的Main函数,这是程序的唯一入口,在函数中启动线程查找所有系统变量并初始化加载让程序一直存活,利用CPU线程的特性(程序执行的最小单位).
+* final关键字:
+    * 修饰类,方法:禁止继承
+    * 修饰成员变量:代表常量,一旦赋值不可修改
+* 值对象和引用对象(注意不是值引用和对象引用)
+    * 值对象要保证不可变性[^2](如人和指纹,是一种`组合`关系,具有`相同的生命周期`)
 * 线程的几种状态
 * 接口和抽象类 `接口like-a 抽象类is-a;接口多实现,抽象类单一继承;接口不能有实现不能私有,抽象类可以有`
 * group by having,按照年龄段,select (select ... 按照条件筛选年龄) a group by 
@@ -93,4 +105,4 @@
         * 自带map-reduce,sharding
 
 [^1]:ThreadLocalMap 是 ThreadLocal中的静态类
-
+[^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
