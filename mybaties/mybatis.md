@@ -16,7 +16,7 @@
   * ObjectFactory，返回结果对象，使用反射获取，默认使用DefaultObjectFactory 
   
 * SqlSession下的四大对象
-  * Executor是Sql执行器
+  * Executor是Sql执行器（`有关SQL的来源，是由XML或者注解中获取的，如果是XML获取的对应的就是MappedStatement对象`）
   * StatementHandler，使用数据库的语句来执行，是核心
   * ParameterHandler，参数处理
   * ResultHandler是进行最后的数据集封装和返回
