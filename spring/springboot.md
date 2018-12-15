@@ -23,3 +23,4 @@ Spring Boot
   * 可以配置其他名字的日志，在yml文件中
 * @ConfigurationProperties，读取application.properties / yml文件中的配置
 * @Profile注解，配置多套配置文件
+* Actuator 
