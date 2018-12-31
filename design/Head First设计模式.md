@@ -119,3 +119,4 @@
   * 其中add,remove,getChild是组合组件Composite相关的操作,因为组合组件Composite包含了一个List<Component>存贮数据,Leaf组件不支持这类方法
   * 可在toString方法中,使用迭代器Iterator来实现递归显示
   * 它以单一责任设计原则换取透明性,透明性就是Composite和Leaf可以一视同仁
+* 
