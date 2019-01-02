@@ -91,7 +91,7 @@ SELECT
   SUM(CASE WHEN q.WrongRate BETWEEN 0.81 and 1.00 THEN 1 ELSE 0 END ) as extremelyHigh,
   SUM(CASE WHEN q.WrongRate BETWEEN 0.61 and 0.80 THEN 1 ELSE 0 END ) as veryHigh,
   SUM(CASE WHEN q.WrongRate BETWEEN 0.40 and 0.60 THEN 1 ELSE 0 END ) as higher
-FROM [dbo].[Question] where 
+FROM [dbo].[Question] q where 
 	-- IsDifficult = 1 and
 	 status = 1 
 --	and WrongRate BETWEEN 0.61 and 0.80
@@ -116,6 +116,27 @@ FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h LEFT JOIN Question
   and( q.DealCorrecState=0 or q.DealCorrecState=2 or q.CorrectCount<15 )
   and h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295'   
   and PaperHistoryID is null
+
+
+use zhuntiku;
+select top 30 randomResult.ID from(
+select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from (
+	SELECT ID
+	FROM [dbo].[Question] q where 
+		status = 1
+		and WrongRate BETWEEN 0.40 and 0.60
+		and QuestionType <= 4
+		and TestCount > 15
+	  and ( DealCorrecState=0 or DealCorrecState=2 or CorrectCount<15 )
+		and SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
+		and ExamID ='D5D86F55-3483-4281-850C-214C5E5B9C22'
+	EXCEPT
+	SELECT questionId FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h 
+	WHERE h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
+		and h.ExamID ='D5D86F55-3483-4281-850C-214C5E5B9C22'
+		and h.Username = 'ceshi'
+) undoResult 
+) randomResult where randomResult.rowNum > 600;
 
 /**
 zhuntiku 
