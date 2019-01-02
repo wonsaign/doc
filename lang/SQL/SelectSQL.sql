@@ -117,26 +117,24 @@ FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h LEFT JOIN Question
   and h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295'   
   and PaperHistoryID is null
 
-
+/** 高频易错/高频考点--用户未回试题*/
 use zhuntiku;
-select top 30 randomResult.ID from(
-select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from (
-	SELECT ID
-	FROM [dbo].[Question] q where 
-		status = 1
-		and WrongRate BETWEEN 0.40 and 0.60
-		and QuestionType <= 4
-		and TestCount > 15
-	  and ( DealCorrecState=0 or DealCorrecState=2 or CorrectCount<15 )
-		and SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
-		and ExamID ='D5D86F55-3483-4281-850C-214C5E5B9C22'
-	EXCEPT
-	SELECT questionId FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h 
-	WHERE h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
-		and h.ExamID ='D5D86F55-3483-4281-850C-214C5E5B9C22'
-		and h.Username = 'ceshi'
-) undoResult 
-) randomResult where randomResult.rowNum > 600;
+select top 30 randomResult.ID from( 
+select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from ( 
+	SELECT ID FROM [dbo].[Question] q where 
+	status = 1 
+	-- and q.WrongRate BETWEEN 0.61 and 0.8 
+	and q.DifficultTestPointRate = 3
+	and q.QuestionType <= 4 
+	and q.TestCount > 15 
+	and ( DealCorrecState=0 or DealCorrecState=2 or CorrectCount < 15 ) 
+	and q.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
+	and q.ExamID = 'D5D86F55-3483-4281-850C-214C5E5B9C22' 
+	EXCEPT SELECT questionId FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h WHERE 
+	h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
+	and h.ExamID = 'D5D86F55-3483-4281-850C-214C5E5B9C22' 
+	and h.Username = 'ceshi' 
+) undoResult ) randomResult where randomResult.rowNum > 100; 
 
 /**
 zhuntiku 
