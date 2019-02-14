@@ -72,6 +72,11 @@
 * FailFastProblemReporter，当发生错误时，允许快速失败的方式处理。
 * Location，任意本地资源
 * NullSourceExtractor，空的资源接近者，是Null异常的一种策略实现，空接口。
+* SourceExtractor，简单的策略，允许工具控制bean的Metadata.
+* Problem，描述了一个bean Definition的问题，主要是为一个通用的参数通过ProblemReporter做服务。
+* ProblemReporter，SPI接口，允许工具或者外部processes在解析BeanDefinition的时候处理错误，警告报告。
+* PropertyEntry，是ParseState.Entry接口的实现。
+* QualifierEntry，是ParseState.Entry接口的实现。
 
 [^1]:使用#getObject()
 [^2]:默认是Singleton，可以配置为Prototype
