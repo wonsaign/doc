@@ -117,7 +117,7 @@ FROM [QuestionHistory_D5D86F55-3483-4281-850C-214C5E5B9C22] h LEFT JOIN Question
   and h.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295'   
   and PaperHistoryID is null
 
-/** 高频易错/高频考点--用户未回试题*/
+/** 高频易错--用户未回试题*/
 use zhuntiku;
 select top 30 randomResult.ID from( 
 select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from ( 
@@ -125,7 +125,6 @@ select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from (
 	status = 1 
 	-- and q.WrongRate BETWEEN 0.61 and 0.8 
 	and q.DifficultTestPointRate = 3
-	and q.QuestionType <= 4 
 	and q.TestCount > 15 
 	and ( DealCorrecState=0 or DealCorrecState=2 or CorrectCount < 15 ) 
 	and q.SubjectID = '6FC5A6F4-4C1F-48D8-934C-622489DED295' 
@@ -135,6 +134,16 @@ select undoResult.ID,ROW_NUMBER() over(order by undoResult.id) as rowNum from (
 	and h.ExamID = 'D5D86F55-3483-4281-850C-214C5E5B9C22' 
 	and h.Username = 'ceshi' 
 ) undoResult ) randomResult where randomResult.rowNum > 100; 
+
+
+/** 高频易错-用户未回试题*/
+SELECT  DifficultTestPointRate as testLevel , count(*) as totalNum FROM [dbo].[Question] WHERE  
+	status = 1 and SubjectID = '8AC7EBC4-1595-4AE1-87D7-C0F4C80D82DA'
+	and  (IsDifficultTestPoint = 1 
+				OR DifficultTestPointRate in(1,2,3)
+				)
+	GROUP BY DifficultTestPointRate;
+
 
 /**
 zhuntiku 

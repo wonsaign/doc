@@ -1,4 +1,8 @@
 ### Nginx 的 nginx.conf 配置详细解析
+####
+* rewrite 和 return
+  * rewrite只能返回301，302，return可以返回301，302，307，308,其中301和302`只能返回get请求`，对于post，需要返回307和308
+  * rewrite可以使用正则表达式，而return只能写静态url
 * 配置样例
   ```
     http {
@@ -90,6 +94,21 @@
                 location = /50x.html {
                 root   /root;
             }
+
+            # 自定义URL
+			set $uricut $request_uri;			
+			if ($request_uri  ~ /ks/(.*)$) {
+                # 截取URL
+			    set $uricut $1;
+			}				
+			location ~ /ks {
+				#rewrite ks/(.*)$ http://localhost:80/$1 break;
+                # 拼装URL，返回307
+				return 307 http://localhost:80/$uricut;
+				proxy_set_header   Host    $host:8080;
+				proxy_set_header   X-Real-IP   $remote_addr;
+				proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+			}	
 
             #静态文件，nginx自己处理
             location ~ ^/(images|javascript|js|css|flash|media|static)/ {
