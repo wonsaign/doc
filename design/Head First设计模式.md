@@ -36,7 +36,7 @@
   * 装饰者的继承--增强扩展组件,`只是继承了类型,而不是继承了行为`
   * 装饰者按照顺序来装饰,最基层一定是`组件`,装饰的过程不稳定(一旦装饰顺序错误,可能会失败)
   * 装饰者模式,类似组装,类似文学中的`美丽的,性感的,高挑的亚洲女人`-><font color=LightSeaGreen>亚洲女人是组件</font>,其他形容词是`装饰者`
-  * java IO 就是典型的装饰者模式()->new FilterInputStream(new BufferedInputStream(new LineNumberInputStream()))
+  * java IO 就是典型的装饰者模式()->new FilterInputStream(new BufferedInputStream(new LineNumberInputStream()))，此例子是构造方法传参。
 ![strategy](../Images/decorationpattern.png)
 
 #### 简单工厂/工厂模式/抽象工厂模式(对象创建过程抽象化)
