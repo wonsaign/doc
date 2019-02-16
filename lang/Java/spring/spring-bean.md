@@ -46,9 +46,25 @@
 * 接口中有一个方法，afterPropertySet(),就是在所有属性都设置Ok以后，调用这个方法。
 
 #### BeanMetadataElement
+* 便利的基础class,当存在属性和元素一对一映射关系时，可以被解析并且PropertyName在Class上可以被配置
+* 简而言之，具有访问数据源的能力。
+
+#### DefaultSingletonBeanRegistry
+* 一般的注册为分享Bean实例，实现了SingletonBeanRegistry，允许正在注册的单例实例可以被所有的调用者通过Bean Name分享
+* 这个class主要作为一个base class为BeanFactory的实现类提供服务，记住，ConfigurableBeanFactory接口继承于SingletonBeanRegistry接口。
+* 此接口支持嵌套属性，能够设置无限深度子类属性。
+
+#### PropertyAccessor
+* 通用的接口能获取以名称命名的属性，为基础的接口BeanWrapper提供服务。
+
+#### BeanWrapper
+* Spring低级别JavaBean结构重要接口。
+* 提供分析和操作标准JavaBean的操作：可以get/set赋值属性，获取Property描述，query可读/可写的属性
 
 
 #### config包下
+* AbstractAutowireCapableBeanFactory，抽象骨架实现。
+* AutowireCapableBeanFactory，BeanFactory的继承类，可以实现autowiring，以及引用Bean后的后置处理器。
 * BeanDefine，一个bean定义，描述了有属性，构造参数值和更多继承类中信息的bean实例
 * BeanDefineHolder，一个持有name和alias的持有者，可以作为占位符在一个内部类（inner）Bean中，有一种组件的意思
 * BeanDefineVisitor，可以穿过BeanDefine，从而分离Bean的metadata数据。
@@ -68,7 +84,7 @@
 * ConstructorArgumentEntry，是ParseState.Entry接口的实现。
 * DefaultsDefinition，是BeanMetadataElement的标记接口，一个空的接口。
 * EmptyReaderEventListener，空的ReaderEventLiseter[^6]。
-* ProblemReporter，SPI接口，允许工具或者外部processes在解析BeanDefinition的时候处理错误，警告报告。
+* ProblemReporter，SPI[^0]接口，允许工具或者外部processes在解析BeanDefinition的时候处理错误，警告报告。
 * FailFastProblemReporter，当发生错误时，允许快速失败的方式处理。
 * Location，任意本地资源
 * NullSourceExtractor，空的资源接近者，是Null异常的一种策略实现，空接口。
@@ -78,6 +94,41 @@
 * PropertyEntry，是ParseState.Entry接口的实现。
 * QualifierEntry，是ParseState.Entry接口的实现。
 
+#### support包下
+* AbstractAutowireCapableBeanFactory，
+* AbstractBeanFactory，BeanFactory的抽象类，提供了ConfigurableBeanFactorySPI的全部功能
+  * 这个类提供了一个单例缓存（通过它的base class->DefaultSingletonBeanRegistry）
+* FactoryBeanRegistrySupport，为想要控制`FactoryBean`实例的单例注册者提供base class支持。
+* AbstractPropertyAccessor，PropertyAccessor接口的抽象实现，提供了所有便利方法的基础实现，实际属性的访问是由子类实现。
+* AutowireCandidateQualifier，合格者通过解析自动注入的候选者。就是@Autowire注解的实现。
+* AutowireCandidateResolver，一个策略接口，决定了一个特殊的BeanDefinition的资格是否可以作为对于一个特殊依赖的Autowire候选人
+* AutowireUtil，工具类包含了各种有用的方法为autowire的bean Factories的实现类。
+* BeanDefinitionBuiler，建造者模式为建造BeanDefinition。
+* BeanDefinitionDefaults，一个简单的持有属性的默认实现。
+* BeanDefinitionReader，一个简单的接口，具体指明了通过Resource和String本地参数加载方法。
+* BeanDefinitionReaderUtils，工具类，主要是本地使用。
+* BeanDefinitionRegistry，保存bean声明的注册信息接口，并且只在Bean项目下。
+* BeanDefinitionResource，描述Resource包装者为一个BeanDefinition。
+* BeanDefinitionValueResolver，帮助类，使用在Bean Factory的实现类，解析包含在BeanDefinition中的实际值，然后应用于一个目标实例，被使用在AbstractAutowireCapableBeanFactory中
+* BeanNameGenerator,策略接口为BeanDefinition生成Bean的Name。
+* CglibSubclassingInstantiationStrategy，默认的使用在BeanFactories中的实例化策略。
+* SimpleInstantiationStrategy，简单的实例化策略。
+* InstantiationStrategy，实例化策略接口。这个被拉取出来放进一个策略作为一个多方面接近手段，包含了使用CGLIB去创建subclass
+* DefaultBeanNameGenerator，默认BeanNameGenerator实现
+* `DefaultListableBeanFactory`，默认的ConfigurableListableBeanFactory和BeanDefinitionRegistry实现类.
+* DefaultSingletonBeanRegistry，在上面
+* DisposableBeanAdapter，适配器实现了DisposableBean和Runnable接口，提供了各种destroy方法摧毁一个Bean。
+* GenericTypeAwareAutowireCandidateResolver。
+* GenericBeanDefinition，
+* RootBeanDefinition，一个RootBeanDefinition定义表明它是一个可合并的bean definition：即在spring beanFactory运行期间，可以返回一个特定的bean。RootBeanDefinition可以作为一个重要的通用的bean definition 视图。在Spring2.5以后使用GenericBeanDefinition时更好的动态获取的方式。
+* 
+
+
+* BeanInfoFactory，策略接口，为了spring-bean创建BeanInfo实例
+
+
+
+[^0]:Service Provider Interface，服务提供接口
 [^1]:使用#getObject()
 [^2]:默认是Singleton，可以配置为Prototype
 [^3]:`${adc}`,这种占位符的实现
