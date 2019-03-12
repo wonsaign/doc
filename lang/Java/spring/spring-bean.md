@@ -61,6 +61,8 @@
 * Spring低级别JavaBean结构重要接口。
 * 提供分析和操作标准JavaBean的操作：可以get/set赋值属性，获取Property描述，query可读/可写的属性
 
+#### DefaultListableBeanFactory默认的容器实现（注册和获取Bean）
+
 
 #### config包下
 * AbstractAutowireCapableBeanFactory，抽象骨架实现。
