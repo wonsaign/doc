@@ -34,6 +34,7 @@
     * {@code postProcessAfterInitialization} methods of BeanPostProcessors
 
 #### FactoryBean 装饰者模式
+> 一般来讲，Spring中的Bean 是通过反射并指定属性来实例化的，但是有些Bean的属性太过复杂，如果按照传统的方式，需要在XML文件配置太多的属性，因此Spring内置了很多FactoryBean（大概70多种）用来实例化特殊的Bean。它们隐藏一些复杂的实例化细节，（类似门面模式的作用），并定义了3个非常便利的方法，getObject(),isSingleton(),getObjectType().
 * 这个接口的实现类是一个特殊的Bean，它被用作工厂使用暴露对象，而不是直接作为Bean实例暴露自己。
 * 如果一个实现了该接口的Bean，不能被当做一个正常的Bean使用了，FactoryBean是以Bean的风格样式定义的，但是当作为Bean的引用（reference）时[^1]，总是由FactoryBean自己创建的。
 * 该接口，大量使用在Spring框架中，例如AOP或者Jndi。
@@ -97,6 +98,7 @@
 * QualifierEntry，是ParseState.Entry接口的实现。
 
 #### support包下
+* AbstractBeanDefinition,
 * AbstractAutowireCapableBeanFactory，
 * AbstractBeanFactory，BeanFactory的抽象类，提供了ConfigurableBeanFactorySPI的全部功能
   * 这个类提供了一个单例缓存（通过它的base class->DefaultSingletonBeanRegistry）
@@ -109,7 +111,7 @@
 * BeanDefinitionDefaults，一个简单的持有属性的默认实现。
 * BeanDefinitionReader，一个简单的接口，具体指明了通过Resource和String本地参数加载方法。
 * BeanDefinitionReaderUtils，工具类，主要是本地使用。
-* BeanDefinitionRegistry，保存bean声明的注册信息接口，并且只在Bean项目下。
+* `BeanDefinitionRegistry`，保存bean Definition的注册信息接口，例如：RootBeanDefinition和ChldBeanDefinition实例。代表性的BeanFactories是内部协作于AbstractBeanDefinition层。就像Spring配置的内存数据库，主要以Map实现，后续直接从BeanDefinitionRegistry中读取配置信息。
 * BeanDefinitionResource，描述Resource包装者为一个BeanDefinition。
 * BeanDefinitionValueResolver，帮助类，使用在Bean Factory的实现类，解析包含在BeanDefinition中的实际值，然后应用于一个目标实例，被使用在AbstractAutowireCapableBeanFactory中
 * BeanNameGenerator,策略接口为BeanDefinition生成Bean的Name。
@@ -121,12 +123,13 @@
 * DefaultSingletonBeanRegistry，在上面
 * DisposableBeanAdapter，适配器实现了DisposableBean和Runnable接口，提供了各种destroy方法摧毁一个Bean。
 * GenericTypeAwareAutowireCandidateResolver。
-* GenericBeanDefinition，
-* RootBeanDefinition，一个RootBeanDefinition定义表明它是一个可合并的bean definition：即在spring beanFactory运行期间，可以返回一个特定的bean。RootBeanDefinition可以作为一个重要的通用的bean definition 视图。在Spring2.5以后使用GenericBeanDefinition时更好的动态获取的方式。
+* GenericBeanDefinition，的目的是为标准Bean提供`一站式`服务。就像任意Bean生命，它允许声明一个类加任意构造函数参数值和属性值。此外，来源于parent bean Definition可以很柔和的通过“parentName”属性配置。并存储XML配置文件。
+* RootBeanDefinition，一个RootBeanDefinition定义表明它是一个可合并的bean definition：即在spring beanFactory运行期间，可以返回一个特定的bean。`RootBeanDefinition可以作为一个重要的通用的bean definition 视图`。在Spring2.5以后使用GenericBeanDefinition时更好的动态获取的方式。它可以能是由互相继承的多个原始Bean定义创建的。在这种相互继承的Bean关系中，代表了当前初始化类的父类的BeanDefinition。那么依赖关系是如何实现的呢？在AbstractBeanDefinition(RootBeanDefinition)中，有一个String[]数组（dependsOn）,保存了依赖的BeanName，并在DefaultSingletonBeanRegistry中，有一个Map，保存了BeanName和它之间的依赖关系集合Set<String>,是一个一对多的关系。
 * 
 
 
 * BeanInfoFactory，策略接口，为了spring-bean创建BeanInfo实例
+
 
 
 

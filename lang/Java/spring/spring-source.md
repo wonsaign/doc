@@ -35,6 +35,7 @@
                 3. applyPropertyValue() 将上述获取的属性填充到BeanWapper中
    
 
+* spring中自定义标签非常常见，如<tx:annotion-driven>
 
 [^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory[^3],并将当前Bean的标识符放到当前创建的Bean池.
 [^2]:主要作用是<b>用来在无参构造方法创建依赖Bean之前,从工厂中获取已经创建好的Bean,解决循环依赖</b>  
