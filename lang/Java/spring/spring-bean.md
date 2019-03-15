@@ -125,7 +125,9 @@
 * GenericTypeAwareAutowireCandidateResolver。
 * GenericBeanDefinition，的目的是为标准Bean提供`一站式`服务。就像任意Bean生命，它允许声明一个类加任意构造函数参数值和属性值。此外，来源于parent bean Definition可以很柔和的通过“parentName”属性配置。并存储XML配置文件。
 * RootBeanDefinition，一个RootBeanDefinition定义表明它是一个可合并的bean definition：即在spring beanFactory运行期间，可以返回一个特定的bean。`RootBeanDefinition可以作为一个重要的通用的bean definition 视图`。在Spring2.5以后使用GenericBeanDefinition时更好的动态获取的方式。它可以能是由互相继承的多个原始Bean定义创建的。在这种相互继承的Bean关系中，代表了当前初始化类的父类的BeanDefinition。那么依赖关系是如何实现的呢？在AbstractBeanDefinition(RootBeanDefinition)中，有一个String[]数组（dependsOn）,保存了依赖的BeanName，并在DefaultSingletonBeanRegistry中，有一个Map，保存了BeanName和它之间的依赖关系集合Set<String>,是一个一对多的关系。
-* 
+
+#### xml包下
+* BeanDefinitionParserDelegate，有状态的代表类，用户解析XML的BeanDefinitions
 
 
 * BeanInfoFactory，策略接口，为了spring-bean创建BeanInfo实例
