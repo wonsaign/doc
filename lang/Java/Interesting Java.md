@@ -105,6 +105,5 @@
         * 自带map-reduce,sharding
 * Java中isAssignableFrom的用法(是native函数)，A.class.isAssignableFrom(B.class),表示A类（或接口）是否是B类（或接口）一样，或者是B类的超类（或超接口），是返回true。
 
-
 [^1]:ThreadLocalMap 是 ThreadLocal中的静态类
 [^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
