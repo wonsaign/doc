@@ -148,7 +148,7 @@
       * 红黑树保证的是从根节点到叶子节点最长的路径不超过最短路径的2倍,是相对(大体上)平衡树,面对频繁插入和删除红黑树更合适
 * Map
   * TreeMap依靠Compareable或者Comparator来实现Key去重
-  * HashMap依靠hashMap和equals去重
+  * HashMap依靠hashMap和equals去重 
 
 
 
