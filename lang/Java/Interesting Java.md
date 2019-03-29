@@ -149,7 +149,9 @@
 * Map
   * TreeMap依靠Compareable或者Comparator来实现Key去重
   * HashMap依靠hashMap和equals去重 
-
+* Thread
+  * volatile
+    * 每个线程都有独占的内存区域，如操作枝、本地变量表等。线程本地内存保存了引用变量在堆内存中的副本，线程对变量的所有操作都在本地内存区域中进行，执行结束后再同步到堆内存中去。这里必然有一个时间差，在这个时间差内，该线程对副本的操作，对于其他线程都是不可见的。当使用volatile修饰变量是,此变量的操作都是在内存中进行,不会产生副本.
 
 
 [^1]:ThreadLocalMap 是 ThreadLocal中的静态类
