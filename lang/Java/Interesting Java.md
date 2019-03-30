@@ -150,9 +150,44 @@
   * TreeMap依靠Compareable或者Comparator来实现Key去重
   * HashMap依靠hashMap和equals去重 
 * Thread
+  * `happen-before`原则(先于):是时钟顺序的先后
+    * 程序顺序规则:一个线程中的每个操作,happen-before于改线程中的任意后续操作;
+    * 对一个监视锁的解锁,happen-before于随后对这个监视锁的加锁;
+    * 对一个volatile域的写,happen-before于任何后续对这个volatile域的读;
+    * a happen-before b,且b happen-before c,那么a happen-before c
+  * 指令重排(优化,写操作不会重排,但是赋值和读操作可能会重排):
+    * 以生活为例,A去换从图书馆借的α书,并且再借一本β书;同寝室室友B正好也有一本书γ要还,并且还想接一本δ;那么按照正常人的惯例,A会将B的γ书和自己借的书α一起还给图书馆,然后借出两本书β和δ.
+    * 计算机的也有类似的优化.比如
+      ``` 
+           int a = 1;
+           int b = 2;
+           int c = 3;
+           x = x + 1;
+      ```
+      优化后为:
+      ``` 
+           int b = 2;
+           int c = 3;
+           int a = 1;
+           x = x + 1;
+      ```
   * volatile
     * 每个线程都有独占的内存区域，如操作枝、本地变量表等。线程本地内存保存了引用变量在堆内存中的副本，线程对变量的所有操作都在本地内存区域中进行，执行结束后再同步到堆内存中去。这里必然有一个时间差，在这个时间差内，该线程对副本的操作，对于其他线程都是不可见的。当使用volatile修饰变量是,此变量的操作都是在内存中进行,不会产生副本.
+    * 它是轻量级的线程操作可见方式,并非同步方式.适合`一写多读`的并发场景,如CopyOnWriteArrayList.
+  * ThreadPoolExecutor
+    * 核心参数
+      * corePoolSize,表示常驻核心线程数,如果等于0,执行完任务之后,线程池中的线程会自动销毁;如果大于0,则不会销毁数字内的核心线程
+      * maximumPoolSize,表示线程池能容纳同事执行的最大线程数.必须大于或者等于1,如果等于corePoolSize则是固定大小的线程池.
+      * keepAliveTime,表示线程池中的线程空闲时间,当空闲时间达到keepAliveTime值时,线程会被摧毁,直到只剩下corePoolSize个线程为止.
+      * TimeUnit
+      * workQueue表示缓存队列.当请求线程数大于maximumPoolSize时,线程进入BlockingQueue阻塞队列.
+      * threadFactory表示线程工厂,它用来成产一组相同任务的线程.
+      * handler表示执行拒绝策略的对象,默认使用AbortPolicy()[^3],当任务缓存区上限的时候,就可以使用拒绝策略处理请求.
+    * ThreadLoacl,在上面有讲述.
+
+
 
 
 [^1]:ThreadLocalMap 是 ThreadLocal中的静态类
 [^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
+[^3]:总是抛出RejectedExecutionExcepiton异常来终止线程
