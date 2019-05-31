@@ -186,6 +186,57 @@
       * handler表示执行拒绝策略的对象,默认使用AbortPolicy()[^3],当任务缓存区上限的时候,就可以使用拒绝策略处理请求.
     * ThreadLoacl,在上面有讲述.
 
+* java中main方法启动的是一个进程还是一个线程?
+  * 是一个线程也是一个进程，一个java程序启动后它就是一个进程，进程相当于一个空盒，它只提供资源装载的空间，具体的调度并不是由进程来完成的，而是由线程来完成的。一个java程序从main开始之后，进程启动，为整个程序提供各种资源，而此时将启动一个线程，这个线程就是主线程，它将调度资源，进行具体的操作。Thread、Runnable的开启的线程是主线程下的子线程，是父子关系，此时该java程序即为多线程的，这些线程共同进行资源的调度和执行。
+  * 代码如下 
+    ```
+      public static void main(String[] args) throws IOException, InterruptedException {
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        System.out.println(name);
+        String pid = name.split("@")[0];
+        System.out.println("Pid is:" + pid);
+        
+        System.err.println("进程中主线程ID="+Thread.currentThread().getId());
+        
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(60000);
+                    System.out.println(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
+        System.err.println("进程中子线程T1的ID="+t1.getId());
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(60000);
+                    System.out.println(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t2.start();
+        System.err.println("进程中子线程T2的ID="+t2.getId());
+    }
+    ```
+    * 上述代码会输出，可以看出进程中必定有一个线程，它就是主线程，而且线程id为`1`
+    ```
+        1044@2013-20180318IJ
+        Pid is:1044
+        进程中主线程ID=1
+        进程中子线程T1的ID=11
+        进程中子线程T2的ID=12
+    ```
+    
+* 程序，进程，线程的关系？
 
 
 
