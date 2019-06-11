@@ -138,15 +138,16 @@
 * 集合
   * 集合结构图
   ![collection](../../Images/java_collection.png)
-  * List,List<Object>,List<?>
-    * List<?>,称为通配符集合,它可以接受任意类型的集合引用赋值,不能add,但是可以remove和clear,一般用来接受外部集合或者返回一个不知道具体元素类型的集合.
+  * List<?>,称为通配符集合,它可以接受任意类型的集合引用赋值,不能add,但是可以remove和clear,一般用来接受外部集合或者返回一个不知道具体元素类型的集合.
   * 并发容器CopyOnWriteArrayList,简称COW奶牛容器.读写分离,如果是写操作,复制一个新集合,在新集合内进行删除或添加,待一切修正完成后,将其指向新的集合.优点是,`可以高并发的对COW进行读和遍历`,而不需要加锁.
-    * 使用COW的注意事项
-      * 1.尽量设置合理的容量初始值,它扩容代价比较大
-      * 2.使用批量添加或删除方法的时候,如addAll或者removeAll操作,在高并发请求下,可以攒一下要添加的或删除的元素,避免添加一个元素而复制整个集合.
-      * 3.适用于读多写极少的场景.
+  * 使用COW的注意事项
+    * 1.尽量设置合理的容量初始值,它扩容代价比较大
+    * 2.使用批量添加或删除方法的时候,如addAll或者removeAll操作,在高并发请求下,可以攒一下要添加的或删除的元素,避免添加一个元素而复制整个集合.
+    * 3.适用于读多写极少的场景.
   * 集合实现了Collection接口，这个接口中定义了迭代器Iterator。
-    * 使用Iterator的remove时候要注意，要先使用it.next(),才可以remove(),因为remove会删除上次调用的Element.
+  * 使用Iterator的remove时候要注意，要先使用it.next(),才可以remove(),因为remove会删除上次调用的Element.
+
+
 * 树
   * 二叉查找树
     * 前序,中序,后序遍历左节点一定是在右节点之前遍历
@@ -157,41 +158,70 @@
 * Map
   * TreeMap依靠Compareable或者Comparator来实现Key去重
   * HashMap依靠hashMap和equals去重 
+
 * Thread
-  * `happen-before`原则(先于):是时钟顺序的先后
-    * 程序顺序规则:一个线程中的每个操作,happen-before于改线程中的任意后续操作;
-    * 对一个监视锁的解锁,happen-before于随后对这个监视锁的加锁;
-    * 对一个volatile域的写,happen-before于任何后续对这个volatile域的读;
-    * a happen-before b,且b happen-before c,那么a happen-before c
-  * 指令重排(优化,写操作不会重排,但是赋值和读操作可能会重排):
-    * 以生活为例,A去换从图书馆借的α书,并且再借一本β书;同寝室室友B正好也有一本书γ要还,并且还想接一本δ;那么按照正常人的惯例,A会将B的γ书和自己借的书α一起还给图书馆,然后借出两本书β和δ.
-    * 计算机的也有类似的优化.比如
-      ``` 
-           int a = 1;
-           int b = 2;
-           int c = 3;
-           x = x + 1;
-      ```
-      优化后为:
-      ``` 
-           int b = 2;
-           int c = 3;
-           int a = 1;
-           x = x + 1;
-      ```
-  * volatile
-    * 每个线程都有独占的内存区域，如操作枝、本地变量表等。线程本地内存保存了引用变量在堆内存中的副本，线程对变量的所有操作都在本地内存区域中进行，执行结束后再同步到堆内存中去。这里必然有一个时间差，在这个时间差内，该线程对副本的操作，对于其他线程都是不可见的。当使用volatile修饰变量是,此变量的操作都是在内存中进行,不会产生副本.
-    * 它是轻量级的线程操作可见方式,并非同步方式.适合`一写多读`的并发场景,如CopyOnWriteArrayList.
-  * ThreadPoolExecutor
-    * 核心参数
-      * corePoolSize,表示常驻核心线程数,如果等于0,执行完任务之后,线程池中的线程会自动销毁;如果大于0,则不会销毁数字内的核心线程
-      * maximumPoolSize,表示线程池能容纳同事执行的最大线程数.必须大于或者等于1,如果等于corePoolSize则是固定大小的线程池.
-      * keepAliveTime,表示线程池中的线程空闲时间,当空闲时间达到keepAliveTime值时,线程会被摧毁,直到只剩下corePoolSize个线程为止.
-      * TimeUnit
-      * workQueue表示缓存队列.当请求线程数大于maximumPoolSize时,线程进入BlockingQueue阻塞队列.
-      * threadFactory表示线程工厂,它用来成产一组相同任务的线程.
-      * handler表示执行拒绝策略的对象,默认使用AbortPolicy()[^3],当任务缓存区上限的时候,就可以使用拒绝策略处理请求.
-    * ThreadLoacl,在上面有讲述.
+  * 一旦一个线程开始运行，它不必始终保持运行。事实上，运行中的线程被中断，目的是为了让其他线程获得运行机会。记住，在任何给定时刻，一个可运行的线程可能正在运行也可能没有运行（这就是为什么将这个状态称为可运行而不是运行）
+    * 守护线程，守护线程的唯一用途就是为其他线程服务，比如计时线程，当只剩下守护线程的时候，虚拟机就退出了。`守护线程应该永久不会去访问固有资源，如文件，数据库，因为他们可能在任一时刻的一个操作而发生中断`。
+    * `线程安全`，从下面结果维度上来说明
+      * 锁
+        * ReentrantLock（重入锁）的lock/unlock，这与synchronized是一样的，但是更加灵活
+        * Object的wait/notify  <==>  Condition的await/signalAll方法是一样的
+        * 高级应用：
+          * blocking queue，阻塞队列
+          * 同步器：
+            * CyclicBarrier：允许线程集等待直至其中预定数目的线程到达一个公共障栅（ barrier)，然后可以选择执行一个处理障栅的动作
+            * Phaser：类似于循环障栅， 不过有一个可变的计数
+            * CountDownLatch：允许线程集等待直到计数器减为0
+            * Exchanger：允许两个线程在要交换的对象准备好时交换对象
+            * Semaphore：允许线程集等待直到被允许继续运行为止
+            * SynchronousQueue：允许一个线程把对象交给另一个线程
+      * synchronized
+        * monitor，监视器，是native方法
+        * 高级应用：
+          * ConcurrentHashMap，ConcurrentLinkedQueue等线程安全集合
+      * final
+        * final域不可改变
+      * volatile
+        * 每个线程都有独占的内存区域，如操作栈、本地变量表等。线程本地内存保存了引用变量在堆内存中的副本，线程对变量的所有操作都在本地内存区域中进行，执行结束后再同步到堆内存中去。这里必然有一个时间差，在这个时间差内，该线程对副本的操作，对于其他线程都是不可见的。当使用volatile修饰变量是,此变量的操作都是在内存中进行,不会产生副本.
+        * 它是轻量级的线程操作可见方式,并非同步方式.适合`一写多读`的并发场景,如CopyOnWriteArrayList.
+        * `happen-before`原则(先于):是时钟顺序的先后
+          * 程序顺序规则:一个线程中的每个操作,happen-before于改线程中的任意后续操作;
+          * 对一个监视锁的解锁,happen-before于随后对这个监视锁的加锁;
+          * 对一个volatile域的写,happen-before于任何后续对这个volatile域的读;
+          * a happen-before b,且b happen-before c,那么a happen-before c
+        * 指令重排(优化,写操作不会重排,但是赋值和读操作可能会重排):
+          * 以生活为例,A去换从图书馆借的α书,并且再借一本β书;同寝室室友B正好也有一本书γ要还,并且还想接一本δ;那么按照正常人的惯例,A会将B的γ书和自己借的书α一起还给图书馆,然后借出两本书β和δ.
+          * 计算机的也有类似的优化.比如
+          ``` 
+              int a = 1;
+              int b = 2;
+              int c = 3;
+              x = x + 1;
+          ```
+          优化后为:
+          ``` 
+              int b = 2;
+              int c = 3;
+              int a = 1;
+              x = x + 1;
+          ```
+    * 执行器
+      * 线程池
+        * 普通线程池：ExecutorService
+        * 定时线程池：ScheduledExecutorService
+        * 控制任务组：ExecutorCompletionService，传统线程池ExecutorService执行一组任务（List<Task>）时需要将？？？？
+        * Fork-Join 框架：分解子任务
+        * CompletableFuture：自定义线程之间执行顺序以及结果传递等操作
+      * ThreadPoolExecutor源码参数
+          * 核心参数
+          * corePoolSize,表示常驻核心线程数,如果等于0,执行完任务之后,线程池中的线程会自动销毁;如果大于0,则不会销毁数字内的核心线程
+          * maximumPoolSize,表示线程池能容纳同事执行的最大线程数.必须大于或者等于1,如果等于corePoolSize则是固定大小的线程池.
+          * keepAliveTime,表示线程池中的线程空闲时间,当空闲时间达到keepAliveTime值时,线程会被摧毁,直到只剩下corePoolSize个线程为止.
+          * TimeUnit
+          * workQueue表示缓存队列.当请求线程数大于maximumPoolSize时,线程进入BlockingQueue阻塞队列.
+          * threadFactory表示线程工厂,它用来成产一组相同任务的线程.
+          * handler表示执行拒绝策略的对象,默认使用AbortPolicy()[^3],当任务缓存区上限的时候,就可以使用拒绝策略处理请求.
+          * ThreadLoacl,在上面有讲述.
 
 * java中main方法启动的是一个进程还是一个线程?
   * 是一个线程也是一个进程，一个java程序启动后它就是一个进程，进程相当于一个空盒，它只提供资源装载的空间，具体的调度并不是由进程来完成的，而是由线程来完成的。一个java程序从main开始之后，进程启动，为整个程序提供各种资源，而此时将启动一个线程，这个线程就是主线程，它将调度资源，进行具体的操作。Thread、Runnable的开启的线程是主线程下的子线程，是父子关系，此时该java程序即为多线程的，这些线程共同进行资源的调度和执行。
@@ -242,7 +272,7 @@
         进程中子线程T1的ID=11
         进程中子线程T2的ID=12
     ```
-    * 一旦一个线程开始运行，它不必始终保持运行。事实上，运行中的线程被中断，目的是为了让其他线程获得运行机会。记住，在任何给定时刻，一个可运行的线程可能正在运行也可能没有运行（这就是为什么将这个状态称为可运行而不是运行）
+
     
 * 程序，进程，线程的关系？
 
