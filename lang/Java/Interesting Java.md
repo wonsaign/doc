@@ -52,8 +52,9 @@
 * 同步方法和同步代码块的区别:
     * 同步代码块使用的是管程(monitor);
     * 同步方法是从JVM方法常量池中的方法表结构(method_info Structure) 中的 ACC_SYNCHRONIZED 访问标志区分一个方法是否同步方法
-* ThreadLocal,是线程的局部变量,每个Thread都有一个ThreadLocalMap[^1],用来存贮<ThreadLoacal,Object>的key,value键值对.
-    * 当调用ThreadLocal.get()方法,会将当前ThreadLocal引用作为正在运行Thread中的ThreadLocalMap的key,在Map的Entry[]中检索value值.
+* ThreadLocal,是线程的局部变量,每个Thread都有一个ThreadLocalMap[^1],用来存贮<ThreadLoacal,Object>的key,value键值对.从概念上看`可以将ThreadLocal<T>看做Map<Thread,T>`.
+    * 当调用ThreadLocal.get()方法,会将当前ThreadLocal引用作为正在运行Thread中的ThreadLocalMap的key,在Map的Entry[]中检索value值.简而言之：get方法总是返回当前线程使用set方法设置的最新值。ThreadLocal的值会随着线程的消亡而被垃圾回收，所以在使用线程池的时候（线程不会消亡），总是在end时清除保存的值，总是在begin时set值。
+    * 应用：实现应用程序框架的时候被大量使用
     * 伪代码:
     ```
     public T get() {
@@ -164,24 +165,26 @@
     * 守护线程，守护线程的唯一用途就是为其他线程服务，比如计时线程，当只剩下守护线程的时候，虚拟机就退出了。`守护线程应该永久不会去访问固有资源，如文件，数据库，因为他们可能在任一时刻的一个操作而发生中断`。
     * `线程安全`，从下面结果维度上来说明
       * 锁
-        * ReentrantLock（重入锁）的lock/unlock，这与synchronized是一样的，但是更加灵活
+        * ReentrantLock[^4]（重入锁）的lock/unlock，这与synchronized是一样的，但是更加灵活
         * Object的wait/notify  <==>  Condition的await/signalAll方法是一样的
-        * 高级应用：
-          * blocking queue，阻塞队列
-          * 同步器：
-            * CyclicBarrier：允许线程集等待直至其中预定数目的线程到达一个公共障栅（ barrier)，然后可以选择执行一个处理障栅的动作
-            * Phaser：类似于循环障栅， 不过有一个可变的计数
-            * CountDownLatch：允许线程集等待直到计数器减为0
-            * Exchanger：允许两个线程在要交换的对象准备好时交换对象
-            * Semaphore：允许线程集等待直到被允许继续运行为止
-            * SynchronousQueue：允许一个线程把对象交给另一个线程
+          * 高级应用：
+            * blocking queue，阻塞队列
+            * 同步器：
+              * CyclicBarrier：允许线程集等待直至其中预定数目的线程到达一个公共障栅（ barrier)，然后可以选择执行一个处理障栅的动作
+              * Phaser：类似于循环障栅， 不过有一个可变的计数
+              * CountDownLatch：允许线程集等待直到计数器减为0
+              * Exchanger：允许两个线程在要交换的对象准备好时交换对象
+              * Semaphore：允许线程集等待直到被允许继续运行为止
+              * SynchronousQueue：允许一个线程把对象交给另一个线程
       * synchronized
         * monitor，监视器，是native方法
         * 高级应用：
           * ConcurrentHashMap，ConcurrentLinkedQueue等线程安全集合
       * final
         * final域不可改变
+      * 原子变量 
       * volatile
+        * 使用方式：因为提供了“可见性”，所以对于“只读”判断非常好用，但是不建议赋值修改（如果更新，建议使用单线程）。
         * 每个线程都有独占的内存区域，如操作栈、本地变量表等。线程本地内存保存了引用变量在堆内存中的副本，线程对变量的所有操作都在本地内存区域中进行，执行结束后再同步到堆内存中去。这里必然有一个时间差，在这个时间差内，该线程对副本的操作，对于其他线程都是不可见的。当使用volatile修饰变量是,此变量的操作都是在内存中进行,不会产生副本.
         * 它是轻量级的线程操作可见方式,并非同步方式.适合`一写多读`的并发场景,如CopyOnWriteArrayList.
         * `happen-before`原则(先于):是时钟顺序的先后
@@ -281,3 +284,4 @@
 [^1]:ThreadLocalMap 是 ThreadLocal中的静态类
 [^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
 [^3]:总是抛出RejectedExecutionExcepiton异常来终止线程
+[^4]:可重入锁，当一个线程进入一个锁的同步代码块的时候，锁的计数器加1，当线程退出同步代码块数量-1.（注意Synchronized和ReentrantLock，都是重入锁）
