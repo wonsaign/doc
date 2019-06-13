@@ -10,4 +10,6 @@ java中多线程的一些知识点梳理
   * ThreadLocal
     * 当调用ThreadLocal.get()方法,会将当前ThreadLocal引用作为正在运行Thread中的ThreadLocalMap的key,在Map的Entry[]中检索value值.简而言之：get方法总是返回当前线程使用set方法设置的最新值。ThreadLocal的值会随着线程的消亡而被垃圾回收，所以在使用线程池的时候（线程不会消亡），总是在end时清除保存的值，总是在begin时set值。
     * 应用：实现应用程序框架的时候被大量使用。
-  * 不变性
+  * 不变性final
+* 同步容器：Hashtable，Vector
+* 并发容器：ConcurrentHashMap，CopyOnWriteArrayList，BlockingQueue（生成消费模式）
