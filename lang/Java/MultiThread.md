@@ -13,3 +13,4 @@ java中多线程的一些知识点梳理
   * 不变性final
 * 同步容器：Hashtable，Vector
 * 并发容器：ConcurrentHashMap，CopyOnWriteArrayList，BlockingQueue（生成消费模式）
+* JVM在启动的时候，创建的所有线程中，除了主线程以为其他都是守护线程。（如垃圾回收器，其他辅助线程）默认情况下，主线程创建的所有线程都是普通线程。
