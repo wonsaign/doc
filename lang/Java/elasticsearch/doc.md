@@ -35,3 +35,37 @@
 * Lunuce中的索引，在Elasticsearch中叫分片，而Elasticsearch为了区分索引的概念，使用分片这个词，就是等于Lunece中索引。而Elasticsearch中的索引是分片的逻辑概念。
 
 ### Part Two 官方手册
+* 开始
+  * 探索你的集群
+    * 集群健康
+      * /_cat/health?v
+      * /_cat/nodes?v
+    * 遍历所有的Index
+      * /_cat/indices?v
+    * 创建Index(注意,6版本的es,一个index只能对应一个type)
+      * `PUT` /indexname
+    * 修正你的数据
+      * 增删改略
+      * 批量更新
+        * `POST` /yourindex/_doc/_bulk  后跟Json串
+  * 探索你的数据
+    * 直接在URL上获取
+    * 使用Query语言(Query DSL),支持Json请求.请求 `GET` /yourindex/_doc/`_search` {"query":{"match":{}}},`match`表示模糊查询
+    * 指定返回字段 `GET` /yourindex/_doc/_search {"query":{},"_source":["param1","param2"]},其中`_source`中指定的字段即使返回的字段,类似SQL SELECT FROM field list.
+    * 使用Query DSL , query:bool:must:[match1,match2] 其中match1和match2是'AND'关系. query:bool:should:[match1,match2]其中match1和match2是'OR'关系.query:bool:must_not:[match1,match2]代表'NOR'关系
+    * 执行Filters,query:bool:must,filter:range:param1:gte,lte 其中param1代表参数, 类似sql中 param1 between gte and lte; `Between And`
+    * 聚合查询(Group by) aggs:group_by_state:terms:filed:"param1.keyword",order:"param2":"desc" 类似SQL中的 select param1,count(*) from xxx group by param1 order param2 desc limit 10;
+* API 习俗
+  * 多倍的索引,目前所有的请求都是/test/_doc/1,/test1/_doc/1,/test2/_doc/1,那么现在可以使用test*/doc/1 来代替前面所有
+  * 时间格式 GET /<logstash-{now/d}>/_search
+  * 通用设置
+    * _settings?flat_settings=true
+* 文档API
+  * 增删改查
+  * 使用Query DSL语言删除,例如:POST /yourindex/`_delete_by_query` query:match
+  * 使用Query DSL语言更新,例如:POST /yourindex/`_update_by_query` 
+  * mget , 多倍获取 , 需要使用`docs` 如 GET/_mget  docs[{},{}]
+  * bulk批量操作.
+  * Reindex,重命名 POST _redindex {"source":{"index":"old"},"dest":{"index":"new"}}
+  
+  
