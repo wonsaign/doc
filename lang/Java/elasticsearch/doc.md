@@ -1,4 +1,4 @@
-### 此文档便于新手理解Elasticsearch
+### Part One 基本概念
 
 * Elasticsearch与关系数据库对应关系
     ```
