@@ -159,3 +159,157 @@ SELECT top 10 * FROM 	EverydayTest
   subjectId='6fc5a6f4-4c1f-48d8-934c-622489ded295' 
 	and day <= 20181231
 	ORDER BY [Day] desc ;
+
+
+/** OrderProducts */
+
+USE wangxiao2_products;
+SELECT * FROM [dbo].[Order_Products] WHERE OrderNumber IN ('201907161418055319211','201907201127334338363') 
+AND Type = '0';
+
+
+SELECT * FROM [dbo].[Order_Products] WHERE OrderNumber ='201907201127334338363';
+SELECT
+	* 
+FROM
+	[dbo].[Order_Products] 
+WHERE
+	OrderNumber = '201907181601143726735' 
+-- 	AND productId IN ( 'AFE5518A-40E6-43FF-8013-5712CC2BC2C1' ) 
+	AND Type = 0;
+
+
+SELECT 
+	*
+	FROM(
+		SELECT 
+	 count( OrderNumber) AS times,
+		OrderNumber
+		-- ,ProductId 
+	FROM
+		[dbo].[Order_Products]
+	WHERE
+		username = 'ceshi' 
+		AND Type = 0 
+	GROUP BY
+		OrderNumber) op
+	WHERE op.times = 2 ;
+	
+SELECT OrderNumber FROM [dbo].[Order_Products] WHERE ProductId IN ('50369063-7554-4864-8383-605BDFBD81F7','9429DF3B-231A-4FEA-802E-2BA652A40A78') 
+AND Type = '0' AND username = 'ceshi' GROUP BY OrderNumber; 
+
+SELECT 
+	*
+	FROM(
+SELECT count( OrderNumber) AS times,OrderNumber FROM [dbo].[Order_Products] WHERE 
+OrderNumber IN (
+'201705171350256241418',
+'201711031100490395155',
+'201711031133543384530',
+'201711031134377031727',
+'201711031139281985335',
+'201711031346119188720',
+'201711031347404019087',
+'201711031349372846584',
+'201711031401088809293',
+'201711031438494876810',
+'201711031440070325390',
+'201711031441558158880',
+'201711031442218587774',
+'201711031442585636437',
+'201711131406035197171') 
+AND Type = '0' AND username = 'ceshi' GROUP BY OrderNumber
+) opp
+WHERE opp.times = 2;
+
+
+SELECT
+	OrderNumber 
+FROM
+	(
+SELECT COUNT
+	( OrderNumber ) AS times,
+	OrderNumber 
+FROM
+	[dbo].[Order_Products] 
+WHERE
+	ProductId IN ( '50369063-7554-4864-8383-605BDFBD81F7', '9429DF3B-231A-4FEA-802E-2BA652A40A78' ) 
+	AND Type = '0' 
+	AND username = 'ceshi' 
+GROUP BY
+	OrderNumber 
+	) opp 
+WHERE
+	opp.times = 2 
+EXCEPT
+SELECT
+	OrderNumber 
+FROM
+	[dbo].[Order] 
+WHERE
+	username = 'ceshi' 
+	AND PayStatus = '0';
+	
+
+SELECT * FROM 
+	[dbo].[Order_Products] 
+	WHERE OrderNumber IN (
+	(
+	SELECT
+		OrderNumber 
+	FROM
+		(
+	SELECT COUNT
+		( OrderNumber ) AS times,
+		COUNT(*) AS itmes,
+		OrderNumber 
+	FROM
+		[dbo].[Order_Products] 
+	WHERE
+		ProductId IN ( '50369063-7554-4864-8383-605BDFBD81F7' ) 
+		AND Type = '0' 
+		AND username = 'ceshi' 
+	GROUP BY
+		OrderNumber 
+		) opp 
+	WHERE
+		opp.times = 1
+	)
+)
+
+
+
+
+
+SELECT DISTINCT
+	( OrderNumber ) 
+FROM
+	[wangxiao2_products].[dbo].[Order_Products] 
+WHERE
+	OrderNumber IN (
+SELECT
+	OrderNumber 
+FROM
+	( SELECT OrderNumber, COUNT ( * ) timecount FROM [wangxiao2_products].[dbo].[Order_Products] WHERE username = 'ceshi' AND [Type] = 0 GROUP BY OrderNumber ) a 
+WHERE
+	a.timecount= 2
+	) 
+	AND ProductId IN ( '50369063-7554-4864-8383-605BDFBD81F7', '9429DF3B-231A-4FEA-802E-2BA652A40A78') 
+	AND [Type] = 0 
+	AND CreateTime  
+	AND OrderNumber IN (
+SELECT
+	OrderNumber 
+FROM
+	[wangxiao2_products].[dbo].[Order] 
+WHERE
+	username = 'ceshi' 
+	AND PayStatus = 0)
+
+
+
+SELECT OrderNumber FROM [dbo].[Order_Products] WHERE username = 'ceshi' AND productId IN ('AF9EFA58-1BD6-4B07-9AC1-43E0F8837E6D')  GROUP BY OrderNumber;
+	
+	
+	
+	

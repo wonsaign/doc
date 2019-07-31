@@ -65,7 +65,7 @@
 * 命令模式中有`三个角色`,
   * 真正的命令`执行者`(在命令接口的实现类中,Command接口的实现execute,undo方法内真正的执行动作的角色)
   * `命令`接口(包含execute等方法),每个命令的实现类中的execute等方法,都代表了`一组动作`
-  * `Invoker`调用命令者,Invoker是一个存储着多个命令的容器,并通过setCommand方法,将命令设置在其中
+  * `Invoker`命令的请求者,Invoker是一个存储着多个命令的容器,并通过setCommand方法,将命令设置在其中
 * Command接口除了有execute()方法以外
   * 还要有undo()方法,来执行回退
     * 通过使用`状态`来记录,并退回
@@ -73,6 +73,7 @@
   * 队列请求,将实现了Command接口的运算块(实例),放入队列中,此时队列是Invoker,与运算块(命令的实现类)完全解耦,工作队列只需要知道取出命令对象,而不在乎哪个线程来执行运算块(命令的实现类),可有效的把运算限制在固定数目的线程中进行.
   * 日志请求,在命令模式中添加store/load方法,利用对象的序列化实现这些方法,将`命令`缓存在磁盘中.如:当update请求达到时,将其封装为命令接口,并调用UpdateCommandImpl实现类中的store/load方法通过序列化,将当前命令存储在磁盘中;对于高级应用而言,这些技巧可以被扩展到`事务`处理中.
 ![commandpattern](../Images/commandpattern.png)
+![commandmyself](../Images/command-by-myself.jpg)
 
 #### 单例模式
 
