@@ -8,6 +8,7 @@ act as 担任...角色
 apply v 应用
 adequate adj.足够的;合格的
 as well as 既..又..;此外
+assemble v.聚集;聚合;组装
 auditor n.审计师(audit v.审计)
 
 ###B
@@ -17,6 +18,8 @@ but also 并且
 ###C
 canonicalization n.规范化
 coexist v.共存
+complex adj.复杂的 n.建筑群;不正常的状态;
+concern v 与..相关;担心;担忧
 confirm v.顺从,与一致,遵从
 corresponding adj 相符合,相关的
 constraint  n  约束
@@ -46,8 +49,10 @@ guarantees n/v. 保证
 ###H
 
 ###I
-indicate v 表明,暗示,指明
+indicate v.表明,暗示,指明
+infiltrate v.潜入
 infrastructure  n.基础设施
+instruction n.(计算机)指令;用法说明;指示
 internally adv.内在的
 interpreter n.解释程序
 invariant n.不变的,不等式,不变量
@@ -77,6 +82,7 @@ optimization n.最佳化;优选法,最优
 
 
 ###P
+partial adj.部分的
 privilege n.特权
 promote v.促进,推动
 
