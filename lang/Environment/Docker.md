@@ -18,6 +18,11 @@ Docker简单命令
 * docker container stop 容器id 停止容器
 * docker container rm 容器id 删除容器
 * docker container ps 显示正在运行的容器
+* docker search 镜像名 --filter "is-official=true"
+* docker image inspect 镜像名（非常有用的命令）
+  
+
+docker镜像是由松耦合的只读镜像组成的。就像补丁，比如ubuntu镜像，里面包含了ubuntu，python，security patch三层镜像，并且镜像可以共享
 
 
 
