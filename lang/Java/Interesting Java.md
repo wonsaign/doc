@@ -8,8 +8,8 @@
 * springboot 内置tomcat如何启动
 * 一个请求流程,如何在tomcat服务器内执行
 * nio/bio
-* ClassLoader,就是加载.class文件的java程序或C++程序,分为两类:
-    * 一类是`BootStrap`,由C++实现,是虚拟机的一部分
+* ClassLoader,就是加载.class文件的java程序或C程序,分为两类:
+    * 一类是`BootStrap`,由C实现,是虚拟机的一部分
     * 另外一类是`其他加载器`,也是java程序,并全部继承java.lang.ClassLoader,`这些加载器`的启动`由BootStrap加载器`先`加载`到内存后才能去加载其他的类.
         * BootStrap ClassLoader:负责加载`JDK/jre/lib`目录下的二进制Class文件
         * Extension ClassLoader:负责加载`JDK/jre/lib/ext`目录下的二进制Class文件
