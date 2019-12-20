@@ -20,7 +20,7 @@
 * 函数声明
   * func 关键字
   * func 方法名（小驼峰代表了：non-static； 大驼峰代表了 static）
-  * func hello(a int, b string)(x boolean, y int8) // 第一个是括号是入参，第二个括号是出参
+  * func hello(a int, b string)(boolean, int8) // 第一个是括号是入参，第二个括号是出参
 * 基本类型
   * int 有符号(根据操作系统)// 等待测试
     * int8 // 等同于 byte
@@ -69,10 +69,27 @@
 * 包 import
   * 在import包时，路径从`$GOPATH目录下是src`开始
   * 如果包名过长，可以起别名。
+![packagealias](../../Images/packagealias.png)
 * 函数
   * golang不支持重载（Overload）
   * golang没有static关键字，如果引用a包中的工具方法，方法名必须大驼峰（public）,与java面向对象的语言不同的是，java可以new对象之后，使用对象的方法，也可以声明方法为static，此时使用方式则与golang一致。
-
+  * 基本语法 func 函数名 (形参列表) (返回值类型列表) {}
+    * 如果返回值多个的时候，如果要忽略某个返回值使用‘_’(下划线)表示站位
+    * 返回值只有一个括号可以不写(感觉是非常好用的特性)
+    * 返回值列表，可以不声明变量，也可声明变量 比如（x int, y string）=>(int, string)
+  * golang中函数也是一种数据类型。使用方式： var 变量名 = 函数名 如： var f = add[^3]
+    * 函数可以作为形参。函数式编程。
+  * 自定义类型type
+    * 语法 type <b>自定义数据名</b>  <b>数据类型</b>
+    * 虽然给指定的类型命名了，但是如果要转换类型，还是必须要进行类型转换的
+![golangtype](../../images/golangtype.png)
+  * init函数 在每个go文件中，都可以定义一个init函数，在golang运行都时候，会先调用init函数
+    * 调用顺序  变量定义->init函数->main函数
+  * 匿名函数（不是匿名类）
+    * 使用方式
+![golananonymousfunc](../../images/golananonymousfunc.png)
+  * 闭包 ？！ 我没研究透
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
 [^2]: 当string不能转换为其他有效当数字时候，如“hello”，则会变成默认值0
+[^3]: 注意，这里带函数不能带括号，带括号代表了调用函数，不带括号才是声明函数
