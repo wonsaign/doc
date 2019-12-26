@@ -1,6 +1,6 @@
 ## Mybatis
 * Mybaties使用流程图：
-    ![mybaties构成](../Images/Mybaties的构成.png)
+    ![mybaties构成](../Images/Mybatis的构成.png)
     * `org.apache.ibatis.session.Configuration`去管理Xml中配置文件或JavaBean配置用来生成SqlSessionFactory(接口)，SqlSessionFactory的实现类有两个：
       * SqlSessionManager
       * DefaultSqlSessionFactory（默认使用这个）
