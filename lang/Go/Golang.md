@@ -88,7 +88,8 @@
   * init函数 在每个go文件中，都可以定义一个init函数，在golang运行都时候，会先调用init函数
     * 调用顺序  变量定义->init函数->main函数
   * 匿名函数（不是匿名类）
-    * 使用方式
+    * 使用方式一  var functionInterface = func(i int, ii int) int { return i + ii }  ;functionInterface(1, 2)
+    * 使用凡事二  func(i int, ii int) int { return i + ii }(1, 2) // 此种方式直接就调用了.
 ![golananonymousfunc](../../images/golananonymousfunc.png)
   * 闭包 ？！ 我没研究透
 * defer函数延迟加载：函数执行完毕后会调用。
@@ -109,10 +110,10 @@
     * panic == excepiton
     * defer == finally
     * recover == catch
-    * errors.new 可以自定义生成一个panic
+    * errors.new 可以自定义生成一个error类型的值,表示一个错误.
   * golang处理异常的方式不太一样,
-    * 因为没有try区块,所以java中使用try-catch,在golang中使用的是defer function(){recover()},通过recover()来恢复线程.
-* 数组
+    * 因为没有try区块,所以java中使用try-catch,在golang中使用的是defer function(){recover()},通过recover()来恢复线程.s
+* 数组,数组存贮的是值类型.
   * 声明方式
     * var array [3]int = [3]int{1, 2, 3}
     * var array = [3]int{1, 2, 3}
@@ -122,6 +123,9 @@
   * 切片类似一个结构体{*type[],len,cap},包含了指针数组,长度和容量三个属性
   * 初始化三种方式
     * 数组-> var arr [5]int = [...]int{1,2,3,4,5}  var slice = arr[1,3][^5]  `这种方式,因为事先声明了数组,所以程序可见`
+      * var slice = arr[0:end] 可以简写为var slice = arr[:end]
+      * var slice = arr[start:len(arr)] 可以简写为var slice = arr[star:]
+      * var slice = arr[0:len(arr)] 可以简写为var slice = arr[:]
     * make-> var slice []type = make([]type, 5, 10) `数组由切片底层维护么,对程序不可见`
     * 直接声明-> var slice []type = []type{param1, param2, param3}
   * 切片可以使用`append`扩容,具体用法见API.原理与java数组扩容是一样的.
