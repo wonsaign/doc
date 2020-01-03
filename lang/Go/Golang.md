@@ -23,9 +23,9 @@
   * func hello(a int, b string)(boolean, int8) // 第一个是括号是入参，第二个括号是出参
 * 基本类型
   * int 有符号(根据操作系统)// 等待测试
-    * int8 // 等同于 byte
+    * int8 // 别名 byte
     * int16
-    * int32
+    * int32 // 别名 rune
     * int64
   * uint 无符号
     * uint8
@@ -131,6 +131,35 @@
   * 切片可以使用`append`扩容,具体用法见API.原理与java数组扩容是一样的.
   * 切片定义完,不能立即使用,需要引用到一个数组,或者make一个空间供切片使用.类似指针,刚刚创建出来是nil,需要new一块地址出来一样的.
   * copy,切片可以copy,但是不同的是,copy后的两个切片,都有自己独立的空间,修改互不影响.
+  * string和slice,string本质上是一个byte数组,因此string也可以进行切片处理
+    * string是不可变类型,不像普通数组,可以替换某一个值,如果要修改,重新赋值一个把.
+* map数据类型
+  * 语法声明 var param map[keytype]valuetype
+  * key的类型,可以是基本类型,指针,channel,还可以是只包含前几个类型的接口,结构体,数组,注意切片,map和function无法作为key,因为无法使用==来判断.
+  * 删除,map没有clear方法,只能通过遍历key来删除全部元素,或者是直接赋值给一个新map,让gc帮助删除
+  * map中的key存放顺序是无序的,每次遍历,取得值的顺序都是不同的.
+  * map是引用类型
+  * map会自动扩容,是动态增长的key-value
+* 结构体,就是其他语言中的class,只不过比较简化
+  * 语法 type TypeName struct{} 
+  * golang的结构体,去掉来传统oop语言的继承,方法重载,构造函数和折构函数和隐藏this指针等等.
+  * golang没有继承关键字,继承通过匿名字段来实现的.
+  * golang面向接口编程的特点.
+  * 结构体是值类型空间,没有指向地址(地址再映射空间),而是直接指向空间.直接通过xx.a这种方式获取结构体内的a变量的值.
+  * 结构体赋值的几种方式
+    * var p Person  ; p.Name = "" p.Age = 0
+    * var p Person = Persion{"",0}
+    * var pp *Persion = new(Person),此时 (*pp).name = "wang" 等同于  p.name = "wang" 因为golang语言设置者的语法糖,会自动将p.name = "wang"变为(*p).name = "wang"
+    * var pp *Person = &Persion{} (*pp).name = "wang" 同上
+  * 结构体内所有字段的内存是连续的.
+  * 结构体如果想要强制类型转换,字段名称,个数,类型必须完全一样.
+  * 使用type为结构体起别名,被认为是新类型,但是也可以强制转换.
+  * 结构体的每个字段可以写一个tag标记,可以用于序列化和反序列化使用.(常用于encoding/json包下)
+* 方法(不是函数)
+  * 方法的声明: func (receiver type) methodName(参数列表)(返回值列表)
+    * receiver type 可以是结构体,也可以是其他类型(比如自定义的 type integer int)
+    * receiver type如果传递的是结构体,那么结构体是值传递,若要改变原来结构体的内容,请传递指针.
+  * 如果一个变量(结构体)实现了String()方法,就是java中的toString()方法.fmt.print就会按照指定的格式输出.
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
 [^2]: 当string不能转换为其他有效当数字时候，如“hello”，则会变成默认值0
