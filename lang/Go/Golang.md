@@ -68,6 +68,8 @@
     * golang 没有这两个，可以使用for if break 代替
 * 包 import
   * 在import包时，路径从`$GOPATH目录下是src`开始
+  * golang导入的是`包名`,而不是文件名.
+![packagealias](../../Images/golang_import1.png) 
   * 如果包名过长，可以起别名。
 ![packagealias](../../Images/packagealias.png)
 * 值传递和引用传递
@@ -146,20 +148,34 @@
   * golang没有继承关键字,继承通过匿名字段来实现的.
   * golang面向接口编程的特点.
   * 结构体是值类型空间,没有指向地址(地址再映射空间),而是直接指向空间.直接通过xx.a这种方式获取结构体内的a变量的值.
-  * 结构体赋值的几种方式
+  * 结构体`创建`的几种方式
     * var p Person  ; p.Name = "" p.Age = 0
     * var p Person = Persion{"",0}
     * var pp *Persion = new(Person),此时 (*pp).name = "wang" 等同于  p.name = "wang" 因为golang语言设置者的语法糖,会自动将p.name = "wang"变为(*p).name = "wang"
     * var pp *Person = &Persion{} (*pp).name = "wang" 同上
+  * 结构体`赋值`的几种方式
+    * var stu Person = Student{"wangs",18}
+    * var stu Person = &Student{Name:"wangs",Age:18}
+    * var stu *Person = &Student{"wangs",18}
+    * var stu *Person = &Student{Name:"wangs",Age:18}
+  * 嵌套匿名结构体,可以直接声明
+  * golang没有构造函数,所以初始化赋值可以使用简单工厂模式来给函数赋值.
   * 结构体内所有字段的内存是连续的.
   * 结构体如果想要强制类型转换,字段名称,个数,类型必须完全一样.
   * 使用type为结构体起别名,被认为是新类型,但是也可以强制转换.
   * 结构体的每个字段可以写一个tag标记,可以用于序列化和反序列化使用.(常用于encoding/json包下)
+* 面向对象编程
+  * 封装
+  * 继承,golang没有关键字extends,而是直接使用匿名结构体.
+![golananonymousfunc](../../images/golang_extends.jpeg)
+    * 继承的使用方式,类似于java中内部类的使用方式.
+![golananonymousfunc](../../images/golang_extendstouse.jpeg)
 * 方法(不是函数)
   * 方法的声明: func (receiver type) methodName(参数列表)(返回值列表)
     * receiver type 可以是结构体,也可以是其他类型(比如自定义的 type integer int)
     * receiver type如果传递的是结构体,那么结构体是值传递,若要改变原来结构体的内容,请传递指针.
   * 如果一个变量(结构体)实现了String()方法,就是java中的toString()方法.fmt.print就会按照指定的格式输出.
+
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
 [^2]: 当string不能转换为其他有效当数字时候，如“hello”，则会变成默认值0
