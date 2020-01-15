@@ -49,6 +49,10 @@
   * 另外高位数和低位数可以互相转换，但是当高向低级别转的时候会「丢失数据」
   * 其他类型->string的时候，可以使用fmt.Sprinf()或者strconv.FormatInt/FormatFloat....
   * string->其他类型的时候[^2]，可以使用strconv.ParseInt/ParseFloat....
+  * golang使用,两个变量值呼唤的时候,可以不用使用第三个变量,可以这样
+    * a := 1
+	    b := 2
+	    a,b = b,a
 * 复杂类型
   * 指针，存贮的是变量在内存中的地址
   * 声明方式 以int指针为例  var ip *int8  // 注意指针无法显示的赋值地址，暂时我还没学会
@@ -170,17 +174,37 @@
 ![golananonymousfunc](../../images/golang_extends.jpeg)
     * 继承的使用方式,类似于java中内部类的使用方式.
 ![golananonymousfunc](../../images/golang_extendstouse.jpeg)
+  * 多态,golang多态,指的是`接口`多态,java是`抽象类和接口`
 * 方法(不是函数)
   * 方法的声明: func (receiver type) methodName(参数列表)(返回值列表)
     * receiver type 可以是结构体,也可以是其他类型(比如自定义的 type integer int)
     * receiver type如果传递的是结构体,那么结构体是值传递,若要改变原来结构体的内容,请传递指针.
   * 如果一个变量(结构体)实现了String()方法,就是java中的toString()方法.fmt.print就会按照指定的格式输出.
 * 接口interface
+  * 接口中的方法,要大写(代表全局可见),如果写成小写,接口就看不见了
   * golang中接口没有implements关键字
   * 如果实现了一个接口中所有的方法,则认为是实现了该接口.(怎么在IDE中找到关系呢?)
   * 接口的实现体,不仅仅是stuct,只要是自定义的 `type` 类型就都可以实现接口
   * 接口是一种引用类型.(结构体是值类型)
-  * 空接口 interface{}, 表明了所有的类型都实现了空接口.作用类似java中的Object类.
+  * 空接口 interface{}, 表明了所有的类型都实现了空接口.作用类似java中的Object类.空接口可以赋值为任何结构体(或type类型的数据)
+![golananonymousfunc](../../images/golang_emptyinterface.png)
+  * golang中`当一个接口继承多个接口时,如果有相同当接口`,怎编译不会通过,java则没有影响
+![golananonymousfunc](../../images/golang_extends_samefunc.png)
+  * 方法,也可是实现接口,但是注意,必须传递方法所要求的类型.
+![golananonymousfunc](../../images/golang_interface.png)
+* 断言
+  * 对于接口不知道是什么类型的时候,如果想要转换成具体类型,需要使用类型断言(java 中 instanceof)
+![golananonymousfunc](../../images/golang_instanceof.png)
+  * 断言带类型检测,如果转换失败会返回错误.上图
+![golananonymousfunc](../../images/golang_instanceof_check.png)
+* 文件(os包file)
+  * 文件类似java,先open,read,close.
+    * Reader代表缓冲区,读写大文件的时候时候.
+    * 一次性读取,ioutil包中的readFile等等.
+* 命令行
+  * os包中的全局切片变量Args,设置Args,代表了命令行中接受的参数.
+  * 使用flag包中的方法.
+    * 比如flag.StringVar(&user,"u","","mysql登陆用户名参数")方法,第一个参数接受的参数,第二个指定的名称,第三个参数默认值,第四个参数水明
 
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
