@@ -87,17 +87,19 @@
     * 返回值列表，可以不声明变量，也可声明变量 比如（x int, y string）=>(int, string)
   * golang中函数也是一种数据类型。使用方式： var 变量名 = 函数名 如： var f = add[^3]
     * 函数可以作为形参。函数式编程。
-  * 自定义类型type
-    * 语法 type <b>自定义数据名</b>  <b>数据类型</b>
-    * 虽然给指定的类型命名了，但是如果要转换类型，还是必须要进行类型转换的
-![golangtype](../../images/golangtype.png)
   * init函数 在每个go文件中，都可以定义一个init函数，在golang运行都时候，会先调用init函数
     * 调用顺序  变量定义->init函数->main函数
   * 匿名函数（不是匿名类）
     * 使用方式一  var functionInterface = func(i int, ii int) int { return i + ii }  ;functionInterface(1, 2)
     * 使用凡事二  func(i int, ii int) int { return i + ii }(1, 2) // 此种方式直接就调用了.
 ![golananonymousfunc](../../images/golananonymousfunc.png)
-  * 闭包 ？！ 我没研究透
+  * 闭包 ? 本次理解,其实就是函数式编程,闭包是函数和它所引用的环境.(先理解到这里)
+* 自定义类型type
+  * 语法 type <b>自定义数据名</b>  <b>数据类型</b>
+    * 定义结构体 type Student struct
+    * 定义等价类型,类似于取别名(虽然给指定的类型命名了，但是如果要转换类型，还是必须要进行类型转换的) type name string
+    * 定义接口 type Personer interface
+    * 定义函数 type handler func (name string) int , 这是golang的函数,类似java8中的函数式编程,使用的时候可以具体体验
 * defer函数延迟加载：函数执行完毕后会调用。
   * defer后面必须是function。
   * defer可以声明多次，并按照声明的顺序，以`栈`的方式存贮，并且入栈时，相应的值也会copy，类似函数传参
@@ -115,7 +117,7 @@
   * defer，panic，errors，recover
     * panic == excepiton
     * defer == finally
-    * recover == catch
+    * recover == catch  注意:recover只有在defer调用的函数中有效。
     * errors.new 可以自定义生成一个error类型的值,表示一个错误.
   * golang处理异常的方式不太一样,
     * 因为没有try区块,所以java中使用try-catch,在golang中使用的是defer function(){recover()},通过recover()来恢复线程.s
@@ -140,7 +142,7 @@
   * string和slice,string本质上是一个byte数组,因此string也可以进行切片处理
     * string是不可变类型,不像普通数组,可以替换某一个值,如果要修改,重新赋值一个把.
 * map数据类型
-  * 语法声明 var param map[keytype]valuetype
+  * 语法声明 var param map[keytype]valuetype, map初始值是nil,所以如果使用必须make一下.
   * key的类型,可以是基本类型,指针,channel,还可以是只包含前几个类型的接口,结构体,数组,注意切片,map和function无法作为key,因为无法使用==来判断.
   * 删除,map没有clear方法,只能通过遍历key来删除全部元素,或者是直接赋值给一个新map,让gc帮助删除
   * map中的key存放顺序是无序的,每次遍历,取得值的顺序都是不同的.
@@ -186,7 +188,7 @@
   * 如果实现了一个接口中所有的方法,则认为是实现了该接口.(怎么在IDE中找到关系呢?)
   * 接口的实现体,不仅仅是stuct,只要是自定义的 `type` 类型就都可以实现接口
   * 接口是一种引用类型.(结构体是值类型)
-  * 空接口 interface{}, 表明了所有的类型都实现了空接口.作用类似java中的Object类.空接口可以赋值为任何结构体(或type类型的数据)
+  * 空接口 interface{}, 表明了所有的类型都实现了空接口.作用类似java中的Object类.空接口可以赋值为任何结构体(或type类型的数据),空接口可以转换其他类型,比如t.(string)或者t.(error)或者t.(type)等等.这点很重要,我马上去试试看
 ![golananonymousfunc](../../images/golang_emptyinterface.png)
   * golang中`当一个接口继承多个接口时,如果有相同当接口`,怎编译不会通过,java则没有影响
 ![golananonymousfunc](../../images/golang_extends_samefunc.png)
@@ -205,6 +207,25 @@
   * os包中的全局切片变量Args,设置Args,代表了命令行中接受的参数.
   * 使用flag包中的方法.
     * 比如flag.StringVar(&user,"u","","mysql登陆用户名参数")方法,第一个参数接受的参数,第二个指定的名称,第三个参数默认值,第四个参数水明
+* 单元测试(UnitTest)
+  * 文件名称,必须以`_test.go`结尾.
+  * 测试用例函数必须以`Test`开头
+  * 方法内的形参,必须是`*testing.T`,比如,TestAdd(t *testing.T)
+  * 运行指令 go test或者 go test -v,前者只有错误才会输出日志,后者都会输出日志.
+  * 当出现错误的时候,可以使用t.Fatailf来格式化输出错误信息
+  * t.Logf方法可以输出响应的日志.
+  * 测试单个文件: go test -v cal_test.go cal.go
+  * 测试单个方法: go test -v -test.run TestAdd
+* goroutline(叫协程,协助的线程)
+  * 并行:多线程在单核上运行;并发:多线程在多核上运行.
+  * go主线程(与java中的模型一样,是真的底层硬件级别的内核线程)可以挂起多个协程,通过这句话的描述就知道golang的多线程是建立在主线程上,是一种逻辑线程,非常轻量.
+    * 有独立的栈空间
+    * 共享程序存贮空间
+    * 调度由用户控制(内核线程由cpu调度.)
+    * 是轻量级的`线程`
+  * 使用方式 go f(args)[^6] , 其实是个语法糖,真正是这么调用的runtime.newproc(size, f, args)
+  * runtime包,对于并发还是非常重要的. 比如:runtime.NumCPU()获取cpu核数的方法.
+  * 
 
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
@@ -212,3 +233,4 @@
 [^3]: 注意，这里带函数不能带括号，带括号代表了调用函数，不带括号才是声明函数
 [^4]: 注意，区分大小写的比较是==，不区分是EqualFold
 [^5]: 左闭右开区
+[^6]: f,指的是函数名称,args,指的是参数
