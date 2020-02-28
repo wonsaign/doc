@@ -225,8 +225,33 @@
     * 是轻量级的`线程`
   * 使用方式 go f(args)[^6] , 其实是个语法糖,真正是这么调用的runtime.newproc(size, f, args)
   * runtime包,对于并发还是非常重要的. 比如:runtime.NumCPU()获取cpu核数的方法.
-  * 
-
+* channel(管道)
+  * 定义/声明 `var 变量名 chan 数据类型`channel是引用类型,必须初始化才能写入数据,即make后才能使用,管道是有数据类型的.
+    * var intChan chan int
+    * var mapChan chan map[int]string
+    * var perChan chan Person
+    * var perChan2 chan *Person
+  * 管道`var intChan chan int = make(chan int,3)`
+    * 写入数据 : intChan<- 3
+    * 读取数据 : num := <-intChan
+  * 管道可以使用close方法关闭.`已经关闭的管道仍然是可以读取数据的,但是不能再写入.`
+  * channel支持for range遍历
+    * 遍历时,管道没有关闭,则会出现阻塞异常deadlock错误,不是因为管道没有关闭不能读入,而是没有关闭的管道会一直读取,当没有数据的时候就会出现deadlock
+    * 遍历时,管道关闭,则遍历完成后,就会退出遍历.
+    * for range管道时候,因为管道无下标,所以不会有`index`
+    * 管道可以声明成只读和只写,有点就是防止误操作.
+      * var chan2 chan<- int 只写int管道
+      * var chan3 <-chan int 只读int管道
+    * 使用select case可以解决从管道中读取数据的阻塞问题.(如果管道未关闭,一直读取会报deadlock错误,因为一直读取,使用select时候,当管道没有数据的时候,会从default中获取值,而不用关闭管道)
+    * 可以在go携程中使用defer + recover ,以保证错误不会导致主函数停止.
+  * 反射.
+    * 基本介绍
+      * `运行时`获取变量的各种信息,比如变量的类型,值
+      * 如果反射是结构体变量,还可以获取到结构体本身的信息()
+* IDE篇幅
+  * 使用vscode编译器.
+  * classpath配置ok
+  * 好像只有写上注释才会给提示
 
 [^1]: 使用“+”连接字符串，但是如果字符串过于长的时候，换行的时候，`必须将符号放在末尾`，因为golang会默认在尾部补充“;”
 [^2]: 当string不能转换为其他有效当数字时候，如“hello”，则会变成默认值0

@@ -12,3 +12,6 @@
 
 * UNION ALL 相同列出现多次， UNION相同列出现一次
 * INTERSECT 交集  EXCEPT 差集 
+
+## SQL索引
+* 索引是什么?简单来讲就是书的目录,实际上是指排好序的数据机构(二叉树,B-Tree,Hash,红黑树)
