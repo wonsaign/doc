@@ -57,7 +57,7 @@
   * 指针，存贮的是变量在内存中的地址
   * 声明方式 以int指针为例  var ip *int8  // 注意指针无法显示的赋值地址，暂时我还没学会
   * 为了说明指针，下图说明（指针变量也是‘值’，存贮指针的‘值’，也是有地址的。）
-![pointexplain](../../Images/pointexplain.jpeg)
+![pointexplain](../../Images/programming/go/pointexplain.jpeg)
 * 运算符
   * 与java不同的是，不支持i=i++，因为golang设计理念比较简介，减少容易产生歧义的地方。并且只支持i++，不支持++i
   * golang不支持三元运算符。
@@ -73,9 +73,9 @@
 * 包 import
   * 在import包时，路径从`$GOPATH目录下是src`开始
   * golang导入的是`包名`,而不是文件名.
-![packagealias](../../Images/golang_import1.png) 
+![packagealias](../../Images/programming/go/golang_import1.png) 
   * 如果包名过长，可以起别名。
-![packagealias](../../Images/packagealias.png)
+![packagealias](../../Images/programming/go/packagealias.png)
 * 值传递和引用传递
   * 不管是值传递还是引用传递，传递的都是变量的copy，不同的是值传递是copy的值，引用传递copy的是地址，地址效率高，因为地址长度小，占用空间小，copy时间短。
 * 函数
@@ -92,7 +92,7 @@
   * 匿名函数（不是匿名类）
     * 使用方式一  var functionInterface = func(i int, ii int) int { return i + ii }  ;functionInterface(1, 2)
     * 使用凡事二  func(i int, ii int) int { return i + ii }(1, 2) // 此种方式直接就调用了.
-![golananonymousfunc](../../images/golananonymousfunc.png)
+![golananonymousfunc](../../images/programming/go/golananonymousfunc.png)
   * 闭包 ? 本次理解,其实就是函数式编程,闭包是函数和它所引用的环境.(先理解到这里)
 * 自定义类型type
   * 语法 type <b>自定义数据名</b>  <b>数据类型</b>
@@ -173,9 +173,9 @@
 * 面向对象编程
   * 封装
   * 继承,golang没有关键字extends,而是直接使用匿名结构体.
-![golananonymousfunc](../../images/golang_extends.jpeg)
+![golananonymousfunc](../../images/programming/go/golang_extends.jpeg)
     * 继承的使用方式,类似于java中内部类的使用方式.
-![golananonymousfunc](../../images/golang_extendstouse.jpeg)
+![golananonymousfunc](../../images/programming/go/golang_extendstouse.jpeg)
   * 多态,golang多态,指的是`接口`多态,java是`抽象类和接口`
 * 方法(不是函数)
   * 方法的声明: func (receiver type) methodName(参数列表)(返回值列表)
@@ -189,16 +189,16 @@
   * 接口的实现体,不仅仅是stuct,只要是自定义的 `type` 类型就都可以实现接口
   * 接口是一种引用类型.(结构体是值类型)
   * 空接口 interface{}, 表明了所有的类型都实现了空接口.作用类似java中的Object类.空接口可以赋值为任何结构体(或type类型的数据),空接口可以转换其他类型,比如t.(string)或者t.(error)或者t.(type)等等.这点很重要,我马上去试试看
-![golananonymousfunc](../../images/golang_emptyinterface.png)
+![golananonymousfunc](../../images/programming/go/golang_emptyinterface.png)
   * golang中`当一个接口继承多个接口时,如果有相同当接口`,怎编译不会通过,java则没有影响
-![golananonymousfunc](../../images/golang_extends_samefunc.png)
+![golananonymousfunc](../../images/programming/go/golang_extends_samefunc.png)
   * 方法,也可是实现接口,但是注意,必须传递方法所要求的类型.
-![golananonymousfunc](../../images/golang_interface.png)
+![golananonymousfunc](../../images/programming/go/golang_interface.png)
 * 断言
   * 对于接口不知道是什么类型的时候,如果想要转换成具体类型,需要使用类型断言(java 中 instanceof)
-![golananonymousfunc](../../images/golang_instanceof.png)
+![golananonymousfunc](../../images/programming/go/golang_instanceof.png)
   * 断言带类型检测,如果转换失败会返回错误.上图
-![golananonymousfunc](../../images/golang_instanceof_check.png)
+![golananonymousfunc](../../images/programming/go/golang_instanceof_check.png)
 * 文件(os包file)
   * 文件类似java,先open,read,close.
     * Reader代表缓冲区,读写大文件的时候时候.

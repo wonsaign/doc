@@ -17,7 +17,7 @@
 * 策略模式和状态模式的区别
   * 策略模式使用的是组合,主要应用在`算法`上;context会将行为委托给当前的状态类
   * 状态模式由Context对象,在对象内随着时间自由切换状态,来改变`行为`,是`自动化`的;context允许随着状态的改变而改变行为
-![statepattern](../Images/statepattern.png)
+![statepattern](../../Images/programming/design/statepattern.png)
 
 #### 观察者模式(对象之间一对多)
 > 在对象的定义之间存在`一对多`的关系,这样一个状态改变,依赖它的其他对象收到通知,并自动更新.
@@ -40,7 +40,7 @@
   * 装饰者按照顺序来装饰,最基层一定是`组件`,装饰的过程不稳定(一旦装饰顺序错误,可能会失败)
   * 装饰者模式,类似组装,类似文学中的`美丽的,性感的,高挑的亚洲女人`-><font color=LightSeaGreen>亚洲女人是组件</font>,其他形容词是`装饰者`
   * java IO 就是典型的装饰者模式()->new FilterInputStream(new BufferedInputStream(new LineNumberInputStream()))，此例子是构造方法传参。
-![strategy](../Images/decorationpattern.png)
+![strategy](../../Images/programming/design/decorationpattern.png)
 
 #### 简单工厂/工厂模式/抽象工厂模式(对象创建过程抽象化)
 > 工厂模式是用来封装对象的创建的
@@ -55,8 +55,8 @@
   * 工厂模式,主要是`继承`,<font color=LightSeaGreen>强调具体产品生产的方式</font>;
   * 抽象工厂,主要是`组合`,<font color=LightSeaGreen>强调不同的对象(抽象产品)之间的组合所产生的不同的<b>概念产品</b></font>,侧重点不同
   * 一般来讲,抽象工厂使用工厂模式的方法实现具体的工厂;工厂模式使用简单工厂的方法作为生产产品的具体过程
-![factory](../Images/factory.png)
-![absfactory](../Images/absfactory.png)
+![factory](../../Images/programming/design/factory.png)
+![absfactory](../../Images/programming/design/absfactory.png)
 
 
 #### 命令模式(通过对请求的封装,使其响应者之间解耦)
@@ -72,8 +72,8 @@
   * 宏命令,在Command接口中,定义一组命令集合,并在execute方法的视线中,逐一调用命令集合中每个命令的execute方法,实现批量命令
   * 队列请求,将实现了Command接口的运算块(实例),放入队列中,此时队列是Invoker,与运算块(命令的实现类)完全解耦,工作队列只需要知道取出命令对象,而不在乎哪个线程来执行运算块(命令的实现类),可有效的把运算限制在固定数目的线程中进行.
   * 日志请求,在命令模式中添加store/load方法,利用对象的序列化实现这些方法,将`命令`缓存在磁盘中.如:当update请求达到时,将其封装为命令接口,并调用UpdateCommandImpl实现类中的store/load方法通过序列化,将当前命令存储在磁盘中;对于高级应用而言,这些技巧可以被扩展到`事务`处理中.
-![commandpattern](../Images/commandpattern.png)
-![commandmyself](../Images/command-by-myself.jpg)
+![commandpattern](../../Images/programming/design/commandpattern.png)
+![commandmyself](../../Images/programming/design/command-by-myself.jpg)
 
 #### 单例模式
 > 无
@@ -127,7 +127,7 @@
   * 其中add,remove,getChild是组合组件Composite相关的操作,因为组合组件Composite包含了一个List<Component>存贮数据,Leaf组件不支持这类方法
   * 可在toString方法中,使用迭代器Iterator来实现递归显示
   * 它以单一责任设计原则换取透明性,透明性就是Composite和Leaf可以一视同仁
-![componet](../Images/componet.png)
+![componet](../../Images/programming/design/componet.png)
 
 #### 代理模式
 >为另外一个对象提供一个替身或占位符以控制对这个对象的访问,主要作用`控制访问`.  
@@ -137,5 +137,5 @@
   * 适配器是改变对象的适配接口;代理模式则实现相同的接口,而代理模式实现的是控制访问
   * 代理模式,控制对象的访问,保护对象避免不想要的访问;装饰者是对接口方法的一种横向扩展
 
-![proxypattern](../Images/proxypattern.png)
-![动态代理](../Images/invocationproxypattern.png)
+![proxypattern](../../Images/programming/design/proxypattern.png)
+![动态代理](../../Images/programming/design/invocationproxypattern.png)

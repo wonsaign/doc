@@ -1,6 +1,6 @@
 ## Mybatis
 * Mybaties使用流程图：
-    ![mybaties构成](../Images/Mybatis的构成.png)
+    ![mybaties构成](../../Images/programming/mybaties/Mybatis的构成.png)
     * `org.apache.ibatis.session.Configuration`去管理Xml中配置文件或JavaBean配置用来生成SqlSessionFactory(接口)，SqlSessionFactory的实现类有两个：
       * SqlSessionManager
       * DefaultSqlSessionFactory（默认使用这个）
@@ -21,7 +21,7 @@
   * ParameterHandler，参数处理
   * ResultHandler是进行最后的数据集封装和返回
     下面是SqlSession内部运行图
-    ![运行图](../Images/SqlSession内部运行图.png)
+    ![运行图](../../Images/programming/mybaties/SqlSession内部运行图.png)
 [^1]: SqlSessionFactory的生命周期是整个Mybaties的生命周期，并且是`单例`的
 [^2]: SqlSessionFactoryBuilder的生命周期是：一旦生成SqlSessionFactory就会结束
 [^3]: 类似Jdbc中的Connection，默认一级缓存的情况下单次请求获得的结果放入缓存，在规定的时间内下次请求从缓存中取，线程不安全，生命周期是：一次数据库请求，并控制实务，每次使用后应当立即关闭

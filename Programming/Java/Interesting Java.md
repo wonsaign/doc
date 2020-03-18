@@ -138,7 +138,7 @@
 * `数组是一种顺序表`.是表结构,划重点.
 * 集合
   * 集合结构图
-  ![collection](../../Images/java_collection.png)
+  ![collection](../../Images/programming/java/java_collection.png)
   * List<?>,称为通配符集合,它可以接受任意类型的集合引用赋值,不能add,但是可以remove和clear,一般用来接受外部集合或者返回一个不知道具体元素类型的集合.
   * 并发容器CopyOnWriteArrayList,简称COW奶牛容器.读写分离,如果是写操作,复制一个新集合,在新集合内进行删除或添加,待一切修正完成后,将其指向新的集合.优点是,`可以高并发的对COW进行读和遍历`,而不需要加锁.
   * 使用COW的注意事项
