@@ -54,6 +54,7 @@ Spring Boot
   * @SpringBootConfiguration->其实就是@Configuration
   * @EnableAutoConfiguration：->@Import(AutoConfigurationImportSelector.class)`它借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器`,AutoConfigurationImportSelector.class的作用就是读取配置spring-boot-autoconfiguration中的spring.factories文件
   ![autoconfig](../../../Images/programming/java/spring/autoconfigurationdefault.png)
+  ![springFactories](../../../Images/programming/java/spring/springFactories.png)
     * @AutoConfigurationPackage->@Import(AutoConfigurationPackages.Registrar.class)作用是：返回了当前主程序类的同级以及子级的包组件。
   * @ComponentScan:它的功能其实就是自动扫描并加载符合条件的组件
 * 下面是原理图
