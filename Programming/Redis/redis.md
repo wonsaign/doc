@@ -1,5 +1,6 @@
 ##Redis 
 > Redis作为一个可基于内存亦可持久化的日志型、Key-Value数据库.
+> redis-cli -h 127.0.0.1 -p 6379 -a pwd 快速连接
 
 #### Redis五种数据类型
 ##### String
@@ -148,3 +149,52 @@
     SINTER os:android cpu:brand:inter ram:8G ->{P30 mi-6x}
   ```
     ![图1](../../Images/programming/redis/flter_condition.png)
+
+#### Redis其他应用
+##### 分布式锁
+* 回顾一下,分布式锁为什么需要?
+![分布式锁](../../Images/programming/redis/分布式锁.png)
+* Redis集群搭建(只有3.0版本以后才支持)
+  * 第一步 在/usr/local下创建文件夹 redis-cluster,然后在其下面创建6个文件夹.
+    ```
+    1. mkdir -p /user/local/redis-cluster
+    2. mkdir 8001,mkdir 8002,mkdir 8003,mkdir 8004,mkdir 8005,mkdir 8006
+    ```
+  * 第二步 把之前的redis.conf配置文件copy到8001下,修改如下内容
+    ```
+    1. daemonize yes (守护线程启动,就是后台启动)
+    2. port 8081(分别对每个机器对端口号进行配置)
+    3. bind 192.168.1.10(必须要绑定当前机器的ip,这里方便redis集群定位机器,不绑定可能会出现循环查找集群节点机器的情况)
+    4. dir /user/local/redis-cluster/8001(指定数据文件存放位置,必须要指定不同的目录位置,不然会丢失数据)
+    5. cluster-enable yes(启动集群模式)
+    6. cluster-config-file nodes-8001.conf(这里800x最好和port对应上)
+    7. cluster-node-timeout 5000 (5秒超时)
+    8. appendonly yes(打开AOF持久化)
+    ```
+  * 第三步 把修改后的配置文件,分别copy到各个文件夹下,注意每个文件要修改第2,4,6项的端口号,可以批量修改
+    ```
+    * %s/源字符串/目的字符串/g
+    ```
+  * 第四步 由于redis集群需要使用ruby命令,所以我们需要安装ruby
+    ```
+    1. yum install ruby
+    2. yum install rubygems
+    3. gem install redis --version(安装redis 和 ruby的接口)
+    ```
+  * 第五步 分别启动6个redis实例,然后检查是否启动成功
+    ```
+    1. /user/local/redis/bin/redis-server /usr/local/redis-cluster/800*/redis.conf
+    2. ps -ef|grep redis
+    ```
+  * 第六步 在redis3的安装目录下执行redis-trib.rb命令创建整个redis集群
+    ```
+    1. cd /user/local/redis3/src
+    2. ./redis-trib.rb create --replicas 1 192.168.10:8001 192.168.10:8002 192.168.10:8003 192.168.10:8004 192.168.10:8005 192.168.10:8006 (注意 --replicas 1 ,这个 ‘1’ 是master/slave的比值,因为我们每个节点只有1个主节点和从节点,所以比值是1,如果是1个主和2个从,那么就是0.5; 规定的前面的都是主节点8001,8002,8003,后面的都是从节点8004,8005,8006)
+    ```
+  * 第七步 验证集群
+    ```
+    1. 连接任意一个客户端即可: ./redis-cli -c -h -p(-c表示集群模式,指定ip地址和端口号) 如:/user/local/redis/bin/redis-cli -c -h 192.168.1.10 -p 800*
+    2. 进行验证: cluster info (查看集群信息),cluster nodes (查看节点列表)
+    3. 进行数据验证操作
+    4. 关闭集群需要逐个进行关闭,使用命令
+    ```
