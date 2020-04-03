@@ -45,6 +45,7 @@ determine `v`决定;安排;查明
 distrustful `adj`不信任的 
 
 ###E
+eligible `adj`符合条件的
 elimination `n`淘汰;排除;排泄;驱逐;丢弃
 embody `v` 具体表现;包含;收录
 equivalent `adj`相等的,等价的
@@ -123,6 +124,7 @@ sanitize `v`使...消毒
 separation `n`分离;分割;分居
 serve as 充当
 scenario `n`设想,方案
+synthetic `adj` 合成的
 specify `v`具体说明;详列,阐述
 strip `v`扒光衣服
 strip away 揭开;揭露;披露

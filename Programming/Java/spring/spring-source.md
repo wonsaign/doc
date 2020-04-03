@@ -33,10 +33,14 @@
                 1. autowireByName() 获取通过名称注入的属性
                 2. autowireByType() 获取通过类型注入的属性
                 3. applyPropertyValue() 将上述获取的属性填充到BeanWapper中
-   
 
-* spring中自定义标签非常常见，如<tx:annotion-driven>
+图示创建过程
+![BeanLife](../../../Images/programming/java/spring/BeanLife.png)
 
-[^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory[^3],并将当前Bean的标识符放到当前创建的Bean池.
+---
+### AOP
+> 由于很多业务的重复性,所以面向对象编程OOP编程了面向接口编程AOP,而Spring中很多组件都是由SPI[^3]接口实现的.
+
+[^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory(循环依赖验证,是否循环依赖),并将当前Bean的标识符放到当前创建的Bean池.
 [^2]:主要作用是<b>用来在无参构造方法创建依赖Bean之前,从工厂中获取已经创建好的Bean,解决循环依赖</b>  
-[^3]:循环依赖验证,是否循环依赖
+[^3]:有关SPI详情,请见[SPI](../Java%20Core.md)
