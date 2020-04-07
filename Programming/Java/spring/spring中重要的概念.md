@@ -66,10 +66,18 @@ Environment
 * InstantiationAwareBeanPostProcessor的默认实现类图
 ![后置处理器实现类](../../../Images/programming/java/spring/InstantiationAwareBeanPostProcessorImpl.png)
 
+
 #### Aware(词义:醒着,唤醒)
 > 实现此类接口的,按照实现类BeanNameAware,BeanFactoryAware,BeanClassLoaderAware,可以取得一些相对应的资源来设置对应的属性,是一种钩子函数方法.
+
 
 #### ApplicationContext
 > 是BeanFactory多扩展,比其多了很多功能.包括国际化,访问资源,AOP,消息(ApplicationEventPublisher)等等.
 
 ![应用上下文](../../../Images/programming/java/spring/ApplicationContext.png)
+
+
+#### MethodInvocation
+> Spring AOP中,方法增强的切面类图
+
+![应用上下文](../../../Images/programming/java/spring/MethodInvocation大体实现类图.png)
