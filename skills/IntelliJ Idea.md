@@ -12,6 +12,10 @@
     ritar   Iterate elements of array in reverse order 
     itit               Iterate java.util.Iterator
     ```
+*Idea 显示包名百分比和行数
+```
+Coverage 控制台的缘故,找到对应的快捷键,然后打开,去掉选中的项目
+```
 
 * Idea 生成类图
 `[ctrl]+[shift]+[alt]+U`
@@ -41,6 +45,7 @@
             Move Statement Up  无
             Move Line Up  [option]+[⬆️]
             Move Statement Up  [option]+[⬇️]
+            Generate [option]+[command]+[s]
         ->Window
             ->Active Tool Window
                 Show List of Tabs  无

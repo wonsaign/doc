@@ -5,6 +5,7 @@
 
 ###A
 act as 担任...角色
+adapte `v` 适配,改变
 appropriately `adv` 适当的 
 apply `v` 应用
 adequate `adj`足够的;合格的
@@ -26,6 +27,7 @@ complex `adj`复杂的 `n`建筑群;不正常的状态;
 complie `v`编译;编写
 compromise `v`妥协,让步;受怀疑的
 concern `v` 与..相关;担心;担忧
+concrete `vt` 使凝固；用混凝土修筑
 confirm `v`顺从,与一致,遵从
 corresponding adj 相符合,相关的
 contract `n`&`v`对比；反差
@@ -67,11 +69,12 @@ infiltrate `v`潜入
 infrastructure  `n`基础设施
 instruction `n`(计算机)指令;用法说明;指示
 inherit `v` 继承
+interact `vt` 互相影响；互相作用
 internal `adj` 内在的
 internally ad`v`内在地
 interpreter `n`解释程序
 invalid `adj`无效的 `n`病弱者 `v`衰弱者
-invariant `n`不变的,不等式,不变量
+invariant `n`不变的,不等式,不变量 
 involve `v`包含;必须;影响;(使)加入
 
 
@@ -100,11 +103,13 @@ omit `v`省略;忽略
 optionally adv 随意地
 outline  `n`&`v` 描述,概述
 optimization `n`最佳化;优选法,最优
+out-of-the-box `adj` 拆盒即可使用的；开箱即用的
 overcome `v`克服
 
 
 ###P
 partial `adj`部分的
+premature `adj` 早产的；不成熟的；比预期早的
 privilege `n`特权
 promote `v`促进,推动
 proof `n`证据 `adj`能抵御的
@@ -124,12 +129,14 @@ sanitize `v`使...消毒
 separation `n`分离;分割;分居
 serve as 充当
 scenario `n`设想,方案
+side-effects `n`副作用
 synthetic `adj` 合成的
 specify `v`具体说明;详列,阐述
 strip `v`扒光衣服
 strip away 揭开;揭露;披露
 subsystem `n`子系统
 subscribe `n`订阅
+substitution `n` 代替；[数] 置换；代替物
 susceptible `adj`敏感的,易受伤的;敢情丰富的
  
 
@@ -143,12 +150,15 @@ tier  `v` 层,阶,级,等级
 
 
 ###U
+underlying `adj`潜在的；根本的；在下面的；优先的
 unforgeable `adj`不可伪造的
+unintended `adj` 无意识的；非计划中的,意想不到的
 unwary `adj`不警觉的人;不警觉
 
 ###V
-via  `prep` 经由，经过(某一地方);通过，凭借(某人、系统等)
 variety `n`多变的；不同种类的；变体；品种；（计算机）变量
+via  `prep` 经由，经过(某一地方);通过，凭借(某人、系统等)
+violate `v` 违背，违反
 vnlnerability `n`脆弱的
 
 ###W

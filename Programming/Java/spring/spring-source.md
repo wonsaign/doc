@@ -50,6 +50,11 @@
 
 ![BeanLife](../../../Images/programming/java/spring/BeanLife.png)
 
+### Spring 解决循环依赖
+> Spring使用了3级缓存来解决循环依赖
+
+![循环依赖](../../../Images/programming/java/spring/循环依赖.gif)
+
 ---
 ### AOP
 > 由于很多业务的重复性,所以面向对象编程OOP编程了面向接口编程AOP,而Spring中很多组件都是由SPI[^3]接口实现的.
@@ -57,12 +62,29 @@
 ###### AOP代理对象的生成缓存
 > 下面这份流程图是AOP代理对象的生成缓存
 
+* 注意,生成AOP代理对象组件的时候,同时也将事务相关的组件也生成了
+
 ![BeanLife](../../../Images/programming/java/spring/AOP代理对象的生成.png)
 
 ###### AOP代理对象的方法增强
 > 下面这份流程图是AOP代理对象的生成缓存
 
+* 注意,代理对象生成的时候,使用的是递归加责任链模式来生成的代理对象.
+
 ![BeanLife](../../../Images/programming/java/spring/AOP方法增强.png)
+
+
+---
+### Spring Mybatis整合
+> Spring整个Mybatis中生成mapper中主要就是依靠`ImportBeanDefinitionRegistrar`接口和通过干预BeanDefinition来影响最终生成的Bean
+1. 通过**Import注解**引入的实现了**ImportBeanDefinitionRegistrar**接口的MapperScannerRegistrar类,在启动的时候,会将实现类转换成BeanDefinition
+2. **MapperScannerRegistrar实例化**加入Spring容器
+3. 调用实现了BeanDefinitionRegistryPostProcessor接口的类(MapperScannerConfigurer)
+
+> 流程图如下   
+
+![SpringMybatis](../../../Images/programming/java/spring/SpringMybatis.png)
+
 
 [^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory(循环依赖验证,是否循环依赖),并将当前Bean的标识符放到当前创建的Bean池.
 [^2]:主要作用是<b>用来在无参构造方法创建依赖Bean之前,从工厂中获取已经创建好的Bean,解决循环依赖</b>  

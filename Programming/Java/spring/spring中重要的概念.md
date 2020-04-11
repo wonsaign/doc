@@ -72,12 +72,115 @@ Environment
 
 
 #### ApplicationContext
-> 是BeanFactory多扩展,比其多了很多功能.包括国际化,访问资源,AOP,消息(ApplicationEventPublisher)等等.
+> 是BeanFactory多扩展,比其多了很多功能.包括国际化,访问资源,AOP,消息(ApplicationEventPublisher)等等.常用的两个类是ClassPathXmlApplacationContext和AnnotationConfigApplacationContext
 
 ![应用上下文](../../../Images/programming/java/spring/ApplicationContext.png)
+
+##### AbstractApplicationContext
+* 实现类默认的功能,其中最重要的就是`refresh`方法
+    ```
+    @Override
+    public void refresh() throws BeansException, IllegalStateException {
+        synchronized (this.startupShutdownMonitor) {
+            // Prepare this context for refreshing.
+            // 准备刷新上下文环境
+            prepareRefresh();
+
+            // Tell the subclass to refresh the internal bean factory.
+            // 获取告诉子类初始化Bean工厂
+            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+            // Prepare the bean factory for use in this context.
+            // 对bean工厂进行属性填充
+            prepareBeanFactory(beanFactory);
+
+            try {
+                // Allows post-processing of the bean factory in context subclasses.
+                // 后置处理器,使用子类去实现该接口
+                postProcessBeanFactory(beanFactory);
+
+                // Invoke factory processors registered as beans in the context.
+                // 调用我们的bean工厂的后置处理器
+                invokeBeanFactoryPostProcessors(beanFactory);
+
+                // Register bean processors that intercept bean creation.
+                // 调用我们的bean的后置处理器
+                registerBeanPostProcessors(beanFactory);
+
+                // Initialize message source for this context.
+                // 初始化国际化资源处理器
+                initMessageSource();
+
+                // Initialize event multicaster for this context.
+                // 创建事件多播器
+                initApplicationEventMulticaster();
+
+                // Initialize other special beans in specific context subclasses.
+                // 同样的也是子类实现的(springboot也是从这个方法进行启动tomcat的)
+                onRefresh();
+
+                // Check for listener beans and register them.
+                // 把我们的事件监听器注册到多播器上
+                registerListeners();
+
+                // Instantiate all remaining (non-lazy-init) singletons.
+                // 实例化我们剩余的单实例bean
+                finishBeanFactoryInitialization(beanFactory);
+
+                // Last step: publish corresponding event.
+                // 最后容器刷新,发布刷新事件(spring cloud 也是从这里启动的)
+                finishRefresh();
+            }
+
+            catch (BeansException ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Exception encountered during context initialization - " +
+                            "cancelling refresh attempt: " + ex);
+                }
+
+                // Destroy already created singletons to avoid dangling resources.
+                destroyBeans();
+
+                // Reset 'active' flag.
+                cancelRefresh(ex);
+
+                // Propagate exception to caller.
+                throw ex;
+            }
+
+            finally {
+                // Reset common introspection caches in Spring's core, since we
+                // might not ever need metadata for singleton beans anymore...
+                resetCommonCaches();
+            }
+        }
+    }
+    ```
+
+![应用上下文](../../../Images/programming/java/spring/AbstractApplicationContext.png)
 
 
 #### MethodInvocation
 > Spring AOP中,方法增强的切面类图
 
 ![应用上下文](../../../Images/programming/java/spring/MethodInvocation大体实现类图.png)
+
+
+
+#### BeanFactoryPostProcessor(Mybatis的MapperScannerConfigurer就是使用了这个接口)
+> 允许客户修改ApplicationContext容器中的BeanDefinition和通过Context容器中优先级较高bean工厂改变属性值的`工厂钩子`
+> 对于系统管理员自定义配置文件非常有用,它实现了一种开箱即用的解决方法.
+> BeanFactoryPostProcessor可以影响和修改BeanDefinition,但不会影响Bean实例.可能会使不成熟的bean实例,违背容器原则引起不可预期的副作用.如果Bean实例确定要干预影响,考虑实现BeanPostProcessor接口.
+
+简单来讲,BeanFactoryPostProcessor可以影响生成的BeanDefinition,从而影响BeanFactory生成Bean实例.
+
+#### ImportBeanDefinitionRegistrar
+> 通过实现这个接口,可以向spring容器中加入BeanDefinition(无需使用@Component注解)以便可以向Spring容器中添加Bean实例.
+
+
+#### BeanDefinitionRegistry(Bean定义登记处)
+> 仅仅是用来存放BeanDefinition的登记处,实际上在默认的实现类(DefaultListableBeanFactory)中,就是:(Bean定义Map)
+> private final Map《String, BeanDefinition》 beanDefinitionMap = new ConcurrentHashMap《》(256);
+> 那么这个接口的作用就是拥有权限向里面beanDefinitionMap注册BeanDefinition,或者获取BeanDefinition
+
+* 官方文档是这么说的:The standard BeanFactory interfaces only cover access to a fully configured factory instance.
