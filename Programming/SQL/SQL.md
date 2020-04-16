@@ -53,8 +53,10 @@
     但是innodb不同,innodb主键的B+tree叶子节点是存贮的完整的单条行的数据,数据和索引在一起,所以被称为聚集索引.
   * 辅助索引,叶子节点存储的是主键的值.数据一致性,减少空间.
   ```
-  
-* 使用DESC或者EXPLAIN查看SQL的执行计划时候,会有几个关键`列`
+* 使用DESC或者EXPLAIN查看SQL的执行计划时候,会有`id`这个列,这个**列**
+  `数字越大越先执行`
+  `同样的数字从上往下执行`.
+* **使用DESC或者EXPLAIN查看SQL的执行计划时候,会有几个关键`列`**
   ```
   * type(从上至下,越来越好)
     * all 未执行索引.
@@ -65,8 +67,43 @@
     * const 只是理想类型，基本达不到
     * system 只是理想类型，基本达不到
   * key 执行索引 会显示索引名字
-  * key_len 执行索引的长度(如果是联合索引,可以根据key_len执行的长度,判断执行了几个索引条件)
-  * extra (额外的)如果使用排序的时候,这里会出现: filesort,filesort是非常耗时的,所以常用的优化手段是:将排序列与查询条件列做连个索引,并且条件列放在联合索引的后面,比如index(condiA, orderB)
+  * key_len 执行索引的长度(如果是联合索引,可以根据key_len执行的长度,判断执行了几个索引条件),如果是联合索引可以帮助查看具体执行了哪些索引字段
+    * 计算公式
+    * 字符串 
+      * char(n) n字节长度
+      * varchar(n) 2字节存贮字符串长度,如果是utf-8 则长度是3n+2
+    * 数值类型
+      * tinyint  1字节
+      * smallint 2字节
+      * int 4字节
+      * bigint 8字节
+    * 时间类型
+      * date 3字节
+      * timestamp 4字节
+      * dateime 8字节
+    * 如果字段允许为Null,则需要1字节记录是否为Null.
+  * rows 行数(这个是估计值,对比真实的数据比较相近,但不是真实的数据)
+  * ref
+    * const(常量)
+    * file_name(字段名)
+  * extra (额外的)
+    * using index : 查询的列是索引了列,覆盖索引(Select关键字后的字段是索引字段.)
+    * using where : 查询的列,不是索引列
+    * using index condition : 查询的列不完全是索引了列,where条件是前导列(联合索引的第一个就是前导列)范围查找.
+    * using temporary: 使用临时表.这种情况一般要优化.
+      * 使用distinct去重的时候,如果去重列是索引列,则是using index,否则就是using temporary.(优化原则,字段加索引.)
+    * filesort,filesort是非常耗时的,所以常用的优化手段是:将排序列与查询条件列做连个索引,并且条件列放在联合索引的后面,比如index(condiA, orderB)
+    * Select talbes optimized away: 使用某些聚合函数(max,min)来访问存在索引的某个字段.
+    * ...
+  ```
+* **filesor文件排序原理详解**
+  ```
+  使用sort buffer排序(默认大小1M)
+  *单路排序: 一次性取出满足条件行所有的字段,然后放在sort buffer中进行排序,使用trace工具可以看到sort_mode信息里是<sort_key,additional_fields>或者<sort_key,packed_additional_fields>
+  *双路排序(又叫回表排序): 是先根据条件取出相应的`排序字段`和`可以直接定位行数据的行id`,然后在sort buffer中进行排序,排序完后需要再次取回其他需要的字段;trace工具可以看到sort_mode信息里是<sort_key,rowid>
+  *Mysql可以通过比较系统变量max_length_for_sort_data(默认是1024字节)来和需要查询的字段总长度来比较选择使用那种排序.
+  max_length_for_sort_data > 查询的总字段长度  单路排序
+  max_length_for_sort_data < 查询的总字段长度  双路排序
   ```
 * Innodb推荐使用数字,因为数字的排序要比UUID的排序简单,占用空间少.
 * Innodb推荐自增主键,因为B+Tree是排序树(Balance Tree),叶子节点是经过排序的,使用自增新增的数据会放在后面,不会分叉,可以提高索引的插入速度.
@@ -85,6 +122,7 @@
 
 
 ## SQL索引优化
+### 普通查询
 * 使用union all 来代替 IN 或者 OR 是因为将 range 变为 ref,从而加快速度.
 * 如果有`order by` 或者 `group by` 或者 `distinct`时,那么会额外的使用filesort进行排序浪费性能,最好的方式是使用`联合索引`,将排序字段作为联合索引的后面
   ```
@@ -92,7 +130,12 @@
     那么建立索引就要使用 
     alter table table1 add key 'combineIndex'('a','b');
   ```
-* group by having , having后面的条件是不会走索引的.所以优化是,,,
+* group by和order by的优化条件是一毛一样的.
+  ```
+  本质上是先排序后分组,遵照索引创建顺序的最左前缀法则.
+  对于group by的优化,如果不需要排序可以添加order by null禁止排序.* 注意此方法对sqlserver不起作用,因为sqlserver已经默认不排序了.
+  ```
+* group by having , having后面的条件是不会走索引的.所以优化是,尽量将条件写在`where`里.
 * 联合索引如果有范围索引（between,in,or,> < >=),只会走range索引,后面的索引条件不会走,所以range索引条件放在最后面执行.
 * 查询条件上进行运算是不会走索引的,另外`使用函数`也是不走索引的.
   ```
@@ -100,7 +143,119 @@
     select * from table1 where id - 1 = 9;
   ```
 * NOT IN 对于辅助索引是不执行的,但是对于聚集索引依然执行.
+* 索引不能使用范围查询后面的列(> = <等等)
+* 尽量使用`覆盖索引`(Select 列都是索引列)
+  ```
+    优化:
+    select index_row where index_row = xxx
+  ```
+* `mysql使用不等于`(!=或者<>)会全表扫描
+* `is null,is not null` 全表扫描
+* `like ‘%xxx’` 不走索引(但是myisam索引引擎会走)或者使用`覆盖索引`
+  ```
+    优化:
+    select index_row where index_row like '%xxx'
+  ```
+* `字符串不加单引号''`,也不会走索引,原因是mysql会默认执行一个函数,所以就不会走了.
+* `少用or或者in`,不一定会走索引.
+* `范围索引查询优化`,内部会有很多评估因素,时而走索引,时而不走索引.[SQL分析](Mysql分析.md)
+### 复杂查询
+* 分页查询优化
+  * 原因:
+  select * from table limit 10000,5 ,`没有使用索引`,`并且是查询了10005行,丢弃了10000行`,所以数据量越大,越消耗性能.
+  * 优化
+    * ~~如果分页是按照自增主键来的,并且没有丢失数据的情况下,可以将分页写成 id > 10000 limit 5.基本上此种优化条件不可用~~
+    * 使用`覆盖索引`
+    ```
+    SELECT * FROM a INNER JOIN (SELECT id FROM WHERE name = 'xxx' LIMIT 10000,5) b ON a.id = b.id
+    ```
+* Join关联优化
+  * 表关联的常见两种算法(假设有两个表,**表A一万条数据**,**表B一百条数据**)
+    * Nested—Loop Join(针对链接有索引的链接字段)
+    ```
+    SELECT * FROM tableA a INNER JOIN tableB b ON a.id = b.id;
+    选择数据量小的表,进行一次全表扫描,比如表b数量只有100行.
+    扫描表b全表100行.
+    取出表b中每行字段id,在表a中进行索引查找100次,表a进行了100行扫描
+    所以总扫描次数是 表b + 表a = 100全表扫描 + 100次索引查找 = 200行.
+    ```
+    * Block Nested—Loop Join
+    ```
+    SELECT * FROM tableA a INNER JOIN tableB b ON a.name = b.name;
+    表b和表a全扫描100 + 10000 = 10100次
+    将表b结果放入join buffer
+    表a的每一条数据与join buff中表b的数据逐行的比较
+    最终次数是:100与10000进行查找,进行 `100 * 10000 + 100 + 10000 次`
+    ```
+  * 优化
+    * 关联字段加索引,尽量使用Nested—Loop Join算法
+    * 小表驱动大表,写多表链接的sql时候,明确知道哪张是小表,写成straight_join写法固定链接驱动方式,省去mysql优化器自己判断的时间.但是一般情况不要用.
+    ```
+      straight_join只是适用于inner_join,不适用left join 和 right join
+      SELECT * FROM tableB b STRAIGHT_JOIN tableA a ON a.`name` = b.`name`;
+      解释一下,表b是小表,表a是大表. 大表,小表指的是参与关联的数据量.
+      小表写在前面,大表写在后面.
+    ```
+* In和Exsits优化
+  * 优化原则:`加索引`;`小表驱动大表`(小的数据集驱动大的数据集)
+  * In tableB的结果集要小于tableA的结果集
+    ```
+      select * from tableA where id in (select id from tableB)
+      等价于:
+      for(select id from tableB){
+        select * from tableA where tableB.id = tableA.id;
+      }
+    ```
+  * Exsits tableA的结果集要小于tableB的结果集
+    ```
+      select * from tableA where id in (select id from tableB)
+      等价于:
+      for(select id from tableA){
+        select * from tableB where tableB.id = tableA.id;
+      }
+    ```
+* Count(*)
+  * Count(1);// 也是扫的非聚集索引,但是因为不会进行解码解析,所以要小于Count(name)
+  * Count(id);// 扫描聚集索引, `一般认为聚集索引存贮的数据比较多,Count的时候其实不如Count非聚集索引快`
+  * Count(name);// 扫描非聚集索引; Count尽量不要count非主键,因为Null会被忽略.
+  * Count(*)
+  * 结论优到劣 count(1)>count(name)==count(*)>count(id)
+  * MySql5.7版本推荐使用count(*)
+  * 优化方案
+    ```
+    1.如果是mysaim存储引擎,极快(但是不支持事务就...)
+    2.如果只是要一个估算值,使用 show table status like 'table_name' 极快.
+    3.将总数维护到Redis里(incr或decr).但是有可能不准,很难保证事务一致性.
+    4.增加数据库计数表.放在一个事务里操作(一个数据库内的,不是分布式事务,容易很多.)
+    ```
+## MySQL锁和事务隔离级别.
+### 锁
+* 从性能上分为乐观锁和悲观锁
+  ```
+  * 乐观锁: 表中加一个字段version,查询出来,跟新的时候,where条件判断版本号是否一致.
+  * 悲观锁:
+    * 读锁:共享锁,针对同一份数据,多个读操作可以同时进行而不会互相影响 read 🔒 write
+    * 写锁:排它锁,当前操作没有完成,阻断其他所有的写锁和读锁. write 🔒 read & write
+  * 从数据操作粒度分: 表锁和行锁.
+  ```
+  * 表锁,每次锁住整张表.开销小,加锁快;粒度大;不会出现死锁,发生锁冲突大概率最高,并发度低;
+  * 行锁,锁一行,开销大,枷锁慢,`会出现死锁`,发生锁冲突度概率最低,并发度最高.
+    InnoDB与MyISAM最大度**两点不同**
+    `支持事务`
+    `支持行级锁`
+### 事务
+* 并发执行会出现度问题.
+  * 更新丢失
+  * 脏读:事务A读取了事务B修改但未commit的数据.
+  * 不可重复读:事务A读取了事务B`修改`的数据.
+  * 幻读:事务A读取了事务B`新增`的数据.
+* 隔离级别
+  * read uncommit
+  * read commit
+  * repeatable ead
+  * serializable
 
 ## 数据库分库
 * 数据库分片,修改scheme.xml文件.
 * 如果有关联表操作,那么分片的表有两种方式:全局表或者ER分片(父子分片)
+
