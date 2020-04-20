@@ -124,6 +124,7 @@ Concurrent Mark Sweep,同步标记清除,以获取最短的“Stop The World”�
 * **G1收集器**
 
 
+
 * Full GC也会回收方法区中的垃圾回收,必须全部满足下面3个条件才会被回收.
   1. 该类的所有实例在堆中都被回收
   2. 加载该类的ClassLoader被回收
