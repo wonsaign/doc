@@ -254,6 +254,7 @@
   * read commit
   * repeatable ead
   * serializable
+![mysql事务](../../Images/programming/sql/Mysql事务.png)
 
 ## 数据库分库
 * 数据库分片,修改scheme.xml文件.
