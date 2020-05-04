@@ -52,6 +52,37 @@
 
 ### Spring 解决循环依赖
 > Spring使用了3级缓存来解决循环依赖
+* 循环依赖只能使用单例和Setter方式单例(默认方式)
+  1. 构造器参数循环依赖,不行.
+    ```
+        因为顺序
+        1.createBeanInstant// 通过反射获取bean实例
+        2.addSingletonFactory // 将创建好的Bean实例放入singletFactory缓存中.
+        3.populateBean// 填充发现依赖.
+        原因:走不到第二步
+        在第一步的时候使用反射的时候,如果是构造器的话,不会加入缓存,而是会继续反射获取,走不到第二步(加入缓存).
+    ```
+  2. Setter方式原型，prototype(多例)不行(只允许单例->mbd.isSingleton())
+    ```
+        boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
+                isSingletonCurrentlyInCreation(beanName));
+        if (earlySingletonExposure) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Eagerly caching bean '" + beanName +
+                        "' to allow for resolving potential circular references");
+            }
+            addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
+        }
+    ```
+* 2级缓存也可以解决,为何要3级缓存呢?
+    ```
+    为啥使用earlySingletObjects?
+    singletFactories是单例工厂(mybatis是典型实现),非常消耗性能.
+    如果是单线程的情况下earlySingletObject确实是多余的步骤.
+    但是请注意在getSingleton方法中,是使用synchronized的,说明容器启动的时候是多线程的.
+    那么每个线程都从singletFactories里getObject显然是非常消耗性能的.
+    所以一旦有一个singletFactories创建好实例后,放入earlySingletObjects缓存,其他线程获取的时候,就不需要再去获取,提高了性能.
+    ```
 
 ![循环依赖](../../../Images/programming/java/spring/循环依赖.gif)
 
@@ -61,10 +92,12 @@
 
 ###### AOP代理对象的生成缓存
 > 下面这份流程图是AOP代理对象的生成缓存
+> 由第五步解析@EnableAspectJAutoProxy注解,将默认代理对象BeanDefinitionMap中
+> 再第十一步,将所有第BeanDefinitionMap全部实例化.
 
 * 注意,生成AOP代理对象组件的时候,同时也将事务相关的组件也生成了
 
-![BeanLife](../../../Images/programming/java/spring/AOP代理对象的生成.png)
+![BeanLife](../../../Images/programming/java/spring/SpringAOP创建代理对象.png)
 
 ###### AOP代理对象的方法增强
 > 下面这份流程图是AOP代理对象的生成缓存

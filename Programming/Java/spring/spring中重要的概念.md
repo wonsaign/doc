@@ -69,6 +69,7 @@ Environment
 
 #### Aware(词义:醒着,唤醒)
 > 实现此类接口的,按照实现类BeanNameAware,BeanFactoryAware,BeanClassLoaderAware,可以取得一些相对应的资源来设置对应的属性,是一种钩子函数方法.
+> 比如BeanFactoryAware的方法void setBeanFactory(BeanFactory beanFactory)可以设置工厂.
 
 
 #### ApplicationContext
@@ -83,52 +84,52 @@ Environment
     public void refresh() throws BeansException, IllegalStateException {
         synchronized (this.startupShutdownMonitor) {
             // Prepare this context for refreshing.
-            // 准备刷新上下文环境
+            // 1准备刷新上下文环境
             prepareRefresh();
 
             // Tell the subclass to refresh the internal bean factory.
-            // 获取告诉子类初始化Bean工厂
+            // 2获取告诉子类初始化Bean工厂
             ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
             // Prepare the bean factory for use in this context.
-            // 对bean工厂进行属性填充
+            // 3对bean工厂进行属性填充
             prepareBeanFactory(beanFactory);
 
             try {
                 // Allows post-processing of the bean factory in context subclasses.
-                // 后置处理器,使用子类去实现该接口
+                // 4后置处理器,使用子类去实现该接口
                 postProcessBeanFactory(beanFactory);
 
                 // Invoke factory processors registered as beans in the context.
-                // 调用我们的bean工厂的后置处理器
+                // 5调用我们的bean工厂的后置处理器
                 invokeBeanFactoryPostProcessors(beanFactory);
 
                 // Register bean processors that intercept bean creation.
-                // 调用我们的bean的后置处理器
+                // 6调用我们的bean的后置处理器
                 registerBeanPostProcessors(beanFactory);
 
                 // Initialize message source for this context.
-                // 初始化国际化资源处理器
+                // 7初始化国际化资源处理器
                 initMessageSource();
 
                 // Initialize event multicaster for this context.
-                // 创建事件多播器
+                // 8创建事件多播器
                 initApplicationEventMulticaster();
 
                 // Initialize other special beans in specific context subclasses.
-                // 同样的也是子类实现的(springboot也是从这个方法进行启动tomcat的)
+                // 9同样的也是子类实现的(springboot也是从这个方法进行启动tomcat的)
                 onRefresh();
 
                 // Check for listener beans and register them.
-                // 把我们的事件监听器注册到多播器上
+                // 10把我们的事件监听器注册到多播器上
                 registerListeners();
 
                 // Instantiate all remaining (non-lazy-init) singletons.
-                // 实例化我们剩余的单实例bean
+                // 11实例化我们剩余的单实例bean
                 finishBeanFactoryInitialization(beanFactory);
 
                 // Last step: publish corresponding event.
-                // 最后容器刷新,发布刷新事件(spring cloud 也是从这里启动的)
+                // 12最后容器刷新,发布刷新事件(spring cloud 也是从这里启动的)
                 finishRefresh();
             }
 
@@ -184,3 +185,21 @@ Environment
 > 那么这个接口的作用就是拥有权限向里面beanDefinitionMap注册BeanDefinition,或者获取BeanDefinition
 
 * 官方文档是这么说的:The standard BeanFactory interfaces only cover access to a fully configured factory instance.
+
+#### BeanDefinitionHolder
+> 我认为是门面模式的包装类,通过一个name和aliases持有一个BeanDefinition
+
+
+#### MetadataReader(接口)
+> Simple facade for accessing class metadata as read by an ASM {@link org.springframework.asm.ClassReader}.
+> 简单的门面能通过ASM以只读的方式获取类中的元数据.
+
+#### ASM(Spring core包org.springframework.asm)
+> 有关ASM相关技术,请跳转连接.[ASM](../ASM.md)
+
+
+
+#### AnnotationAwareAspectJAutoProxyCreator
+> AOP默认的创建者.
+
+![AOP](../../../Images/programming/java/spring/AnnotationAwareAspectJAutoProxyCreator.png)
