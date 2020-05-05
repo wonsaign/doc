@@ -97,15 +97,47 @@
 
 * 注意,生成AOP代理对象组件的时候,同时也将事务相关的组件也生成了
 
-![BeanLife](../../../Images/programming/java/spring/SpringAOP创建代理对象.png)
+![AOP1](../../../Images/programming/java/spring/SpringAOP创建代理对象.png)
 
 ###### AOP代理对象的方法增强
 > 下面这份流程图是AOP代理对象的生成缓存
 
 * 注意,代理对象生成的时候,使用的是递归加责任链模式来生成的代理对象.
 
-![BeanLife](../../../Images/programming/java/spring/AOP方法增强.png)
+![AOP2](../../../Images/programming/java/spring/AOP方法增强.png)
 
+---
+
+### Spring Transaction事务
+* Spring事务三大接口
+  1. PlatformTransactionManager 事务管理器
+  2. TransactionDefinition 事务的一些基础信息，如超时时间、隔离级别、传播属性等
+  3. TransactionStatus 事务的一些状态信息，如是否一个新的事务、是否已被标记为回滚
+
+###### Spring事务-组件生成
+> Spring生成代理对象过程与AOP及其相像,又有些不同
+
+![事务1](../../../Images/programming/java/spring/Spring-Transaction.png)
+
+###### Spring事务-代理对象
+> Spring生成代理对象过程与AOP完全不同,除了前面的使用责任链+递归调用的方式是一样进入的
+> 但是后面的proceed方法完全不同,事务切点只有一个(不像AOP可以后很多After,Before,AfterReturning...),所以责任链+递归只会走一次
+* Spring事务有很多种情况,各个级别之间相互套用情况不同,具体要结合下图具体看代码.
+  1. PROPAGATION_REQUIRED
+  2. PROPAGATION_SUPPORTS 
+  3. PROPAGATION_MANDATORY
+  4. PROPAGATION_REQUIRES_NEW
+  5. PROPAGATION_NOT_SUPPORTED
+  6. PROPAGATION_NEVER
+  7. PROPAGATION_NESTED
+    ```
+    isExistingTransaction(transaction)判断是否存在事务
+    ---
+    一般第一个事务在判断是否存在事务都是False(除非第一个没有事务)走图中粉色图框左边的部分
+    但是方法中嵌套的第二个事务在判断的时候就是True,走图中粉色图框右边的部分
+    ```
+
+![事务2](../../../Images/programming/java/spring/Spring-Transaction方法增强.png)
 
 ---
 ### Spring Mybatis整合

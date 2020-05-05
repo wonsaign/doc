@@ -69,11 +69,13 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 4.  重复上面的步骤,调用所有的BeanFactoryPostProcessors(mybatis)会用这个个.
 
 图示说明
-![后置处理器](../../../Images/programming/java/spring/Spring%20后置处理器.png)\
+![后置处理器](../../../Images/programming/java/spring/Spring%20后置处理器.png)
 
 
 ##### 6 registerBeanPostProcessors
 > 调用我们的bean的后置处理器
+
+![注册后置处理器](../../../Images/programming/java/spring/Spring-注册Bean的后置处理器.png)
 
 ##### 8 initApplicationEventMulticaster
 > 创建事件多播器
@@ -89,7 +91,6 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 2. 调用监听器 doInvokeListener
 3. 方法回调,调用实现了ApplicationListener接口的实现类中的Override方法.
     比如:(ApplicationListener listener, ApplicationEvent event) listener.onApplicationEvent(event);
-
 
 
 

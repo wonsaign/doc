@@ -178,6 +178,9 @@ Environment
 #### ImportBeanDefinitionRegistrar
 > 通过实现这个接口,可以向spring容器中加入BeanDefinition(无需使用@Component注解)以便可以向Spring容器中添加Bean实例.
 
+#### InitializingBean
+>  Interface to be implemented by beans that need to react once all their properties have been set by a {@link BeanFactory}: e.g. to perform custom initialization, or merely to check that all mandatory properties have been set
+> 简单来讲,就是在Bean创建好实例化后,可以给一个钩子,来修改Bean的内容.
 
 #### BeanDefinitionRegistry(Bean定义登记处)
 > 仅仅是用来存放BeanDefinition的登记处,实际上在默认的实现类(DefaultListableBeanFactory)中,就是:(Bean定义Map)
