@@ -12,3 +12,9 @@
 
 ###程序坞在主副屏幕切换
 当使用 mac 连接外置屏幕的时候，把鼠标移到某一个屏幕最底下几秒钟，程序坞就会自动切换到该屏幕.
+
+###时间机器备份
+打开「终端」输入以下命令，关闭系统对时光机器的限流。
+sudo sysctl debug.lowpri_throttle_enabled=0
+打开「终端」输入以下命令，开启系统对时光机器的限流。
+sudo sysctl debug.lowpri_throttle_enabled=1
