@@ -136,6 +136,7 @@
     一般第一个事务在判断是否存在事务都是False(除非第一个没有事务)走图中粉色图框左边的部分
     但是方法中嵌套的第二个事务在判断的时候就是True,走图中粉色图框右边的部分
     ```
+* 当事务和AOP在一起的话,两者都是默认的话,先执行事务,后执行AOP,为啥,因为在找到findCandidate方法的时候,先找的事务,后找的AOP
 
 ![事务2](../../../Images/programming/java/spring/Spring-Transaction方法增强.png)
 

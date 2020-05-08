@@ -1,19 +1,6 @@
 Spring Boot
 ================
-### Spring 
-* Spring IOC
-  没有Spring之前
-  ![依赖](../../../Images/programming/java/spring/对象关系.png)
-  如果依赖稍稍复杂
-  ![复杂依赖](../../../Images/programming/java/spring/复杂的依赖关系.png)
-  Spring容器存在后
-  ![ioc](../../../Images/programming/java/spring/IOC容器.png)
-* Spring 不同版本的特性（spring 4 @Condition）
-  * 1.0 创建了ioc 和 aop （xml注入）
-  * 2.X 增加了注解注入
-  * 3.X 增加了profile mvc更好的支持
-  * 4.X 全面支持jdk1.8，Restful添加，Condition
-  * 5.X webflux 测试增强
+
 ### Spring+SpringMVC 与 SpringBoot
 * SpringMVC dispatcherServlet
   * MVC核心`DispatcherServlet`
@@ -48,15 +35,15 @@ Spring Boot
     * 可以配置其他名字的日志，在yml文件中
   * @ConfigurationProperties，读取application.properties / yml文件中的配置
   * @Profile注解，配置多套配置文件
-### SpringBoot启动原理
-* SpringBoot 启动原理
-* @SpringBootApplication是一个复合注解
-  * @SpringBootConfiguration->其实就是@Configuration
-  * @EnableAutoConfiguration：->@Import(AutoConfigurationImportSelector.class)`它借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器`,AutoConfigurationImportSelector.class的作用就是读取配置spring-boot-autoconfiguration中的spring.factories文件
-  ![autoconfig](../../../Images/programming/java/spring/autoconfigurationdefault.png)
-  ![springFactories](../../../Images/programming/java/spring/springFactories.png)
-    * @AutoConfigurationPackage->@Import(AutoConfigurationPackages.Registrar.class)作用是：返回了当前主程序类的同级以及子级的包组件。
-  * @ComponentScan:它的功能其实就是自动扫描并加载符合条件的组件
-* 下面是原理图
- ![autoconfig](../../../Images/programming/java/spring/boot原理图.png)
 
+
+### SpringBoot源码解读
+> 什么是SpringBoot? 简化配置的Spring
+#### SpringBoot自动装配的过程
+> Spring通过扫描META-INF文件夹下的spring.factories文件,自动扫描对应的组件.
+
+ ![autoconfig](../../../Images/programming/java/spring/SpringBoot注解加载流程.png)
+
+> SpringBoot如何启动的(包含了上面的部分)
+
+ ![autoconfig](../../../Images/programming/java/spring/SpringBoot启动.png)

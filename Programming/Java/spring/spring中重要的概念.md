@@ -206,3 +206,25 @@ Environment
 > AOP默认的创建者.
 
 ![AOP](../../../Images/programming/java/spring/AnnotationAwareAspectJAutoProxyCreator.png)
+
+#### BeanDefinition中的Role属性
+> 代表了其在容器中的角色地位属性
+* 一共有三种
+  1. ROLE_APPLICATION 应用程序中主要的部分,与用户相关的
+  2. ROLE_SUPPORT 作为一个大配置类的支持者
+  3. ROLE_INFRASTRUCTURE 后台角色,与用户不相关的
+* 发现使用的位置是DefaultListableBeanFactory中的registerBeanDefinition,如果允许覆盖,这里打印日志.
+
+![AOP](../../../Images/programming/java/spring/DefaultListableBeanFactory.registerBeanDefinition.png)
+
+
+
+
+---
+#### @Conditional注解
+> @Conditional that only matches when the specified classes are on the classpath
+> 解释就是只有在classpath下能找到特殊的class才会生效.
+
+#### ApplicationEvent事件监听机制
+> 多播放器实际上就是循环ApplicationListener listener中的onApplicationEvent(event)方法触发事件.
+> 好像是观察者默认,将事件发布上去,然后循环里面的事件,一个个的通知.

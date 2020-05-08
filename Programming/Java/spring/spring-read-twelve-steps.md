@@ -31,7 +31,29 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 
 #### onfresh 12 步骤重点解析
 > onfresh 12 步骤的解析
+##### 1 prepareRefresh
+> 这个是比较简单的,就是对环境进行校验.
 
+图示说明
+![准备刷新](../../../Images/programming/java/spring/Spring-prepareRefresh.png)
+
+
+##### 2 obtainFreshBeanFactory();
+> 刷新工厂,内容非常简单,通过CAS获取id
+> 设置序列ID->this.beanFactory.setSerializationId(getId())
+> 这里的工厂是org.springframework.beans.factory.support.DefaultListableBeanFactory
+
+
+##### 3 prepareBeanFactory
+> 为容器(DefaultListableBeanFactory)准备大量的组件
+图示说明
+
+![准备刷新](../../../Images/programming/java/spring/Spring-prepareBeanFactory.png)
+
+##### 4 postProcessBeanFactory
+> 后置处理器,使用子类去实现该接口
+> 空方法,钩子函数
+ 
 
 ##### 5 invokeBeanFactoryPostProcessors
 > 调用我们的bean工厂的后置处理器
@@ -69,13 +91,17 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 4.  重复上面的步骤,调用所有的BeanFactoryPostProcessors(mybatis)会用这个个.
 
 图示说明
-![后置处理器](../../../Images/programming/java/spring/Spring%20后置处理器.png)
+![后置处理器](../../../Images/programming/java/spring/Spring-后置处理器.png)
 
 
 ##### 6 registerBeanPostProcessors
 > 调用我们的bean的后置处理器
 
 ![注册后置处理器](../../../Images/programming/java/spring/Spring-注册Bean的后置处理器.png)
+
+##### 7 initMessageSource
+> 初始化国际化资源处理器
+> 此方法没有特别的绕,很简单.
 
 ##### 8 initApplicationEventMulticaster
 > 创建事件多播器
@@ -93,7 +119,19 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
     比如:(ApplicationListener listener, ApplicationEvent event) listener.onApplicationEvent(event);
 
 
+##### 11 finishBeanFactoryInitialization
+> 实例化我们剩余的单实例bean
+> Spring很多内置的Bean实例一般都是在第五步就会创建了一部分,但是还有一部分是业务代码,事务代码,AOP等等,这些BeanDefinition都会在这11步来完成实例化.
 
+```
+代码就是
+获取所有的BeanDefinition
+List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
+foreach 
+getBean
+```
+
+##### 12 finishRefresh
 
 
 [^1]: 这个类可以通过getImportBeanDefinitionRegistrars方法获取@Import注解的注解类,比如SpringAOP使用@Import(AspectJAutoProxyRegistrar.class),然后将其解析.
