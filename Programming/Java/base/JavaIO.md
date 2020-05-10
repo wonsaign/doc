@@ -3,7 +3,7 @@
 ##### BIO
 > 同步阻塞IO
 
-![经典BIO](../../Images/programming/java/BIO实现流程图.png)
+![经典BIO](../../../Images/programming/java/base/BIO实现流程图.png)
 
 ##### NIO
 > 同步非阻塞IO,一个线程可以处理多个事件,大大提高了线程利用率,减少了线程创建的成本.
@@ -11,7 +11,7 @@
 > 进化版本2:就算使用线程池,但是因为事件太多了,高并发下,连接性大大降低了.是使用两个线程池-->处理连接线程池+处理读写线程池
 
 
-![经典NIO](../../Images/programming/java/经典nio实现流程.png)
+![经典NIO](../../../Images/programming/java/base/经典nio实现流程.png)
 
 
 ##### AIO(NIO2)

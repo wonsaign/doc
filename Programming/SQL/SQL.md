@@ -96,7 +96,7 @@
     * Select talbes optimized away: 使用某些聚合函数(max,min)来访问存在索引的某个字段.
     * ...
   ```
-* **filesor文件排序原理详解**
+* **filesort文件排序原理详解**
   ```
   使用sort buffer排序(默认大小1M)
   *单路排序: 一次性取出满足条件行所有的字段,然后放在sort buffer中进行排序,使用trace工具可以看到sort_mode信息里是<sort_key,additional_fields>或者<sort_key,packed_additional_fields>
@@ -244,6 +244,7 @@
     `支持事务`
     `支持行级锁`
 ### 事务
+> Sql的查询,都必须是走事务的,比喻来讲,事务是管道,必须有管道才能查询数据,获取数据流.
 * 并发执行会出现度问题.
   * 更新丢失
   * 脏读:事务A读取了事务B修改但未commit的数据.

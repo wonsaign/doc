@@ -137,12 +137,18 @@
     但是方法中嵌套的第二个事务在判断的时候就是True,走图中粉色图框右边的部分
     ```
 * 当事务和AOP在一起的话,两者都是默认的话,先执行事务,后执行AOP,为啥,因为在找到findCandidate方法的时候,先找的事务,后找的AOP
+* 注意Spring的事务使用了TransactionSynchronizationManager来保障事务进行的,具体代码就是下图**中的线程挂起方法suspend**,同样的也有图说明了TransactionSynchronizationManager使用了一堆ThreadLocalMap来控制的.why?
+  * 因为事务的生命周期和线程类似,一个事务的生命周期就是一次请求,而线程也是一次方法的执行.
+  * 所以可以使用ThreadLocal来保存当前线程的很多状态(这些状态都是为了当前事务准备的.有关ThreadLocal请跳转[ThreadLocal](../base/ThreadLocal.md))
 
 ![事务2](../../../Images/programming/java/spring/Spring-Transaction方法增强.png)
 
 ---
 ### Spring Mybatis整合
+#### Spring部分
 > Spring整个Mybatis中生成mapper中主要就是依靠`ImportBeanDefinitionRegistrar`接口和通过干预BeanDefinition来影响最终生成的Bean
+> 干预生成的对象是MapperFactoryBean.
+
 1. 通过**Import注解**引入的实现了**ImportBeanDefinitionRegistrar**接口的MapperScannerRegistrar类,在启动的时候,会将实现类转换成BeanDefinition
 2. **MapperScannerRegistrar实例化**加入Spring容器
 3. 调用实现了BeanDefinitionRegistryPostProcessor接口的类(MapperScannerConfigurer)
@@ -151,6 +157,41 @@
 
 ![SpringMybatis](../../../Images/programming/java/spring/SpringMybatis.png)
 
+#### Mybatis部分
+> Spring将Mybatis整合的时候,与原生的Mybatis包有一点不同
+
+* 注意点
+  1. Mybatis中的SqlSessionFactory每次获取的都是局部变量的,而Spring整合将会生成一个SqlSessionTemplate(线程安全的)
+  2. **MapperFactoryBean**创建的SqlSessionTemplate为啥是线程安全的? 因为这里使用了代理.
+     1. 使用了代理
+    ![SqlSessionTemplate](../../../Images/programming/mybaties/SqlSessionTemplate.png)
+     2. 通过内部类代理方法么,**使用SqlSessionUtils.getSqlSession方法**生成SqlSession,下图可以看到SqlSession的生命周期非常短,这又与直接使用SqlSession相同了.
+    ![SqlSessionTemplate-Proxy](../../../Images/programming/mybaties/SqlSessionTemplate-Proxy.png)
+     3. 精辟的总结:**使用代理每次都创建一个新的对象,并且都是用完就干掉,这种思想相当于另外单独开一个线程.父线程是同样的,子线程之间互补影响.**请看下图,是不是很像线程模型.
+    ![SqlSessionTemplate-TheadSafe](../../../Images/programming/mybaties/SqlSessionTemplate-TheadSafe.png)
+     4. **由于上面的特性,实际上mybais的一级缓存就不会生效了**(因为一级缓存的生命周期是SqlSession--一次会话)
+     5. **再由于上面的特性,在同一事务里,由于没有提交释放,所以同一个事务内,多次获取SqlSession其实都是同一个(满足了可重复读的事务特性)**
+  3. SqlSessionTemplate给我的感觉就是一个Wrapper,自己包装了一层,可以按照自己的逻辑进行操作,要说非要template好像也说得过去.Wrapper从名字上来讲,其实并没有完全可以用,template是一个功能完善,各方面多可以使用的.
+
+---
+### SpringMVC
+> 一种非常常用的实图解析模块.
+
+* 原生Sevrlet
+
+时序图如下.
+  ![mvc时序图](../../../Images/programming/java/spring/servlet.png) 
+* SpringMVC 功能特性
+spring mvc本质上还是在使用Servlet处理，并在其基础上进行了封装简化了开发流程，提高易用性、并使用程序逻辑结构变得更清晰
+  1. 基于注解的URL映谢
+  2. 表单参数映射
+  3. 缓存处理
+  4. 全局统一异常处理
+  5. 拦截器的实现
+  6. 下载处理
+
+下面是SpringMVC是时序图
+![mvc时序图](../../../Images/programming/java/spring/mvc.png)
 
 
 [^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory(循环依赖验证,是否循环依赖),并将当前Bean的标识符放到当前创建的Bean池.
