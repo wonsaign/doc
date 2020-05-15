@@ -145,8 +145,15 @@
   2. 偏向锁,当前对象只有一个线程在访问
   3. 轻量级锁,竞争不激烈,交替进行.(竞争线程数量少，锁持有时间短，能通过自旋获取锁),**自旋不会放弃CPU使用权**,自旋次数可以设置.
   ![加锁过程](../../../Images/programming/java/base/轻量级锁自旋.png)
-  4. 重量级锁,会从用户态切换到内核态,消耗比较大.(竞争线程数量多，锁持有时间长),**线程会阻塞挂起**.
+  4. 重量级锁,会从用户态切换到内核态,消耗比较大.(竞争线程数量多，锁持有时间长),**线程会阻塞**.
   * 锁升级....
+
+#### Thread的几种状态
+* Blocked
+A thread that is blocked waiting for a monitor lock is in this state.
+
+* Waiting
+A thread that is waiting indefinitely for another thread to perform a particular action is in this state
 
 #### Java.util.concurrent
 > 由道戈李大师,写的java.util.concurrent,实现了自定义控制锁.
@@ -165,14 +172,21 @@
 ![AQS线程等待+唤醒](../../../Images/programming/java/base/AbstractQueuedSynchronizer-Node.png)
 
 ##### 共享工具1:Semaphore信号量 
+> 信号量,类似限流装置,允许同一时间最多只有N个线程并发
+> 比如Semaphore semaphore = new Semaphore(2);最多只有两个线程并发.
+* 源码流程图
+  * 下面是信号量的`semaphore.acquire()`和`semaphore.release()` 获取许可和释放许可的流程.另外请注意红色箭头,信号量的unpark不一定是通过semaphore.release()调用的,有可能是在`semaphore.acquire()`中的doAcquireSharedInterruptibly()->setHeadAndPropagates调用的
+  ![Semaphore](../../../Images/programming/java/base/Semaphore.png)
+  * 另外下面是信号量,unpark时机,以及注意点,主要是注意`Head结点`的信号灯,以及为何`semaphore.acquire()`中的doAcquireSharedInterruptibly()->setHeadAndPropagates掉用unpark后,`semaphore.release()` 就不会再次调用.
+  ![Semaphore-story](../../../Images/programming/java/base/Semaphore-Story.png)
 
 ##### 共享工具2:CountDownLatch倒计时锁 
 * Countdownlatch是**减法操作**,**不可逆**
   1. 比如声明了10个线程,当前计数器为10 -> CountDownLatch countDownLatch = new CountDownLatch(1)0;
-  2. 并通过await阻塞主线程 -> countDownLatch.await();
+  2. 并通过awaitpark(挂起)主线程 -> countDownLatch.await();
   3. 每个线程完成后调用countDown方法,计数器减1 -> countDownLatch.countDown();
-  4. 当10个线程前部完成,计数器等于0时, await不再阻塞主线程,继续执行.
-* 特点:先阻塞,后放行. while do
+  4. 当10个线程前部完成,计数器等于0时, await不再park(挂起)主线程,继续执行.
+* 特点:先park(挂起),后放行. while do
   ```
     类似的代码含义就是
     Main thread wait();
@@ -194,8 +208,8 @@
 ##### 共享工具3:CyclicBarrier循环屏障
 * Cyclicbarrier是加法操作,**可逆**
   1. 比如声明了10个线程,当前计数器为0,
-  2. 当10个线程每个完成后调用await方法阻塞当前线程,计数器加1
-  3. 当计数器等于10.唤醒所有阻塞的线程继续执行.
+  2. 当10个线程每个完成后调用await方法park(挂起)当前线程,计数器加1
+  3. 当计数器等于10.唤醒所有park(挂起)的线程继续执行.
 * 我觉得多个线程一起执行,达到某个点停下来等待这个,定时任务分配学员.但是我使用了...**CompletableFurther**....
 
 #### 逃逸分析
