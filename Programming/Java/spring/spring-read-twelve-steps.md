@@ -110,6 +110,7 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 ##### 9 onRefresh
 > 同样的也是子类实现的(springboot也是从这个方法进行启动tomcat的)
 * 此方法是空方法,等待用户来实现.
+* SpringBoot的Tomcat就是在这里启动的,具体请详见[springboot](springboot.md)
 
 ##### 10 registerListeners
 > 把我们的事件监听器注册到多播器上

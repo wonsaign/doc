@@ -193,6 +193,10 @@ spring mvc本质上还是在使用Servlet处理，并在其基础上进行了封
 下面是SpringMVC是时序图
 ![mvc时序图](../../../Images/programming/java/spring/mvc.png)
 
+* 从上面的时序图上,我又从请求的源码分析入手,获取到了整个的SpringMVC的处理过程.
+
+![mvc流程图](../../../Images/programming/java/spring/Spring-MVC.png)
+
 
 [^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory(循环依赖验证,是否循环依赖),并将当前Bean的标识符放到当前创建的Bean池.
 [^2]:主要作用是<b>用来在无参构造方法创建依赖Bean之前,从工厂中获取已经创建好的Bean,解决循环依赖</b>  
