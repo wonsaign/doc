@@ -148,12 +148,26 @@
   4. 重量级锁,会从用户态切换到内核态,消耗比较大.(竞争线程数量多，锁持有时间长),**线程会阻塞**.
   * 锁升级....
 
-#### Thread的几种状态
+#### 逃逸分析
+> 如果一个对象只能被一个线程访问到,也就是说当前实例对象的生命周期完全在这个方法线程内，会进行逃逸分析，分析后进行优化，对象的实际就创建在栈内了，减少对象占用内存空间
+
+#### Thread的重点难点
 * Blocked
 A thread that is blocked waiting for a monitor lock is in this state.
-
 * Waiting
 A thread that is waiting indefinitely for another thread to perform a particular action is in this state
+下面是来自stackoverflow中的回答
+Once this thread is notified, it will not be runnable. It might be that other threads are also notified (using notifyAll()) or the first thread has not finished his work, so it is still blocked till it gets its chance. This is called Blocked State. A Blocked state will occur whenever a thread tries to acquire lock on object and some other thread is already holding the lock.
+解释为:
+一旦线程被唤醒,它将不是`可执行的状态`.也许是其他线程也被唤醒了或者第一个线程还没有完成它的工作,因此它将被一直阻塞直到获取机会.
+这种状态被成为阻塞状态.一个阻塞状态将发生在一个线程尝试获取对象锁并且其他线程已经持有了这把锁.
+* Thread.interrupted() 中断线程，并不代表了线程不会运行，而且可以设置的一种状态，可以通过判断线程是否可以中断而跳出死循环
+  * 并发包好像对这个状态很是看中,着重看下.
+* Thread.yield()
+* Thread.sleep() 通过据visvalVM可以看到,sleep的线程不会占有cpu的使用时间.
+  * Thread.sleep(0),意思是让当前cpu放弃一下时间片,让其他线程有机会优先执行,相当于一个让位操作.
+  * 另外synchronized中的管程阻塞队列中的线程也会让出时间片.
+  * 只有for(;;) 和 while(true)这种自旋的才会一直持有cpu的时间片.
 
 #### Java.util.concurrent
 > 由道戈李大师,写的java.util.concurrent,实现了自定义控制锁.
@@ -161,19 +175,22 @@ A thread that is waiting indefinitely for another thread to perform a particular
 * 其基本原理:
   1. 将线程通过Node结点包装,
   2. 然后维护一个双向Node链表控制并发时,其他等待的线程.
-  3. 使用unsafe魔术类,直接越过jvm直接操作操作系统进行CAS操作.
+  3. **使用unsafe魔术类,直接越过jvm直接操作操作系统进行CAS操作.**
+  4. **通过使用线程interrupted属性,来控制判断线程并发,入栈等等等详细操作.**
 * 线程的阻塞和恢复主要使用**Unsafe.park**和**Unsafe.unpark**
 * 下面是AQS中的主要属性,以及ReentrantLock的简单加锁流程
   ![AQS](../../../Images/programming/java/base/ReentrantLock.png)
 
 ##### 独占锁工具1:ReentrantLock 
 > 主要通过CAS原来加维护AQS中的链表,达到同步.
+> 使用阻塞队列,在CLH同步队列用到了node的prev和next
 * 下面是AQS中,ReentrantLock中lock方法,包含`添加等待`(addWaiter),`链表如何连接`的,`同步锁是如何唤醒下一个线程`的
 ![AQS线程等待+唤醒](../../../Images/programming/java/base/AbstractQueuedSynchronizer-Node.png)
 
 ##### 共享工具1:Semaphore信号量 
 > 信号量,类似限流装置,允许同一时间最多只有N个线程并发
 > 比如Semaphore semaphore = new Semaphore(2);最多只有两个线程并发.
+> > 使用阻塞队列,在CLH同步队列用到了node的prev和next
 * 源码流程图
   * 下面是信号量的`semaphore.acquire()`和`semaphore.release()` 获取许可和释放许可的流程.另外请注意红色箭头,信号量的unpark不一定是通过semaphore.release()调用的,有可能是在`semaphore.acquire()`中的doAcquireSharedInterruptibly()->setHeadAndPropagates调用的
   ![Semaphore](../../../Images/programming/java/base/Semaphore.png)
@@ -181,6 +198,7 @@ A thread that is waiting indefinitely for another thread to perform a particular
   ![Semaphore-story](../../../Images/programming/java/base/Semaphore-Story.png)
 
 ##### 共享工具2:CountDownLatch倒计时锁 
+> 使用阻塞队列,在CLH同步队列用到了node的prev和next
 * Countdownlatch是**减法操作**,**不可逆**
   1. 比如声明了10个线程,当前计数器为10 -> CountDownLatch countDownLatch = new CountDownLatch(1)0;
   2. 并通过awaitpark(挂起)主线程 -> countDownLatch.await();
@@ -206,16 +224,77 @@ A thread that is waiting indefinitely for another thread to perform a particular
   * 因为CyclicBarrier是可以循环利用的屏障,而本次业务不需要循环屏障.
 
 ##### 共享工具3:CyclicBarrier循环屏障
+> 使用阻塞队列,在CLH同步队列用到了node的prev和next
 * Cyclicbarrier是加法操作,**可逆**
   1. 比如声明了10个线程,当前计数器为0,
   2. 当10个线程每个完成后调用await方法park(挂起)当前线程,计数器加1
   3. 当计数器等于10.唤醒所有park(挂起)的线程继续执行.
 * 我觉得多个线程一起执行,达到某个点停下来等待这个,定时任务分配学员.但是我使用了...**CompletableFurther**....
 
-#### 逃逸分析
-> 如果一个对象只能被一个线程访问到,也就是说当前实例对象的生命周期完全在这个方法线程内，会进行逃逸分析，分析后进行优化，对象的实际就创建在栈内了，减少对象占用内存空间
+##### 共享工具4:Exchanger线程变量交换，使用极少，有点意思.
+> 暂时没有用到,所以,,尚未仔细研究.
 
 #### Unsafe类
+> Unsafe提供的API大致可分为内存操作、CAS、Class相关、对象操作、线程调度、系 统信息获取、内存屏障、数组操作等几类，下面将对其相关方法和应用场景进行详细介绍。
+* 常用的功能.
+  * 其中申请内存的操作,是在Netty中使用的.零copy...,就是通过申请堆外内存来操作的.
+  * park和unpark,通过查看c++代码发现,park方法一旦发现当前线程有许可证,即刻返回,不再等待.而unpark是先给当前线程设置许可证.
+    * 所以,unpark后调用park方法,并不会使线程变为等待状态.
+    * 但是如果,先park,那当前线程就会变为等待状态,只能由其他线程(或者时间到了后)来解除等待状态.
+![Unfase](../../../Images/programming/java/base/Unfase.png)
+
+#### BlockingQueue阻塞队列
+> 使用的是条件队列.
+> 条件对接是没有用到node的prev和next
+* 阻塞队列的种类
+  * ArrayBlockingQueue 数组阻塞队列
+  * LinkedBlockingQueue 链表阻塞队列
+  * PriorityBlockingQueue 优先级阻塞队列
+  * DelayQueque 优先级支持的,基于时间值的调度队列.
+* 条件队列重中之重
+  * **条件队列最终的Node结点会加入到同步队列(CLH),因为只有这样,才能获取到同步锁(因为阻塞队列使用了RenntrantLock)**
+
+##### ArrayBlockingQueue
+* 未完待续,**太难了**,图只是画了一部分,需要再次仔细来看.
+  ![BlockingQueue](../../../Images/programming/java/base/BlockingQueue-太难了-未完待续.png)
+  
+##### DelayQueque
+* 简易版本的延迟队列,其延迟原来是UNSAFE.park(false/true, time)
+  * UNSAFE.park(**false**, time); 等待一段**纳秒**时间
+  * UNSAFE.park(**true**, time); 等待一段**毫秒**时间
+  * UNSAFE.park(false, 0L); 立即进入等待状态,除非有人unpark,否则一直等待.
+* DelayQueue简略流程图.
+![DelayQueue](../../../Images/programming/java/base/DelayQueue.png)
+
+#### 线程池的几个方法
+* 线程池的5种状态
+  1. running
+  2. stop 有点不同，前者不会接受新任务，会运行队列中的任务,中断线程(Thread.interrupted())
+  3. shutdown 进入stop状态，停止接受新任务，不会运行队列中的任务,中断线程(Thread.interrupted())
+  4. termeneed终结
+  5. tidying
+* 线程池的方法操作.
+  1. execute
+  2. submit ->  RunnableFuture<T> ftask = newTaskFor(task, result);execute(ftask); 最终也对调用execute
+  3. shutdown
+  4. shutdownNow
+* 线程池重要参数
+  * corePoolSize 核心线程池数目
+  * 非核心线程池 maximumPoolSize - corePool (线程用完就消亡)
+  * BlockingQueue
+  * maximumPoolSize 最大线程池数目
+  * RejectionExecutionHandler
+  * keepAliveTime 等待工作的超时时间,如果当前worker数量超过核心线程数目了,那么最多阻塞keepAliveTime的时间.
+  * allowCoreThreadTimeOut 允许核心线程超时.默认是false,如果核心线程闲置的一直存活;如果是true,配合`keepAliveTime`一起使用最大超时等待固定的时间,若没等到则线程消亡.
+* 线程池执行过程.
+  * 下面是线程池对整个执行过程.不是很复杂,重点是理解Worker整个概念.
+  ![ThreadPool](../../../Images/programming/java/base/ThreadPool.png)
+##### 定时任务线程池
+> 定时任务线程是,是基于DelayQueue实现的.
+* 与普通的线程池不同
+  * 在addWorker的时候,普通线程池会带一个任务过去,比如addWork(task,true),而定时任务不会,只会addWork(null,true)
+  * 在(上图)getTask方法获取任务的时候,是从DelayQueue获取的,DelayQueue添加的时候已经做好了排序.
+* 本次暂时不做图,定时任务,基本上是线程池的流程图,加上DelayQueue的综合整理.
 
 
 java中多线程的一些知识点梳理
