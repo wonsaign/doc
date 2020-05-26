@@ -133,6 +133,73 @@ getBean
 ```
 
 ##### 12 finishRefresh
+> 完成刷新.
+* 包含了以下内容
+  1. 清空资源缓存
+  2. 初始化生命周期后置处理器
+  3. 获取生命周期后置器然后onRefresh() // 猜测spring cloud在这里实现的.
+  4. 使用之前创建的时间多播器发布事件. // spring 定时任务
+  5. 存活bean视图注册到容器.
+
+###### 第4步骤:发布事件的例子
+  * Spring定时任务,就是在这里实现的.
+    * ScheduledAnnotationBeanPostProcessor实现了ApplicationListener接口,事件发布的时候会触发onApplicationEvent方法
+    * 这个后置处理器包含的ScheduledTaskRegistrar,通过实现了InitializingBean接口,被调用afterPropertiesSet方法
+        ```
+        public void afterPropertiesSet() {
+            // 最重要的全在这里了.
+            scheduleTasks();
+        }
+        ```
+    * 然后获取TriggerTask/CronTask/IntervalTask类型的定时任务,在这里会调用一个`scheduleTriggerTask`的方法,这个是充电方法
+        ```
+        // 定时任务执行的核心.
+        protected void scheduleTasks() {
+            if (this.taskScheduler == null) {
+                this.localExecutor = Executors.newSingleThreadScheduledExecutor();
+                this.taskScheduler = new ConcurrentTaskScheduler(this.localExecutor);
+            }
+            if (this.triggerTasks != null) {
+                for (TriggerTask task : this.triggerTasks) {
+                    addScheduledTask(scheduleTriggerTask(task));
+                }
+            }
+            if (this.cronTasks != null) {
+                for (CronTask task : this.cronTasks) {
+                    addScheduledTask(scheduleCronTask(task));
+                }
+            }
+            if (this.fixedRateTasks != null) {
+                for (IntervalTask task : this.fixedRateTasks) {
+                    addScheduledTask(scheduleFixedRateTask(task));
+                }
+            }
+            if (this.fixedDelayTasks != null) {
+                for (IntervalTask task : this.fixedDelayTasks) {
+                    addScheduledTask(scheduleFixedDelayTask(task));
+                }
+            }
+        }
+        ```
+    * scheduleTriggerTask方法,就是将定时任务放入`taskScheduler`中,由jdk中的定时线程池来执行任务.
+        ```
+        public ScheduledTask scheduleTriggerTask(TriggerTask task) {
+            ScheduledTask scheduledTask = this.unresolvedTasks.remove(task);
+            boolean newTask = false;
+            if (scheduledTask == null) {
+                scheduledTask = new ScheduledTask(task);
+                newTask = true;
+            }
+            if (this.taskScheduler != null) {
+                scheduledTask.future = this.taskScheduler.schedule(task.getRunnable(), task.getTrigger());
+            }
+            else {
+                addTriggerTask(task);
+                this.unresolvedTasks.put(task, scheduledTask);
+            }
+            return (newTask ? scheduledTask : null);
+        }
+        ```
 
 
 [^1]: 这个类可以通过getImportBeanDefinitionRegistrars方法获取@Import注解的注解类,比如SpringAOP使用@Import(AspectJAutoProxyRegistrar.class),然后将其解析.

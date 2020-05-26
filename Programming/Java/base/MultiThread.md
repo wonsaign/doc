@@ -161,8 +161,13 @@ Once this thread is notified, it will not be runnable. It might be that other th
 解释为:
 一旦线程被唤醒,它将不是`可执行的状态`.也许是其他线程也被唤醒了或者第一个线程还没有完成它的工作,因此它将被一直阻塞直到获取机会.
 这种状态被成为阻塞状态.一个阻塞状态将发生在一个线程尝试获取对象锁并且其他线程已经持有了这把锁.
-* Thread.interrupted() 中断线程，并不代表了线程不会运行，而且可以设置的一种状态，可以通过判断线程是否可以中断而跳出死循环
-  * 并发包好像对这个状态很是看中,着重看下.
+* **interrupt** 中断线程，并不代表了线程不会运行，而且可以设置的一种状态，可以通过判断线程是否可以中断而跳出死循环
+  * interrupt() 它基于「一个线程不应该由其他线程来强制中断或停止，而是应该由线程自己自行停止。」思想，是一个比较温柔的做法，它更类似一个标志位。其实作用不是中断线程，而是「通知线程应该中断了」，具体到底中断还是继续运行，应该由被通知的线程自己处理。
+  * interrupt() 并不能真正的中断线程，这点要谨记。需要被调用的线程自己进行配合才行。也就是说，一个线程如果有被中断的需求，那么就需要这样做：
+    1. 在正常运行任务时，经常检查本线程的中断标志位，如果被设置了中断标志就自行停止线程。
+    2. 在调用阻塞方法时正确处理InterruptedException异常。（例如：catch异常后就结束线程。）
+  * interrupted和isInterrupted(判断线程是否中断)
+    * interrupted() is static and checks the current thread. isInterrupted() is an instance method which checks the Thread object that it is called on.
 * Thread.yield()
 * Thread.sleep() 通过据visvalVM可以看到,sleep的线程不会占有cpu的使用时间.
   * Thread.sleep(0),意思是让当前cpu放弃一下时间片,让其他线程有机会优先执行,相当于一个让位操作.
@@ -259,10 +264,11 @@ Once this thread is notified, it will not be runnable. It might be that other th
   ![BlockingQueue](../../../Images/programming/java/base/BlockingQueue-太难了-未完待续.png)
   
 ##### DelayQueque
-* 简易版本的延迟队列,其延迟原来是UNSAFE.park(false/true, time)
+* 延迟队列,其延迟原来是UNSAFE.park(false/true, time)
   * UNSAFE.park(**false**, time); 等待一段**纳秒**时间
   * UNSAFE.park(**true**, time); 等待一段**毫秒**时间
   * UNSAFE.park(false, 0L); 立即进入等待状态,除非有人unpark,否则一直等待.
+* 原理是使用的C++编写的定时器,最终调用操作系统的函数库,来实现不同的操作.
 * DelayQueue简略流程图.
 ![DelayQueue](../../../Images/programming/java/base/DelayQueue.png)
 
