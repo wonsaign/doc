@@ -177,28 +177,135 @@
   ```
     ![图1](../../../Images/programming/component/redis/flter_condition.png)
 
+#### StringRedisTemplate与RedisTemplate
+> SpringBoot封装了redis模版工具类,下面即使工具类的简单介绍.
+* RedisTemplate中提供了几个常用的接口方法的使用，分别是:
+  ```
+  1 privateValueOperations<K,V>valueOps;
+  2 privateHashOperations<K,V>hashOps;
+  3 privateListOperations<K,V>listOps;
+  4 privateSetOperations<K,V>setOps;
+  5 privateZSetOperations<K,V>zSetOps;
+  ```
+* RedisTemplate中定义了对5种数据结构操作
+  ```
+  1 redisTemplate.opsForValue();//操作字符串 
+  2 redisTemplate.opsForHash();//操作hash
+  3 redisTemplate.opsForList();//操作list
+  4 redisTemplate.opsForSet();//操作set
+  5 redisTemplate.opsForZSet();//操作有序set
+  ```
+* Redis客户端命令对应的RedisTemplate中的方法列表:
+  * **String**
+    | Redis       | RedisTemplate rt   |
+    | --------   | :----- |
+    | set key value        | rt.opsForValue().set("key","value")     | 
+    | get key       | rt.opsForValue().get("key")      |
+    | del key       | rt.delete("key")      | 
+    | strlen key      | rt.opsForValue().size("key")      | 
+    | getset key value      | rt.opsForValue().getAndSet("key","value")     | 
+    | getrange key start end       | rt.opsForValue().get("key",start,end)     | 
+    | append key value       | rt.opsForValue().append("key","value")      | 
+  * **Hash**
+    | Redis       | RedisTemplate rt   |
+    | --------   | :----- |
+    | hmset key field1 value1 field2 value2...       | rt.opsForHash().putAll("key",map) //map是一 个集合对象     | 
+    | hset key field value      | rt.opsForHash().put("key","field","value")     |
+    | hexists key field      | rt.opsForHash().hasKey("key","field")      | 
+    | hgetall key      | rt.opsForHash().entries("key") //返回Map对象      | 
+    | hvals key     | rt.opsForHash().values("key") //返回List对象     | 
+    | getrange key start end       | rt.opsForHash().keys("key") //返回List对象     | 
+    | hmget key field1 field2...      | rt.opsForHash().multiGet("key",keyList)     | 
+    | hsetnx key field value     | rt.opsForHash().putIfAbsent("key","field","value"     | 
+    | hdel key field1 field2     |rt.opsForHash().delete("key","field1","field2")    | 
+    | hget key field      | rt.opsForHash().get("key","field")    | 
+  * **List**
+      | Redis       | RedisTemplate rt   |
+      | --------   | :----- |
+      | lpush list node1 node2..  | rt.opsForList().leftPush("list","node")    | 
+      | lpush list node1 node2..  | rt.opsForList().leftPushAll("list",list) //list是集 合对象   | 
+      | rpush list node1 node2..  | rt.opsForList().rightPush("list","node")    | 
+      | rpush list node1 node2..  | rt.opsForList().rightPushAll("list",list) //list是集 合对象   | 
+      | lindex key index       | rt.opsForList().index("list", index)      |
+      | llen key     | rt.opsForList().size("key")    |
+      | lpop key     | rt.opsForList().leftPop("key")    | 
+      | rpop key     | rt.opsForList().rightPop("key")     | 
+      | lpushx list node      | rt.opsForList().leftPushIfPresent("list","node")    | 
+      | rpushx list node      | rt.opsForList().rightPushIfPresent("list","node ")    | 
+      | lrange list start end       | rt.opsForList().range("list",start,end)      | 
+      | lrem list count value      | rt.opsForList().remove("list",count,"value")     | 
+      | lset key index value       | rt.opsForList().set("list",index,"value")     | 
+  * **Set**
+      | Redis       | RedisTemplate rt   |
+      | --------   | :----- |
+      | sadd key member1 member2...  | rt.boundSetOps("key").add("member1","me mber2",...)    | 
+      | lpush list node1 node2..  | rt.opsForSet().add("key", set) //set是一个集合 对象   | 
+      | scard key     | rt.opsForSet().size("key")   |
+      | sidff key1 key2    | rt.opsForSet().difference("key1","key2") //返 回一个集合对象    | 
+      | sinter key1 key2     | rt.opsForSet().intersect("key1","key2")//同上    | 
+      | sunion key1 key2      | rt.opsForSet().union("key1","key2")//同上   | 
+      | sdiffstore des key1 key2      | rt.opsForSet().differenceAndStore("key1","ke y2","des")   | 
+      | sinter des key1 key2      | rt.opsForSet().intersectAndStore("key1","key2 ","des")     | 
+      | sunionstore des key1 key2     | rt.opsForSet().unionAndStore("key1","key2"," des")     | 
+      | sismember key member      | rt.opsForSet().isMember("key","member")    | 
+      | smembers key     | rt.opsForSet().members("key")    | 
+      | spop key     | rt.opsForSet().pop("key")     | 
+      | srandmember key count      | rt.opsForSet().randomMember("key",count)    | 
+      | srem key member1 member2...      | rt.opsForSet().remove("key","member1","member2",...)     | 
+
+    
 #### Redis其他应用
 ##### 分布式锁
 * 回顾一下,分布式锁为什么需要?
 ![分布式锁](../../../Images/programming/component/redis/分布式锁.png)
 ##### 主从架构
-1. 复制一份redis.conf文件
-2. 将相关配置修改为如下值:
-   1.  port6380
-   2.  pidfile/var/run/redis_6380.pid
-   3.  logfile"6380.log"
-   4.  dir/usr/local/redis‐5.0.3/data/6380
-3. 配置主从复制
-   1. replicaof192.168.0.606379#从本机6379的redis实例复制数据
-   2. replica‐read‐onlyyes
-4. 启动从节点 
-   1. redis‐serverredis.conf
-5. 连接从节点 
-   1. redis‐cli‐p6380
-6. 测试在6379实例上写数据，6380实例是否能及时同步新修改数据
-7. 可以自己再配置一个6381的从节点
+> 主从架构并不能减轻服务器的压力,它是保障的数据安全,放置意外事件导致数据丢失.
+* 搭建过程
+  1. 复制一份redis.conf文件
+  2. 将相关配置修改为如下值:
+     1.  port6380
+     2.  pidfile/var/run/redis_6380.pid
+     3.  logfile"6380.log"
+     4.  dir/usr/local/redis‐5.0.3/data/6380
+  3. 配置主从复制
+     1. replicaof192.168.0.606379#从本机6379的redis实例复制数据
+     2. replica‐read‐onlyyes
+  4. 启动从节点 
+     1. redis‐serverredis.conf
+  5. 连接从节点 
+     1. redis‐cli‐p6380
+  6. 测试在6379实例上写数据，6380实例是否能及时同步新修改数据
+  7. 可以自己再配置一个6381的从节点
+* 主从数据复制原理...重看
+* 主从架构,并没有选举的过程,**slave只不过是备份.**
+##### 哨兵
+> sentinel哨兵是特殊的redis服务，不提供读写服务，主要用来监控redis实例节点。
+![哨兵](../../../Images/programming/component/redis/redis-哨兵.png)
+* 哨兵的搭建过程
+  1. 复制一份sentinel.conf文件 
+     * cpsentinel.confsentinel‐26379.conf
+  2. 将相关配置修改为如下值: 
+     1. port26379
+     2. daemonizeyes
+     3. pidfile"/var/run/redis‐sentinel‐26379.pid"
+     4. logfile"26379.log"
+     5. dir"/usr/local/redis‐5.0.3/data"
+     6. #sentinelmonitor<master‐name><ip><redis‐port><quorum>
+     7. #quorum是一个数字，指明当有多少个sentinel认为一个master失效时(值一般为:sentinel总数/2+ 1)，master才算真正失效
+     8. sentinelmonitor mymaster 192.168.0.60 63792
+  3. 启动sentinel哨兵实例
+     1. src/redis‐sentinelsentinel‐26379.conf
+  4. 查看sentinel的info信息
+     1. src/redis‐cli‐p26379
+     2. info
+  5. 可以自己再配置两个sentinel，端口26380和26381，注意上述配置文件里的对应数字都要修改
 
 ##### 集群
+> 集群可以水平分摊redis服务器的压力,比如之前100g的数据,可以创建5个集群,每个20g,减少服务器压力
+* RedisCluster将所有数据划分为16384个slots(槽位)，每个节点负责其中一部分槽位。槽位的信息存储于每个节点中。
+* Redis集群,水平减轻数据分担,会分配给每个集群一个slot段,当要存贮的key经过计算(HASH_SLOT = CRC16(key)&16384),会得出一个小于16384的值,并将数据存贮在对应slot区域的集群中.
+* Redis集群示意图.
+![集群](../../../Images/programming/component/redis/Redis-集群.png)
 * Redis集群搭建(只有3.0版本以后才支持)
   * 第一步 在/usr/local下创建文件夹 redis-cluster,然后在其下面创建6个文件夹.
     ```
@@ -244,8 +351,43 @@
     4. 关闭集群需要逐个进行关闭,使用命令
     ```
 
-#### Redis缓存击穿
-> 什么是缓存击穿?名称高大上,实际上就是当并发量比较大的时候,当前缓存失效了,直接访问数据库了.数据库承受不了这么大的压力,裂开了.
+#### Redis分布式锁
+* Redisson,使用LUA脚本,是原子性的.
 
+#### Redis缓存设计
+
+##### Redis缓存击穿
+> 什么是缓存击穿?名称高大上,实际上就是查询一个根本不存在的数据,缓存层和存储层都不会命中，通常出于容错的考虑，如果从存储层查不到数据则不写入缓存层。
+* 产生原因
+  * 自身业务代码或者数据出现问题。
+  * 一些恶意攻击、 爬虫等造成大量空命中。
 * 解决方案
-  1. 加锁,查询加锁,只有拿到锁的查询才可以进入数据库查询.(Mysql的二级缓存使用的就是这种方式.)
+  * 缓存空对象.
+  * 加锁,查询加锁,只有拿到锁的查询才可以进入数据库查询.(Mysql的二级缓存使用的就是这种方式.)
+  * 布隆过滤器.
+    * 简单介绍:布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量(位图)和一系列随机映射函数（哈希函数）。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。
+    * 布隆过滤器的优点:可以大量减少使用**空对象**的空间
+  ![Bloom](../../../Images/programming/component/redis/Bloom.png)
+##### Redis缓存失效
+> 大量的缓存,都在同一事件到期,如果此时有大量的请求过来就会导致问题.
+* 产生原因
+  * 带有过期事件的缓存,同一时间大量失效
+* 解决方法
+  * 生成的不能的缓存过期事件使用随机数在30秒内上下波动
+##### Redis缓存雪崩
+> 缓存雪崩指的是缓存层支撑不住或宕掉后，流量会像奔逃的野牛一样，打向后端存储层。
+* 产生原因
+  * 超大并发量
+  * 缓存设计不好，类似大量请求访问bigkey
+* 解决方案
+  * 限流.一般选择多级限流熔断器的策略，让最终到达redis缓存的只有可以接受的qps，不至于击溃缓存
+  * Bigkey，分段思想，拆分取模
+* 热点缓存key重建优化
+  * 开发人员使用“缓存+过期时间”的策略既可以加速数据读写，又保证数据的定期更新，这种模式基本能够满足绝大部分需求。 但是有两个问题如果同时出现，可能就会对应用造成致命的危害:
+    * 当前key是一个热点key(例如一个热门的娱乐新闻)，并发量非常大。
+    * 重建缓存不能在短时间完成， 可能是一个复杂计算， 例如复杂的SQL、 多次IO、 多个依赖等。
+* Redis对于过期键有三种清除策略: 
+  * 被动删除:当读/写一个已经过期的key时，会触发惰性删除策略，直接删除掉这个过期key 
+  * 主动删除:由于惰性删除策略无法保证冷数据被及时删掉，所以Redis会定期主动淘汰一批已过期的key当前已用内存超过maxmemory限定时，触发主动清理策略当REDIS运行在主从模式时，只有主结点才会执行被动和主动这两种过期删除策略，然后把删除 操作”del key”同步到从结点。
+##### Redis分段拆分思想
+* 场景:如果大促商品是同一个商品，那么集群就相当于失效，因为商品key运算过后的都是一个值，只会定位到同一个slot，这时候，就需要对商品进行分段处理，比如pid1234的商品有1000个库存，将pid1234分成10个段，如pid1234-1，pid1234-2等等，每个段存100个库存，降低并发量，思路于concurrentHashmap相似

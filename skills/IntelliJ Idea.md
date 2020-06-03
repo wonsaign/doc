@@ -32,6 +32,8 @@ Coverage 控制台的缘故,找到对应的快捷键,然后打开,去掉选中�
         ->Edit
             ->Find
                 Find  [command]+[F]
+                Replace in Path [control]+[R]
+                Replace ... [command]+[option]+[R]
             Extend Selection  [ctrl]+[shift]+[=]
             Shrink Selection  [ctrl]+[shift]+[-]
             Duplicate Line or Selection [option]+[command]+[⬇️]

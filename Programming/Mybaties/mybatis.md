@@ -43,6 +43,7 @@
 
 * Spring-Mybatis
 > Spring将Mybatis整合的时候,有一点不同
+> 基本上一级缓存是失效的,如何让一级缓存生效,使用事物.
 
 * 注意点
   1. Mybatis中的SqlSessionFactory每次获取的都是局部变量的,而Spring整合将会生成一个SqlSessionTemplate(线程安全的)

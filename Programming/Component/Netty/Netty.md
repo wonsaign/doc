@@ -8,7 +8,7 @@
 * ByteBuff缓冲区,Netty会自己申请一部分连续的内容,方便缓存数据.(是高并发提速的)
 
 IO模型地址:
-[javaIO](javaIO.md)
+[javaIO](../../Java/base/JavaIO.md)
 
 ##### Netty源码分析
 > 下面是netty的源码分析过程
