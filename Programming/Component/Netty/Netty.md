@@ -59,7 +59,7 @@ IO模型地址:
                        1. 所有任务全部执行一遍.
                        
 下面是上面文字的图形版,图太大了.
-![经典BIO](../../../Images/programming/component/netty/Netty-源码.png)
+![Netty](../../../Images/programming/component/netty/Netty-源码.png)
    
 
 ##### Netty重要组件-Pipeline
@@ -75,7 +75,7 @@ IO模型地址:
   * D1的一半和D2+D1的另一半是拆包
 
 ![ChannelHander](../../../Images/programming/component/netty/netty粘包拆包.png)
-* 结果方式
+* 解决方式
   1. 自己增加分隔符(在业务里)
   2. 继承MessageToByteEncoder抽象类
 

@@ -152,9 +152,9 @@
 > 如果一个对象只能被一个线程访问到,也就是说当前实例对象的生命周期完全在这个方法线程内，会进行逃逸分析，分析后进行优化，对象的实际就创建在栈内了，减少对象占用内存空间
 
 #### Thread的重点难点
-* Blocked
+* Blocked(线程状态)
 A thread that is blocked waiting for a monitor lock is in this state.
-* Waiting
+* Waiting(等待其他线程来唤醒,并不是线程的状态.类似RUNNABLE状态)
 A thread that is waiting indefinitely for another thread to perform a particular action is in this state
 下面是来自stackoverflow中的回答
 Once this thread is notified, it will not be runnable. It might be that other threads are also notified (using notifyAll()) or the first thread has not finished his work, so it is still blocked till it gets its chance. This is called Blocked State. A Blocked state will occur whenever a thread tries to acquire lock on object and some other thread is already holding the lock.
@@ -168,6 +168,9 @@ Once this thread is notified, it will not be runnable. It might be that other th
     2. 在调用阻塞方法时正确处理InterruptedException异常。（例如：catch异常后就结束线程。）
   * interrupted和isInterrupted(判断线程是否中断)
     * interrupted() is static and checks the current thread. isInterrupted() is an instance method which checks the Thread object that it is called on.
+    * 下面两个简单小代码,便足以说明问题.
+      Thread.interrupted(); // 静态方法
+      Thread.currentThread().isInterrupted(); // 实例方法
 * Thread.yield()
 * Thread.sleep() 通过据visvalVM可以看到,sleep的线程不会占有cpu的使用时间.
   * Thread.sleep(0),意思是让当前cpu放弃一下时间片,让其他线程有机会优先执行,相当于一个让位操作.
