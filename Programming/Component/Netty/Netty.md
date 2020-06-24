@@ -58,7 +58,7 @@ IO模型地址:
                     2. register0()
                        1. 所有任务全部执行一遍.
                        
-下面是上面文字的图形版,图太大了.
+下面是多线程Reactor模型,上面文字的图形版,图太大了.
 ![Netty](../../../Images/programming/component/netty/Netty-源码.png)
    
 

@@ -10,9 +10,6 @@
 ### 显示隐藏程序坞
 [option] + [command] + [D] 列编辑/列模式
 
-### 允许任何开发者
-sudo spctl --master-disable
-
 ### 查看文件夹属性
 [command] + [i]
 
@@ -38,3 +35,36 @@ sudo sysctl debug.lowpri_throttle_enabled=1
 * Step4
 ![step1](../Images/skills/自动操作4.png)
 * 添加好的工作流的文件位置是: **/Users/wangsai/Library/Services**
+
+
+---------
+
+## Mac启动软件
+
+### Jmeter
+cd到项目到`bin`目录下  
+```
+sh jmeter
+```
+
+### Redis
+```
+Redis cli连接
+redis-cli -h 127.0.0.1 -p 6379 -a pwd 
+
+mac上redis存贮位置
+配置文件也在下面
+/usr/local/Cellar/redis/5.0.7/.bottle
+日志文件存放位置
+/usr/local/var/db/redis/ 
+```
+
+
+## Mac相关设置
+### 鼠标速度
+defaults read -g com.apple.mouse.scaling 查看当前速度
+defaults write -g com.apple.mouse.scaling 6 设置当前速度为6
+
+
+### 允许任何开发者
+sudo spctl --master-disable

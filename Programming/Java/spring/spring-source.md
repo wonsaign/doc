@@ -35,7 +35,7 @@
                 3. applyPropertyValue() 将上述获取的属性填充到BeanWapper中
                
 
->过程中思考使用的设计模式
+> 过程中思考使用的设计模式
 
 * Spring之中使用大量的模版模式,最简单最直接的设计模式,并设计了BeanPostProcess回调方法
 * 由BeanWapper和Definition联合创建实例的过程是工厂模式

@@ -62,7 +62,7 @@
     * all 未执行索引.
     * index 查询全部索引中的数据 (不加条件直接查询索引列 select index_id from table;) 
     * range 检索指定范围的行，查找一个范围内的数据，where后面是一个范围查询 （between,in,or,> < >=); 
-    * ref 非唯一性索引：对于每个索引键的查询，返回匹配的所有行（可以是0，或多
+    * ref 非唯一性索引：对于每个索引键的查询，返回匹配的所有行（可以是0，或多)
     * eq_ref 一般是where condi = param 常见于唯一索引和主键索引
     * const 只是理想类型，基本达不到
     * system 只是理想类型，基本达不到
@@ -167,6 +167,7 @@
     * ~~如果分页是按照自增主键来的,并且没有丢失数据的情况下,可以将分页写成 id > 10000 limit 5.基本上此种优化条件不可用~~
     * 使用`覆盖索引`
     ```
+    // 尽量使用`覆盖索引`(Select 列都是索引列), 自查询中的id就是索引列,所以速度大大提升.
     SELECT * FROM a INNER JOIN (SELECT id FROM WHERE name = 'xxx' LIMIT 10000,5) b ON a.id = b.id
     ```
 * Join关联优化
