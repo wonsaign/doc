@@ -59,6 +59,9 @@ mac上redis存贮位置
 /usr/local/var/db/redis/ 
 ```
 
+### Homebrew
+**/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"**
+
 
 ## Mac相关设置
 ### 鼠标速度

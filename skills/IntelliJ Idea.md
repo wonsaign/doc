@@ -17,6 +17,12 @@
 Coverage 控制台的缘故,找到对应的快捷键,然后打开,去掉选中的项目
 ```
 
+* 出现修改人
+![idea-annotion](../Images/skills/idea技巧出现修改人.png)
+效果如下
+![idea-annotion](../Images/skills/idea行号annotation效果图.png)
+
+
 * Idea 生成类图
 `[ctrl]+[shift]+[alt]+U`
 `[command]+[shift]+[option]+U`

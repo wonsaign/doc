@@ -10,6 +10,7 @@
 * LIMIT 分页
 * UNION ALL 相同列出现多次， UNION相同列出现一次
 * INTERSECT 交集  EXCEPT 差集 
+* REPLACE
 
 ## 磁盘基础知识与MySql
 * 扇区,扇区是磁盘中最小的存贮单位.一般是512b大小.
