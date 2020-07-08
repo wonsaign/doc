@@ -7,8 +7,11 @@
 ### VSCode
 [option] + [shift] + [鼠标左健] 列编辑/列模式
 
+### Idea
+[option] + [鼠标左健]
+
 ### 显示隐藏程序坞
-[option] + [command] + [D] 列编辑/列模式
+[option] + [command] + [D] 
 
 ### 查看文件夹属性
 [command] + [i]
