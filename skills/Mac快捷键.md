@@ -39,6 +39,15 @@ sudo sysctl debug.lowpri_throttle_enabled=1
 ![step1](../Images/skills/自动操作4.png)
 * 添加好的工作流的文件位置是: **/Users/wangsai/Library/Services**
 
+### 根目录创建文件
+1. Mac升级10.15 Catalina，无法在根目录创建文件夹解决办法
+2. 重启电脑，按住 cmd+R进入恢复模式
+   1. 选择顶端的【实用工具】
+   2. 输入命令csrutil disable，关闭SIP 
+   3. reboot 重启
+3. 重新挂载根目录： 【sudo mount -uw /】，接下来划重点：现在已经可以在根目录创建文件夹，**但是，你在根目录创建之后，一旦重启电脑，你创建的目录又是只读权限了**。
+4. 所以，正确的做法是把你需要的目录软链接到根目录, 例如： sudo ln -s /Users/Suvan/data /data
+5. 重新进入恢复模式，重新打开SIP： csrutil enable 
 
 ---------
 
