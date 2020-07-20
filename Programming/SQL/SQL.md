@@ -12,6 +12,25 @@
 * INTERSECT 交集  EXCEPT 差集 
 * REPLACE
 
+## 规模正规的公司SQL细节
+* 为保证数据的唯一性，建立唯一索引UNIQUE INDEX,但是一般写成UNIQUE KEY
+* 数据库的值要填写默认的值
+* 同一部分业务逻辑的字段尽量放在一起，时间类字段尽量放在后面，查询的时候便于查询
+* 时间戳类型，一般是成对儿出现，add_time和update_time,update——time要加上ON UPDATE CURRENT_TIMESTAMP
+```
+  下面是经过多次检查通过的，以后尽量规范
+  CREATE TABLE `boss`.`boss_area_city`  (
+    `id` bigint(20) NOT NULL COMMENT '主键',
+    `city_code` int(11) NOT NULL DEFAULT 0 COMMENT '城市编码',
+    `open_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '开放状态 1开发 0 关闭',
+    `admin_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '操作人id',
+    `add_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_citycode`(`city_code`) USING BTREE
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COMMENT = 'BOSS地区城市开放表';
+```
+
 ## 磁盘基础知识与MySql
 * 扇区,扇区是磁盘中最小的存贮单位.一般是512b大小.
 * 块/簇,windows系统之中叫簇;Linux中叫块(block),每个块/簇都可以包括2、4、8、16、32、64…2的n次方个扇区
@@ -160,6 +179,11 @@
 * `字符串不加单引号''`,也不会走索引,原因是mysql会默认执行一个函数,所以就不会走了.
 * `少用or或者in`,不一定会走索引.
 * `范围索引查询优化`,内部会有很多评估因素,时而走索引,时而不走索引.[SQL分析](Mysql分析.md)
+* `查找是否存在` SELECT count(*) FROM table WHERE a = 1 AND b = 2
+  ```
+    优化后，可减少其他条目的统计。
+    SELECT 1 FROM table WHERE a = 1 AND b = 2 LIMIT 1
+  ```
 ### 复杂查询
 * 分页查询优化
   * 原因:

@@ -8,7 +8,8 @@
 [option] + [shift] + [鼠标左健] 列编辑/列模式
 
 ### Idea
-[option] + [鼠标左健]
+[option] + [鼠标左健] 列编辑/列模式
+[command] + [option] + z  surround with// 超级好用
 
 ### 显示隐藏程序坞
 [option] + [command] + [D] 
