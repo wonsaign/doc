@@ -307,6 +307,7 @@ Once this thread is notified, it will not be runnable. It might be that other th
   * 在addWorker的时候,普通线程池会带一个任务过去,比如addWork(task,true),而定时任务不会,只会addWork(null,true)
   * 在(上图)getTask方法获取任务的时候,是从DelayQueue获取的,DelayQueue添加的时候已经做好了排序.
 * 本次暂时不做图,定时任务,基本上是线程池的流程图,加上DelayQueue的综合整理.
+* 定时任务，里面使用了一个`堆`的数据结构DelayWorkQueue.
 
 
 java中多线程的一些知识点梳理

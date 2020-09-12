@@ -15,13 +15,13 @@ Docker应用容器化
 * `RUN`：会在From指定的基础镜像之上新建一个镜像层来存贮这些安装的内容。
 * `COPY`：将应用相关的文件从构筑上下文中添加到当前的镜像，并新建一个镜像层来存贮。
 * `WORKDIR`：设置工作目录，但是不会新建镜像层。
-* `EXPOSE`：通过TCP对外暴露端口。
+* `EXPOSE`：通过TCP对外暴露端口。 -p
 * `ENTRYPOINT`：指定当前镜像的入口程序。
 * `ADD`：从src复制文件到container的dest路径（外部软件copy到容器内部的指定文件夹位置）
 * `ENV`：用于设置环境变量
 * `CMD`：容器启动时，启动的命令，如果有多个，只会执行最后一个。
 * `USER`：指定用户
-* `VOLUME`:设置挂载点
+* `VOLUME`:设置挂载点 -v
 * `WORKDIR`:切换目录，可以多次切换，类似`cd`命令
 * `LABEL`:定义标签
 * 注意：每一个RUN都会创建一个镜像，但是过大的镜像是不好的，所以可以使用`&&`以及反斜杠(\)来换场，将多个镜像层融合在一个镜像层
@@ -45,6 +45,45 @@ Docker简单命令
 
 docker镜像是由松耦合的只读镜像组成的。就像补丁，比如ubuntu镜像，里面包含了ubuntu，python，security patch三层镜像，并且镜像可以共享
 
+Docker常用命令
+* docker images // 所有镜像
+* docker ps 所有容器
+* docker run -d -v /log:/container-log  -p 91:80 nginx   //启动nginx。 -d后台启动 -p端口号 -v表示目录挂载
+* docker exec -it 容器id /bin/bash  // 进去宿主机
+* docker inspect 容器id
+
+DockerFile构建
+* FROM 从本机/远程拉去一个镜像（本机优先，本机没有就拉远程）
+* docker bulid -t yourApp:yourAppVersion dockerFilePath(比如 docker bulid -t imagesRead:1.0 /data/app/DockerFile)
+
+Docker-compose，统一管理工具，可以将多个组件拼装在一起。
+* 总共分三块儿：
+  1. 工程（project）
+  2. 服务（service）
+  3. 容器（container）
+* 示例：
+  * mysql
+    ```
+    services:
+        mysql:
+        image: mysql:5.7 container_name: mysql
+        command: mysqld ‐‐character‐set‐server=utf8mb4 ‐‐collation‐server=utf8mb4_unicode_ci #覆盖容器启动 后默认执行的启动mysql命令
+        restart: always #关机或者重启机器时，docker同时重启容器，一般mysql服务可以这么设置，保持服务一直都在 environment:
+        MYSQL_ROOT_PASSWORD: root #设置root帐号密码
+        ports:
+            ‐ 3306:3306
+        volumes:
+            ‐ /mydata/mysql/data/db:/var/lib/mysql #数据文件挂载
+            ‐ /mydata/mysql/data/conf:/etc/mysql/conf.d #配置文件挂载 ‐ /mydata/mysql/log:/var/log/mysql #日志文件挂载
+        redis:
+        image: redis:5.0
+        container_name: redis   # 如果是多台机器，这里要注释掉
+        command: redis‐server ‐‐appendonly yes
+        volumes:
+            ‐ /mydata/redis/data:/data #数据文件挂载
+        ports: # 如果是多台机器，这里要注释掉
+            ‐ 6379:6379 # 如果是多台机器，这里要注释掉
+    ```
 
 
 [^1]: 解释一下 `-it`代表了进入容器 `-p`代表了端口号  镜像名是指的是运行的镜像名称  `/bin/bash` 指的是容器运行的进程（如果进入容器后，使用exit退出容器，那么/bin/bash进程也将退出，那么容器也不会存在，因为容器不运行任何进程则无法存在。）若要退出界面，使用 ctrl PQ退出容器。

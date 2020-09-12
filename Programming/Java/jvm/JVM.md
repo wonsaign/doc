@@ -48,7 +48,7 @@ Young GC的过程.(图示中并没有清除垃圾,不过展示了垃圾对象在
   >young -> `eden 80M` `survivor0 10M` `survivor1 10M`
   1. young gc后存活的对象survivor区存放不下,即剩余对象大于10M,进入老年代.
   2. 大对象直接进入老年代,为了避免大对象在suivivor区复制的低效率.可以使用-XX:PretenureSizeThreshold指定大小,超过这个大小直接进入老年代.
-  3. 长期存活的对象会进入老年代:每在survivor区存活一次,年龄加一的“顽固”对象,当达到年龄限制就会进入老年代.可以使用`-XX:MaxTenuringThreshold`来指定年龄,由于是4个bit存贮,所以`默认最大16岁`.
+  3. 长期存活的对象会进入老年代:每在survivor区存活一次,年龄加一的“顽固”对象,当达到年龄限制就会进入老年代.可以使用`-XX:MaxTenuringThreshold`来指定年龄,由于是4个bit存贮,所以`默认最大15岁（0-15）`.
   4. **动态年龄判断机制**.
         ```
         当前对象的survivor区其中一块区域(s0或s1),当一批对象中总大小超过50%当时候(可以使用-XX:TargetSurvivorRatio设置,默认50%),超过的部分会进入老年代.
@@ -95,30 +95,35 @@ Young GC的过程.(图示中并没有清除垃圾,不过展示了垃圾对象在
   年轻代使用复制算法
   老年代使用标记-整理算法
   ```
-* ParNew收集器,多线程收集器,GC时候“Stop The World”
+* ParNew收集器，年轻代收集器,多线程收集器,GC时候“Stop The World”
   ```
   年轻代使用复制算法
   老年代使用标记-整理算法
   ```
-* Parallel Scavenge
+* Parallel Scavenge，默认收集器。
+* Parallel Old，多线程的老年代收集器。
 * **CMS收集器**老年代收集器.
 Concurrent Mark Sweep,同步标记清除,以获取最短的“Stop The World”的时间.
     ```
-      初始标记:“Stop The World”    GC线程标记gc-roots能直接引用的对象,速度快.
-      并发标记:No “Stop The World”  应用程序正常运行和GC线程继续标记并发.(此处占用gc时间的80%时间)
-      重新标记:“Stop The World”    该阶段的任务是完成标记整个老年代的所有的存活对象(此处会产生浮动垃圾:GC线程标记上个阶段由于应用程序和GC线程并发时应用程序新产生的垃圾对象)
-      并发清理:No “Stop The World”  应用程序正常运行和GC线程清理.
+      初始标记:“STW”    GC线程标记gc-roots能直接引用的对象,速度快.
+      并发标记:  应用程序正常运行和GC线程继续标记并发.(此处占用gc时间的80%时间)
+      重新标记:“STW”    该阶段的任务是完成标记整个老年代的所有的存活对象(此处会产生浮动垃圾:GC线程标记上个阶段由于应用程序和GC线程并发时应用程序新产生的垃圾对象)
+      并发清理:  应用程序正常运行和GC线程清理.
+      -------
+      优点：
+      并发收集，低停顿，最耗费时间的并发标记，不会stw，所以用户无感知。
       -------
       容易产生的问题:
-      CPU资源敏感;
-      内存碎片
+      CPU资源敏感，并发收集的时候，会抢占cpu资源;
+      内存碎片 可以使用-XX:+UseCMSCompactAfFullCollection 让jvm执行完标记清楚后再做整理，但是会浪费一些时间
       无法清除'浮动垃圾'
+      执行不确定性，如果上次full gc还没收集完，在并发阶段又再次处罚full gc，会使用Serial收集器，增加了gc时间。可以使用CMSInitiatingOccupancyFraction稍微调大full gc回收的百分比
     ```
   * CMS垃圾收集器参数调整:
     * `-XX:+UseConcMarkSweepGC` 启用CMS
     * `-XX:+UseCMSCompactAtFullCollection` Full GC后做压缩整理(减少碎片)
     * `-XX:CMSFullGCsBeforeCompaction=n`  CMS进行n次full gc后进行一次压缩。如果n=0,每次full gc后都会进行碎片压缩.
-    * `-XX:CMSInitiatingOccupancyFraction=n` 当老年代内存使用达到n%,开始回收。
+    * `-XX:CMSInitiatingOccupancyFraction=n` 当老年代内存使用达到n%,开始回收。默认92%
     * `-XX:+UseCMSInitiatingOccupancyOnly` 如果不指定, 仅在第一次FUll GC用设定的回收阈值.
     * `-XX:+CMSScavengeBeforeRemark` 在使用CMS收集器执行FUll GC之前,先执行一下Minor GC,减少年轻代中的垃圾对象.
   
@@ -131,17 +136,17 @@ Concurrent Mark Sweep,同步标记清除,以获取最短的“Stop The World”�
   * 什么时候会转入老年代与其他的是一样的,不同的是大对象的处理(Humongous)
   * 垃圾收集步骤(使用复制算法,不会产生内存碎片)
     ```
-    初始标记:“Stop The World”    GC线程标记gc-roots能直接引用的对象,速度快.
-    并发标记:No “Stop The World”  应用程序正常运行和GC线程继续标记并发.(此处占用gc时间的80%时间)
-    重新标记:“Stop The World”    该阶段的任务是完成标记整个老年代的所有的存活对象(此处会产生浮动垃圾:GC线程标记上个阶段由于应用程序和GC线程并发时应用程序新产生的垃圾对象)
-    筛选回收:No “Stop The World”  筛选回收阶段对每个region的回收价值和成本进行排序,根据用户希望的GC停顿时间来定制回收计划.
+    初始标记:“STW”    GC线程标记gc-roots能直接引用的对象,速度快.
+    并发标记:应用程序正常运行和GC线程继续标记并发.(此处占用gc时间的80%时间)
+    重新标记:“STW”    该阶段的任务是完成标记整个老年代的所有的存活对象(此处会产生浮动垃圾:GC线程标记上个阶段由于应用程序和GC线程并发时应用程序新产生的垃圾对象)
+    筛选回收:“STW”  筛选回收阶段对每个region的回收价值和成本进行排序,根据用户希望的GC停顿时间来定制回收计划.
     ```
   * G1有三种GC方式
     * young gc: 计算每个region区中回收的时间,如果远小于-XX:MaxGCPauseMilllis(默认200毫秒),则增加年轻代egion区域,当年轻代的所有region区域的回收时间接近-XX:MaxGCPauseMilllis,进行young gc
   ![g1_younggc_hannpen](../../../Images/programming/java/jvm/g1_happen_younggc.png)
     * mixed gc:当老年代占比达到-XX:InitiatingHeapOccupancyPercent参数设置的阀值,年轻代全部gc,老年代部分gc
   ![g1_younggc_hannpen](../../../Images/programming/java/jvm/g1_mixed_gc.png)
-    * full gc:“stop the world”,采用单线程进行标记,清理和压缩整理,空闲一部分Region来使用Mixed GC.这个过程非常耗时.
+    * full gc:“stop the world”,采用`单线程`进行标记,清理和压缩整理,空闲一部分Region来使用Mixed GC.这个过程非常耗时.
   ![g1_younggc_hannpen](../../../Images/programming/java/jvm/g1_full_gc.png)
 
   * G1垃圾器最特别是是,可以**指定**`gc时间`(默认200毫秒).当到达指定时间后回收不完,也会停止回收.在`并发标记`的阶段,会标记每个评估,垃圾回收的价值,每个region垃圾回收的耗时,回收耗时最小的部分,耗时多的放在后面.

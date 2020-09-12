@@ -72,6 +72,11 @@ mac上redis存贮位置
 /usr/local/var/db/redis/ 
 ```
 
+### ZooKeeper
+```
+./zkCli.sh -server 127.0.0.1:2181
+```
+
 ### Homebrew
 **/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"**
 
