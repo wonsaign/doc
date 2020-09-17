@@ -183,6 +183,10 @@ Once this thread is notified, it will not be runnable. It might be that other th
 #### Java.util.concurrent
 > 由道戈李大师,写的java.util.concurrent,实现了自定义控制锁.
 > 其核心是AbstractQueuedSynchronizer(简称AQS)
+* AQS，抽象队列同步器
+  * 包含了锁sync
+  * CLH同步队列,使用自旋锁代替阻塞同步器。
+  * 
 * 其基本原理:
   1. 将线程通过Node结点包装,
   2. 然后维护一个双向Node链表控制并发时,其他等待的线程.

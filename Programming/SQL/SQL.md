@@ -114,6 +114,8 @@
       * 使用distinct去重的时候,如果去重列是索引列,则是using index,否则就是using temporary.(优化原则,字段加索引.)
     * filesort,filesort是非常耗时的,所以常用的优化手段是:将排序列与查询条件列做连个索引,并且条件列放在联合索引的后面,比如index(condiA, orderB)
     * Select talbes optimized away: 使用某些聚合函数(max,min)来访问存在索引的某个字段.
+    * Using temporary 这个也是需要进行优化的。
+    * Using join buffer 循环嵌套。
     * ...
   ```
 * **filesort文件排序原理详解**
