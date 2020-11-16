@@ -14,6 +14,9 @@
 ### 显示隐藏程序坞
 [option] + [command] + [D] 
 
+### 干掉系统升级提示红点
+defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
+
 ### 查看文件夹属性
 [command] + [i]
 
@@ -89,3 +92,9 @@ defaults write -g com.apple.mouse.scaling 6 设置当前速度为6
 
 ### 允许任何开发者
 sudo spctl --master-disable
+
+### Java环境变量
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/ 
+export PATH=$JAVA_HOME/bin:$PATH
+
+echo 'export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/' >> ~/.bash_profile source ~/.bash_profile
