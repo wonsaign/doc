@@ -45,6 +45,22 @@
 Ø  15.复制数据复制和对数据完整性的支持
 ```
 
+#### 优缺点
+##### 优点
+* 为了高效的使用CPU，数据不仅仅按列存储，同时还按向量进行处理；
+* 数据压缩空间大，减少IO；处理单查询高吞吐量每台服务器每秒最多数十亿行；
+* 索引非B树结构，不需要满足最左原则；只要过滤条件在索引列中包含即可；即使在使用的数据不在索引中，由于各种并行处理机制ClickHouse全表扫描的速度也很快；
+* 写入速度非常快，50-200M/s，对于大量的数据更新非常适用。
+##### 缺点
+* 不支持事务，不支持真正的删除/更新，主键可以重复插入。
+* 不支持高并发，官方建议qps为100，可以通过修改配置文件增加连接数，但是在服务器足够好的情况下；目前通过修改max_concurrent_queries来设置，但是实际使用发现并没有生效
+* SQL满足日常使用80%以上的语法，join写法比较特殊；最新版已支持类似SQL的join，但性能不好；
+* 尽量做1000条以上批量的写入，避免逐行insert或小批量的insert，update，delete操作，因为ClickHouse底层会不断的做异步的数据合并，会影响查询性能，这个在做实时数据写入的时候要尽量避开；
+* Clickhouse快是因为采用了并行处理机制，即使一个查询，也会用服务器一半的CPU去执行，所以ClickHouse不能支持高并发的使用场景，默认单查询使用CPU核数为服务器核数的一半，安装时会自动识别服务器核数，可以通过配置文件修改该参数。
+
+#### 单机配置
+* Docker
+* Linux
 
 #### Engine引擎
 * MergeTree
@@ -80,6 +96,13 @@
 #### 导入数据表
 * mysql 
   * CREATE TABLE bus_order ENGINE = MergeTree  ORDER BY (OrderNo) AS SELECT * FROM mysql('103.61.153.18:3306', 'dp_ordm4', 'bus_order', 'pengbo', '123456');
+
+#### Jdbc
+* [官方驱动](https://github.com/ClickHouse/clickhouse-jdbc)
+* java的jdbc代码就不再详细赘述
+
+#### 配置
+[配置文件](setting.md)
 
 #### Distributed/Replicated集群分片
 * docker集群搭建步骤
@@ -277,3 +300,14 @@
     ```
 
 entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的镜像
+
+#### Issues
+* 读写分离 Separator the resource for Insert and Query，Keep the insert ability.[#3575](https://github.com/ClickHouse/ClickHouse/issues/3575)
+  * answer
+  ```
+    It's easy to add new settings
+    max_concurrent_insert_queries
+    max_concurrent_select_queries
+    Up for grabs.
+  ```
+* 不支持唯一主键，可以使用ReplacingMergeTree，clickhouse会在后台不定时的进行merge操作，对重复的主键进行合并。

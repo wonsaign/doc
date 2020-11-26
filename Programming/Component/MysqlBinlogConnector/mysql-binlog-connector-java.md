@@ -64,13 +64,13 @@ show binary logs;
 ##### BinlogfileReader
 > 下图是binfilereader的执行流程
 
-![step1](../../../Images/programming/component/mysqlbinlogconnector/mysql-binlog-connect-java---BinaryLogFileReader.png)
+![filereader](../../../Images/programming/component/mysqlbinlogconnector/mysql-binlog-connect-java--BinaryLogFileReader.png)
 
 
 ##### BinlogfileClient
 > 下图是client的执行流程图，使用了SSLSocket作为长连接，通过不停发ping包命令，保持心跳连接。
 
-![step1](../../../Images/programming/component/mysqlbinlogconnector/mysql-binlog-connect-java--BinaryLogClient.png)
+![client](../../../Images/programming/component/mysqlbinlogconnector/mysql-binlog-connect-java--BinaryLogClient.png)
 
 
 #### 客户端定制
