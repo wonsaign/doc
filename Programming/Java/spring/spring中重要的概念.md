@@ -6,7 +6,7 @@
 > &nbsp;&nbsp;&nbsp;&nbsp;正经一点讲就是,以前都是自己创建对象,new来new去的,现在有一个IOC容器(就是BeanFactory)按照你的要求根据BeanDefinition给你创建一个你想要的对象.
 > &nbsp;&nbsp;&nbsp;&nbsp;如果创建对象的过程中,包含了其他很多对象,便会实例化其中的对象(这个是依赖注入)
 
-#### Bean定义(就是画室中的模特)
+#### BeanDefinition(就是画室中的模特)
 >BeanDefinition 这个不是真正的Bean,是bean的定义的接口,提供了很多有用的方法(简直就是bean的get,set方法单独提出来了),比如:
 ```
 作用域常量:单例SCOPE_SINGLETON,原型SCOPE_PROTOTYPE
@@ -32,12 +32,12 @@
 
 ![Bean定义](../../../Images/programming/java/spring/RootBeanDefinition.png)
 
-#### Bean工厂(画室)
+#### BeanFactory(画室)
 >DefaultListableBeanFactory 默认的是实现了BeanDefinition的工厂.
 >AbstractAutowireCapableBeanFactory这个工厂实现了大部分功能.
 ```
 重要属性:
-// 这个叫合并的Bean定义,不是冲突的意思,是一种整合,名称映射Bean定义.
+这个叫合并的Bean定义,不是冲突的意思,是一种整合,名称映射Bean定义.
 /** Map from bean name to merged RootBeanDefinition. */
 private final Map<String, RootBeanDefinition> mergedBeanDefinitions = new ConcurrentHashMap<>(256);
 ```
