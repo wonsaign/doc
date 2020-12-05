@@ -133,8 +133,10 @@ public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 代码就是
 获取所有的BeanDefinition
 List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
-foreach 
+foreach获取非延迟加载的Bean
 getBean
+然后如果是SmartInitializingSingleton的实现类，调用afterSingletonsInstantiated，单例实例话后的钩子函数
+(比如internalEventListenerProcessor就实现了这个类，在这里添加事件监听器)
 ```
 
 ##### 12 finishRefresh

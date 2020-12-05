@@ -29,10 +29,10 @@
                 3. instantiateBean()
             3. applyMergedBeanDefinitionPostProcessors()
             4. 逻辑判断,是否允许提早曝光,以用来<B>允许</B>循环依赖处理
-            5. populateBean() // 填充Bean:填充时,有依赖关系Bean时间,通过填充实例化依赖的Bean,并将PropertyValues设置到BeanWrapper之中
+            5. populateBean() // 填充Bean:填充时,有依赖关系Bean时间,通过填充实例化依赖的Bean,并将PropertyValues设置到BeanWrapper之中，现在是创建了Bean的实例。
                 1. autowireByName() 获取通过名称注入的属性
                 2. autowireByType() 获取通过类型注入的属性
-                3. applyPropertyValue() 将上述获取的属性填充到BeanWapper中
+                3. applyPropertyValue() Autowired到指定对象。属于DI操作
                
 
 > 过程中思考使用的设计模式

@@ -41,9 +41,10 @@ Spring Boot
 > 什么是SpringBoot? 简化配置的Spring
 #### SpringBoot自动装配的过程
 > Spring通过扫描META-INF文件夹下的spring.factories文件,自动扫描对应的组件.
+> 通过在MAVEN项目的pom文件中添加相关依赖包,因为接口由Spring调用方提供，所以使用SPI机制，并将常用的配置类添加，需要什么功能组件，便由Maven导入即可
 
  ![autoconfig](../../../Images/programming/java/spring/SpringBoot注解加载流程.png)
 
 > SpringBoot如何启动的(包含了上面的部分)
 
- ![autoconfig](../../../Images/programming/java/spring/SpringBoot启动.png)
+ ![autoconfig](../../../Images/programming/java/spring/SpringBoot启动.png) -
