@@ -29,3 +29,4 @@
 * HAR文件方案
   *  本质依赖yarn  位置：hdfs 2:15
 * Sequence Files
+  * 小文件处理

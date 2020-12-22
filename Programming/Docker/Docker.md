@@ -7,6 +7,7 @@ Docker 与 VM 简单说明
 
 镜像与容器
 > 以开发的角度来讲，镜像是class，容器是由class生成的实例
+> 通过docker-entrypoint.sh启动
 
 Docker应用容器化
 > 可以使用Dockerfile制定自己的应用，注释使用#，格式是INSTRUCTION argument.
@@ -51,6 +52,9 @@ Docker常用命令
 * docker run -d -v /log:/container-log  -p 91:80 nginx   //启动nginx。 -d后台启动 -p端口号 -v表示目录挂载
 * docker exec -it 容器id /bin/bash  // 进去宿主机
 * docker inspect 容器id
+* docker cp
+  * 主机到容器 docker cp 主机目录  容器id:容器目录
+  * 容器到主机 docker cp 容器id:容器目录  主机目录
 
 DockerFile构建
 * FROM 从本机/远程拉去一个镜像（本机优先，本机没有就拉远程）

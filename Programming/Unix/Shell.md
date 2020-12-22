@@ -46,9 +46,9 @@
 * 变量类型，局部变量，全局变量（环境变量是全局变量的一种）
   * 在函数内，使用`local`修饰的变量，只在函数内生效，不会影响到全局变量。见下面例子。
   ```
-  name=10
+    name=10
     fun1 (){
-        name=20
+      name=20
 	    echo "fun1 ${name}"
     }
     fun1 #函数调用
@@ -455,10 +455,28 @@
   ```
   * 模式匹配 /正则/ {匹配后的操作}
   * 变量，分为内建变量和用户自定义变量，awk的变量无需声明使用，最开始都会设置为空。
+* awk参数（awk [options] 'pattern {action}' file...）
+  * `pattern`位置传参
+  ```
+  注意这里是单引号加变量，还在当前脚本进程
+  name=百年孤独.txt
+  ls ~/temp/book | awk  '/'$name'/{print $1}'
+  ```
+  * `action`位置传参
+  ```
+  注意这里是双引号+单引号+变量，因为当前变量在awk进程了
+  name=百年孤独.txt
+  ls ~/temp/book ｜ awk  '{print "'$name'"}'
+  或者写成
+  name=百年孤独.txt
+  awk -v n="$name" '{print n}'
+  ```
 
 ##### 进程
 * ps
 
+##### 课外延伸
+*  bash -x ordm_run.sh 执行调试
 
 
 ### 实战篇
@@ -499,4 +517,16 @@ done
 ```
 对于变量，必须使用echo编程流，然后在才可以使用awk，因为awk处理的是file
 item0=$(echo "${itme}" | awk  '{print $1}' )
+```
+6. 情景六 awk
+```
+获取ls后的第一行
+ls  | awk  'NR==1{print $0}'
+```
+7. 情景七 复合条件
+```
+wrong
+([ "$x" ] || [ "$y" ]) && [ "$z" ]
+right
+{ [ "$x" ] || [ "$y" ]; } && [ "$z" ]
 ```

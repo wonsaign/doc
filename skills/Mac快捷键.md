@@ -17,6 +17,9 @@
 ### 干掉系统升级提示红点
 defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
 
+### 删除QuickTime Player播放记录
+rm -rf  ~/Library/Containers/com.apple.QuickTimePlayerX/Data/Library/Preferences
+
 ### 查看文件夹属性
 [command] + [i]
 
