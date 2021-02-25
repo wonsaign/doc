@@ -47,3 +47,70 @@
 
 #### 其他学习
 * proc目录是虚拟化进程，程序启动过后，会产生一个进程id，比如pid=20912，就会在对应的proc下有一个20912的文件夹。
+
+#### 配置文件
+* /etc/sysctl.conf
+```
+    # Kernel sysctl configuration file for Red Hat Linux
+    #
+    # For binary values, 0 is disabled, 1 is enabled.  See sysctl(8) and
+    # sysctl.conf(5) for more details.
+
+    kernel.core_uses_pid = 1
+    // 该文件指定了从一个进程发送到另一个进程的消息最大长度
+    kernel.msgmax = 65536
+    // 该文件指定在一个消息队列中最大的字节数 缺省设置：16384。
+    kernel.msgmnb = 65536
+    kernel.sem = 250 64000 32 256
+    kernel.shmall = 16777216
+    // 该参数定义了共享内存段 的最大尺寸
+    kernel.shmmax = 68719476736
+    // 该参数表示统一一次可以使用的共享内存总量（以页为单位）。默认是2097152，通常不需要修改
+    kernel.shmmni = 4096
+    kernel.sysrq = 0
+
+    // 表示SYN队列的长度，默认为1024，加大队列长度为32768，可以容纳更多等待连接的网络连接数。  
+    net.core.netdev_max_backlog =  32768
+    // 接收套接字缓冲区大小的默认值(以字节为单位)。
+    net.core.rmem_default = 8388608
+    // 接收套接字缓冲区大小的最大值(以字节为单位)
+    net.core.rmem_max = 16777216
+    // 定义了系统中每一个端口最大的监听队列的长度（该内核参数默认值一般是128），对于负载很大的服务程序来说大大的不够。一般会将它修改为2048或者更大。
+    net.core.somaxconn = 32768
+    // 发送套接字缓冲区大小的默认值(以字节为单位)
+    net.core.wmem_default = 8388608
+    // 发送套接字缓冲区大小的最大值(以字节为单位)。
+    net.core.wmem_max = 16777216
+    net.ipv4.conf.default.accept_source_route = 0
+    net.ipv4.conf.default.rp_filter = 1
+
+    // 表示开启路由功能，0是关闭，1是开启
+    net.ipv4.ip_forward = 0
+    //　设置系统　允许系统打开的端口范围
+    net.ipv4.ip_local_port_range = 39999 65000
+    net.nf_conntrack_max=655360
+    net.netfilter.nf_conntrack_tcp_timeout_established = 1200
+    // 探测消息未获得响应时，重发该消息的间隔时间（秒）。系统默认75秒
+    net.ipv4.tcp_keepalive_intvl = 60
+
+    //在认定连接失效之前，发送多少个TCP的keepalive探测包。系统默认值是9。这个值乘以tcp_keepalive_intvl之后决定了，一个连接发送了keepalive探测包之后可以有多少时间没有回应。
+    net.ipv4.tcp_keepalive_probes = 5
+
+
+    // 表示当keepalive起用的时候，TCP发送keepalive消息的频度。默认是2小时，改为300秒
+    net.ipv4.tcp_keepalive_time = 1800
+    net.ipv4.tcp_max_orphans = 3276800
+    net.ipv4.tcp_max_syn_backlog = 65536
+    net.ipv4.tcp_mem = 94500000 915000000 927000000
+    net.ipv4.tcp_synack_retries = 2
+    // 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭
+    net.ipv4.tcp_syncookies = 1
+
+    // 表示在内核放弃建立连接之前发送SYN包的数量。
+    net.ipv4.tcp_syn_retries = 2
+    net.ipv4.tcp_timestamps = 0
+    // 表示开启TCP连接中TIME_WAIT套接字的快速回收，默认为0，表示关闭
+    net.ipv4.tcp_tw_recycle = 1
+    // 表示允许重用TIME_WAIT状态的套接字用于新的TCP连接,默认为0，表示关闭
+    net.ipv4.tcp_tw_reuse = 1
+```

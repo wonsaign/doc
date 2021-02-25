@@ -39,7 +39,9 @@
 列表(list)
 
 #### 语句
+
 * create (:pig{name:"猪爸爸",age:12}); `创建标签语句`
+* MATCH (n) WHERE id(n)=251 RETURN n `id匹配`
 * match (a:pig{name:"猪爸爸"}) return a; `查询语句`
 * match (a:pig{name:"猪爸爸"}) match (b:pig{name:"猪妈妈"}) create (a) -[r:夫妻]->(b) return r; `创建关系` 
 * match (a:pig{name:"猪爸爸"}) match (b:pig{name:"猪妈妈"}) create (a) -[r:夫妻{marriage_age:"2"}]->(b) return r; `创建带属性带关系` 
@@ -56,3 +58,5 @@ RETURN john.name,friend.name 查找约翰和他朋友的名字
 * match (n) where n.name in["猪爸爸","猪妈妈"] return n;
 * 事务
 * 唯一性
+* MATCH (n:Order)-[r]-() DELETE n,r 删除关系和节点
+* MATCH (n:Order) DELETE n 删除节点
