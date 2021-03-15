@@ -6,6 +6,7 @@
 > https://www.cnblogs.com/xuewenlong/p/12914921.html
 * openvpn 配置
 > https://www.jianshu.com/p/92b4d36a1dc4
+> https://www.jianshu.com/p/17a56994b74f
 > /usr/sbin/openvpn --daemon --cd /etc/openvpn/client --config client.ovpn --log-append /var/log/openvpn.log
 
 * post steps

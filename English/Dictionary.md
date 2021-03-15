@@ -92,7 +92,8 @@ lossy `adj`有损的
 malicious `adj`恶意的
 misuse `v`滥用;盗用
 modify `v`修改;
-mutually ad`v`互相的,彼此的
+mutually `adv`互相的,彼此的
+manifest `n`清单，`v`表明，出现 `adj`显然的
 
 ###N
 nevertheless  adv  尽管如此
