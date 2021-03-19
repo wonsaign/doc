@@ -695,7 +695,7 @@
        port: 80
        targetPort: 9377
    ```
-   1. **检测**探针 - 就绪检测(readinessProbe容器的检测)
+   1. **检测**探针 - 就绪检测(readinessProbe容器的检测) 
     ```
     apiVersion: v1
     kind: Pod
@@ -852,7 +852,7 @@ spec:
 ```
 
 #### K8S的服务（Service）
-* Service 在 K8s 中有以下四种类型
+* Service 在 K8s 中有以下四种类型 下班回去收拾你，屁股
   * ClusterIp 默认类型，自动分配一个仅 Cluster 内部可以访问的虚拟IP
   * NodePort 在ClusterIP基础上为Service在每台机器上绑定一个端口，这样就可以通过: NodePort来访问该服务
   * LoadBalancer 在NodePort的基础上，借助cloud provider创建一个外部负载均衡器，并将请求转发到: NodePort
@@ -1171,7 +1171,10 @@ spec:
   * 关闭NetworkManager
   * 通过ip addr 找到网卡的名称
   * 修改 网卡里的DEVICE和NAME都改成xxx，千万记得都要改成，不要有注释。
-  * 还不行，see it -> https://cloud.tencent.com/developer/article/1354933
+  * 还不行，see it -> https://cloud.tencent.com/developer/article/1354933  
+  * 
+
+
 
 #### minikube启动
 * 安装virtualbox
@@ -1180,26 +1183,3 @@ spec:
 * minikube status
 * minikube stop
 * minikube --help
-* 
-
-
-#### TODO
-- [x] ingress 证书 :white_check_mark:
-- [x] 权重 调整不了，但是可以金丝雀发布，nginx代理两个ingress，有一个灰度发布 :white_check_mark:
-- [x] 单一5000 低于5000网络交换
-- [ ] 卡顿（原因？）:thinking:
-- [x] 测试calico
-- [x] 测试方式呢？jmeter -> wrk done
-- [ ] 数据加载太慢了
-- [ ] K8S组件整理 etcd controller
-- [ ] 关于控制器的删除
-- [x] matlab项目启动的如何？ 进程过程。 今天问下 done
-- [x] 大屏的项目需要重新启动，关于数据库索引建立的情况。
-- [x] m02 内部vpn 不能访问了
-- [x] k8s的etcd怎么保存，不至于每次重启都删除掉吧  
-- [ ] k8s管理工具helm
-- [ ] k8s关于etcd存贮备份恢复，持久化
-- [ ] nginx 视频回家看下，学习下调优
-- [ ] 自己主导工作。
-- [ ] 记下来，背！
-- [ ] 整理核心，学习后整理核心。

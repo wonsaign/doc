@@ -94,6 +94,7 @@ misuse `v`滥用;盗用
 modify `v`修改;
 mutually `adv`互相的,彼此的
 manifest `n`清单，`v`表明，出现 `adj`显然的
+masquerade `n`掩饰，隐藏，欺骗,`v`掩饰，隐藏，欺骗
 
 ###N
 nevertheless  adv  尽管如此
