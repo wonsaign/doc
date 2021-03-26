@@ -41,6 +41,7 @@
     ![SqlSession](../../Images/programming/mybaties/Mybatis-SqlSession.png)
 
 
+
 * Spring-Mybatis
 > Spring将Mybatis整合的时候,有一点不同
 > 基本上一级缓存是失效的,如何让一级缓存生效,使用事物.

@@ -23,8 +23,16 @@ rm -rf  ~/Library/Containers/com.apple.QuickTimePlayerX/Data/Library/Preferences
 ### 查看文件夹属性
 [command] + [i]
 
+### 终端
+   * [command] + [shift] + D 上下复制当前屏幕
+   * [command] + D 左右复制当前屏幕
+   * [command] + [shift] + i 键盘输入发送多个窗口（k8s多个窗口同时操作）
+
 ### 程序坞在主副屏幕切换
 当使用 mac 连接外置屏幕的时候，把鼠标移到某一个屏幕最底下几秒钟，程序坞就会自动切换到该屏幕.
+
+### 菜单栏移动位置
+[command] + 鼠标左键拖动
 
 ### 查看端口号
 以8080为例:lsof -i tcp:8080
@@ -101,3 +109,32 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin:$PATH
 
 echo 'export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/' >> ~/.bash_profile source ~/.bash_profile
+
+### 符号文件
+符号|按键1|按键2|按键3|按键4
+---|:--:|---:|---:|---:
+∑|option|w||
+´|option|e||
+®|option|r||
+†|option|t||
+¥|option|y||
+¨|option|u||
+ˆ|option|i||
+ø|option|o||
+π|option|p||
+å|option|a||
+ß|option|s||
+∂|option|d||
+ƒ|option|f||
+©|option|g||
+˙|option|h||
+∆|option|j||
+˚|option|k||
+¬|option|l||
+Ω|option|z||
+≈|option|x||
+ç|option|c||
+√|option|v||
+∫|option|b||
+˜|option|n||
+µ|option|m||

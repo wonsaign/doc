@@ -570,6 +570,7 @@
     --endpoints=${ENDPOINTS} \
     snapshot save /tmp/etcd-snapshot-`date +%Y%m%d%H%M%S`.db
   ```
+  * 资料来源https://cloud.tencent.com/developer/article/1644698
 * kube-scheduler 控制平面组件，负责监视新创建的、未指定运行节点（node）的 Pods，选择节点让 Pod 在上面运行。
 * kube-controller-manager 在主节点上运行 控制器 的组件。
 从逻辑上讲，每个控制器都是一个单独的进程， 但是为了降低复杂性，它们都被编译到同一个可执行文件，并在一个进程中运行。
@@ -583,7 +584,8 @@
 * kube-proxy kube-proxy 是集群中每个节点上运行的网络代理， 实现 Kubernetes 服务（Service） 概念的一部分。
 * 容器运行时（Container Runtime）Kubernetes 支持多个容器运行环境: Docker、 containerd、CRI-O 以及任何实现 Kubernetes CRI (容器运行环境接口)。
 #### Volume
-* 挂载
+* 挂载 
+* 
 
 #### API
 * API-Label，标签，可以定义一组标签，由选择器selector进行选择
