@@ -51,9 +51,9 @@
   2. **MapperFactoryBean**创建的SqlSessionTemplate为啥是线程安全的? 因为这里使用了代理.
      1. 使用了代理
     ![SqlSessionTemplate](../../Images/programming/mybaties/SqlSessionTemplate.png)
-     2. 通过内部类代理方法,生成SqlSession,下图可以看到SqlSession的生命周期非常短,这又与直接使用SqlSession相同了.
+     1. 通过内部类代理方法,生成SqlSession,下图可以看到SqlSession的生命周期非常短,这又与直接使用SqlSession相同了.
     ![SqlSessionTemplate-Proxy](../../Images/programming/mybaties/SqlSessionTemplate-Proxy.png)
-     3. 精辟的总结:**使用代理每次都创建一个新的对象,并且都是用完就干掉,这种思想相当于另外单独开一个线程.父线程是同样的,子线程之间互补影响.**请看下图,是不是很像线程模型.
+     1. 精辟的总结:**使用代理每次都创建一个新的对象,并且都是用完就干掉,这种思想相当于另外单独开一个线程.父线程是同样的,子线程之间互补影响.**请看下图,是不是很像线程模型.
     ![SqlSessionTemplate-TheadSafe](../../Images/programming/mybaties/SqlSessionTemplate-TheadSafe.png)
   3. SqlSessionTemplate给我的感觉就是一个Wrapper,自己包装了一层,可以按照自己的逻辑进行操作,要说非要template好像也说得过去.Wrapper从名字上来讲,其实并没有完全可以用,template是一个功能完善,各方面多可以使用的.
   

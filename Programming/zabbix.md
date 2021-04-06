@@ -51,4 +51,8 @@
   * A: yum -y install wqy-microhei-fonts
   * \cp /usr/share/fonts/wqy-microhei/wqy-microhei.ttc /usr/share/fonts/dejavu/DejaVuSans.ttf 
 
+##### zabbix 命令demo
+* java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false  -Djava.rmi.server.hostname=192.168.29.29 -Dcom.sun.management.jmxremote.rmi.port=10052 -jar world-0.0.1-SNAPSHOT.jar 
+
+
 [^1]: 长期支持版本(Long Term Support)

@@ -1185,3 +1185,10 @@ spec:
 * minikube status
 * minikube stop
 * minikube --help
+
+#### k8s demo命令
+* sudo kubeadm join dc01:6443 --token 208u3b.dnnlu5ulbb7cxkzz   --discovery-token-ca-cert-hash sha256:350d58107ea3d420ff9c9dfeb3b7faea7c85578d9297d5030b9078869e0fde41 --v=5
+* kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/cloud/deploy.yaml
+* ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/cert/ca.pem --cert=/etc/etcd/cert/etcd.pem --key=/etc/etcd/cert/etcd-key.pem --endpoints=https://192.168.29.29:2379endpoint health
+* ETCDCTL_API=3 etcdctl  --cacert=ca.crt  --cert=server.crt --key=server.key  --endpoints=https://192.168.29.29:2379 endpoint health
+* ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt  --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key

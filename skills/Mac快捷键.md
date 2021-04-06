@@ -29,7 +29,13 @@ rm -rf  ~/Library/Containers/com.apple.QuickTimePlayerX/Data/Library/Preferences
    * [command] + [shift] + i 键盘输入发送多个窗口（k8s多个窗口同时操作）
 
 ### 程序坞在主副屏幕切换
-当使用 mac 连接外置屏幕的时候，把鼠标移到某一个屏幕最底下几秒钟，程序坞就会自动切换到该屏幕.
+* 当使用 mac 连接外置屏幕的时候，把鼠标移到某一个屏幕最底下几秒钟，程序坞就会自动切换到该屏幕.
+* 只显示当前运行的应用
+  * defaults write com.apple.dock static-only -bool TRUE; killall Dock // 开启
+  * defaults write com.apple.dock static-only -bool FALSE; killall Dock // 关闭
+* defaults write com.apple.dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'; killall Dock 最近使用
+
+
 
 ### 菜单栏移动位置
 [command] + 鼠标左键拖动

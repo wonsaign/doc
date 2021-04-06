@@ -38,14 +38,22 @@
 - [x] core-jpa
 - [x] core-mybatis
 - [x] dashboard
-- [ ] docker monogo 数据卷挂出来
+- [x] docker monogo 数据卷挂出来
       * docker cp f57790cdfdf6:/data/db .
       * docker run --name mongo-v -v /var/mongodata/db:/data/db -p 27017:27017 -d mongo
 - [x] 金铭交接
-- [ ] 新模型，计算美导助手汇总模型
+- [ ] 新模型，计算美导助手汇总模型，计算结果不准
       * 单条链上锁 Q:因为总会影响到‘植物医生大节点’ 进行分级汇总，定时任务和实时进行队列划分进行保存
       * 相同链，锁住
 - [ ] 分布式事务？
+- [x] 新的GC垃圾回收器的使用
+- [x] 出面试题
+- [ ] m10服务器读取图片过于缓慢
+- [ ] 业务配置 百度DisConf Flink流计算？
+- [ ] 寻找数据源 快速计算 中间的数据计算(王彬)
+- [ ] 配置h5 紧急很重要 
+- [ ] 佩佩商量解决问题的方式
+- [ ] 大数据项目的启动
 
 
 
