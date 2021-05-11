@@ -1175,6 +1175,12 @@ spec:
   * 修改 网卡里的DEVICE和NAME都改成xxx，千万记得都要改成，不要有注释。
   * 还不行，see it -> https://cloud.tencent.com/developer/article/1354933  
   * 
+* Error response from daemon: Get https://xxx/v1/users/: dial tcp xxx:443: getsockopt: connection refused
+  * 配置 vim /etc/docker/daemon.json
+      {
+          "insecure-registries": ["192.168.229.20"]
+      }
+
 
 
 
