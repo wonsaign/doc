@@ -855,8 +855,72 @@ Once this thread is notified, it will not be runnable. It might be that other th
 
 
 ##### Class与实例对象的区别
+1. java在加载的时候，会将Class加载到jvm中，并且只有一份，所有的实例都是依照Class而来。Class对象类似生产对象的模版，若创建对象的时候没有Class对象，会先创建Class对象，在创建实例。
+![class&instance](../../../Images/programming/java/base/class&instance.png)
 
-[^1]:ThreadLocalMap 是 ThreadLocal中的静态类
+##### 队列常用方式
+1. 压入
+```
+压入 在超出容量时，add()方法会对抛出异常，offer()返回false
+queue.add(1);
+queue.offer(1);
+```
+2. 弹出
+```
+弹出 remove()会抛出异常，poll()返回null
+queue.remove(null);
+queue.poll();
+```
+3. 获取头部元素
+```
+获取队头元素(不删除)：element()、peek()
+queue.peek();
+queue.element();
+```
+4. 移除
+```
+添加一个元素 如果队列满，则阻塞
+queue.put(1);
+移除并返回队列头部的元素 如果队列为空，则阻塞
+queue.take();
+```
+
+
+##### System.getProperty()中的字符串参数如下：
+System.getProperty()参数大全 
+|  参数 | 解析  |
+|---|---|
+|java.version                  | Java Runtime Environment version |
+|java.vendor                   | Java Runtime Environment vendor  |
+|java.vendor.url               | Java vendor URL  |
+|java.home                     | Java installation directory  |
+|java.vm.specification.version | Java Virtual Machine specification version  |
+|java.vm.specification.vendor  | Java Virtual Machine specification vendor  |
+|java.vm.specification.name    | Java Virtual Machine specification name  |
+|java.vm.version               | Java Virtual Machine implementation vendor |
+|java.vm.vendor                | Java Virtual Machine implementation vendor |
+|java.vm.name                  | Java Virtual Machine implementation name |
+|java.specification.version    | Java Runtime Environment specification version |
+|java.specification.vendor     | Java Runtime Environment specification vendor |
+|java.specification.name       | Java Runtime Environment specification name |
+|java.class.version            | Java class format version number  |
+|java.class.path               | Java class path |
+|java.library.path             | List of paths to search when loading librar|
+|java.io.tmpdir                | Default temp file path  |
+|java.compiler                 | Name of JIT compiler to use |
+|java.ext.dirs                 | Path of extension directory or directories  |
+|os.name                       | Operating system name  |
+|os.arch                       | Operating system architecture  |
+|os.version                    | Operating system version  |
+|file.separator                | File separator ("/" on UNIX)  |
+|path.separator                | Path separator (":" on UNIX)  |
+|line.separator                | Line separator ("/n" on UNIX) |
+|user.name                     | User’s account name  |
+|user.home                     | User’s home directory  |
+|user.dir                      | User’s current working directory   |
+
+
+[^1]:ThreadLocalMap 是 ThreadLocal中的静态|
 [^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
 [^3]:总是抛出RejectedExecutionExcepiton异常来终止线程
 [^4]:可重入锁，当一个线程进入一个锁的同步代码块的时候，锁的计数器加1，当线程退出同步代码块数量-1.（注意Synchronized和ReentrantLock，都是重入锁）

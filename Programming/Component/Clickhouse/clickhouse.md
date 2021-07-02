@@ -45,6 +45,7 @@
 Ø  15.复制数据复制和对数据完整性的支持
 ```
 
+
 #### 优缺点
 ##### 优点
 * 为了高效的使用CPU，数据不仅仅按列存储，同时还按向量进行处理；
@@ -300,6 +301,17 @@
     ```
 
 entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的镜像
+
+#### clickhouse优化使用
+1. 如果对一张基本表经常进行group sum操作，可以创建对应对物化视图，**预处理**
+2. 可以考虑通过sqlserver -> mysql -> MaterializeMySQL到clickhouse（是否对表更新）？
+3. 当多表联查时，查询的数据仅从其中一张表出时，可考虑使用IN操作而不是JOIN。
+4. 多表Join时要满足小表在右的原则，右表关联时被加载到内存中与左表进行比较。
+5. 将一些需要关联分析的业务创建成字典表进行join操作，前提是字典表不易太大，因为字典表会常驻内存
+6. 使用prewhere替代where关键字；当查询列明显多于筛选列时使用prewhere可十倍提升查询性能  prewhere 会自动优化执行过滤阶段的数据读取方式，降低io操作
+7. 数据量太大时应避免使用select * 操作，查询的性能会与查询的字段大小和数量成线性变换；字段越少，消耗的io资源就越少，性能就会越高。
+8. 千万以上数据集进行order by查询时需要搭配where条件和limit语句一起使用
+9. 使用 uniqCombined 替代 distinct 性能可提升10倍以上，uniqCombined 底层采用类似HyperLogLog算法实现，如能接收2%左右的数据误差，可直接使用这种去重方式提升查询性能。
 
 #### Issues
 * 读写分离 Separator the resource for Insert and Query，Keep the insert ability.[#3575](https://github.com/ClickHouse/ClickHouse/issues/3575)

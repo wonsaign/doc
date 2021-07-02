@@ -1,6 +1,10 @@
 ## Mac的快捷键
 > Idea快捷键,请注意中英文,千万不要打开中文,否则很多快捷键会失效
 
+1. 全屏幕APP切换 [control] + [⬅️]/[➡️]
+2. 调度中心 [control] + [⬆️]
+3. App Expose [control] + [⬇️]
+
 ### Finder下
 [command] + [shift] + [.] 显示/隐藏隐藏文件
 
