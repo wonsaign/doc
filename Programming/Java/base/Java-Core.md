@@ -861,7 +861,7 @@ Once this thread is notified, it will not be runnable. It might be that other th
 ##### 队列常用方式
 1. 压入
 ```
-压入 在超出容量时，add()方法会对抛出异常，offer()返回false
+压入 在超出容量时，add()方法会对抛出异常，offer()返回false 
 queue.add(1);
 queue.offer(1);
 ```
