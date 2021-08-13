@@ -124,3 +124,13 @@ PostgreSql擅长一些空间信息存贮。
   * union，是将一次查询出的数据放入临时表，然后再重新读出数据进行union完成查询。
   * union的限制，比如 （select 语句a union select 语句b ）limit 20， 会全表扫描a和b然后在limit，改为 （select 语句a limit 20  union select 语句b limit 20 ）limit 2
   * 一定要使用union all，因为union包含了distinct去重（会给临时表使用distinct，整个临时表做唯一性检查，代价非常大。）
+
+
+### Q&A
+1. Host 'xxx.xx.xxx.xxx' is not allowed to connect to this MySQL server. 
+```mysql
+CREATE USER 'wangs'@'localhost' IDENTIFIED BY '0357003570Ws!$&';
+GRANT ALL PRIVILEGES ON *.* TO 'wangs'@'localhost'  WITH GRANT OPTION;
+CREATE USER 'wangs'@'%' IDENTIFIED BY '0357003570Ws!$&';
+GRANT ALL PRIVILEGES ON *.* TO 'wangs'@'%' WITH GRANT OPTION;
+```
