@@ -920,7 +920,7 @@ System.getProperty()参数大全
 |user.dir                      | User’s current working directory   |
 
 
-[^1]:ThreadLocalMap 是 ThreadLocal中的静态|
-[^2]:不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
-[^3]:总是抛出RejectedExecutionExcepiton异常来终止线程
-[^4]:可重入锁，当一个线程进入一个锁的同步代码块的时候，锁的计数器加1，当线程退出同步代码块数量-1.（注意Synchronized和ReentrantLock，都是重入锁）
+[^1]: ThreadLocalMap 是 ThreadLocal中的静态
+[^2]: 不可变类,指的是对象内部的数据不可变,是发生在`内部`的.
+[^3]: 总是抛出RejectedExecutionExcepiton异常来终止线程
+[^4]: 可重入锁，当一个线程进入一个锁的同步代码块的时候，锁的计数器加1，当线程退出同步代码块数量-1.（注意Synchronized和ReentrantLock，都是重入锁）
