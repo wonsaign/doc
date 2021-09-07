@@ -129,3 +129,13 @@
 #### Dubbo面试
 * 注册中心挂了可以通信么继续
   * 可以，因为刚刚开始初始化的时候，消费者会将提供者的地址信息拉取到本地缓存，所以注册中心挂了可以继续通信。
+
+#### Dubbo 开发问题
+1. timeout设置方式，优先级consumer高于provider
+```java
+  @DubboReference(timeout = 10000) 优先级高
+  Or
+  dubbo.consumer.timeout=10000 优先级低
+
+  建议使用“注解”，针对每个服务提供不同的超时配置，而不是全局配置
+```
