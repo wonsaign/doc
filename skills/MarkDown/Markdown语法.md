@@ -87,3 +87,32 @@ cond(yes)->e
 cond(no)->op
 &```
 ```
+
+十 字体颜色
+> 常用字体语法
+```
+<font face="逐浪新宋">我是逐浪新宋</font>
+<font face="逐浪圆体">我是逐浪圆体</font>
+<font face="逐浪花体">我是逐浪花体</font>
+<font face="逐浪像素字">我是逐浪像素字</font>
+<font face="逐浪立楷">我是逐浪立楷</font>
+<font color=red>我是红色</font>
+<font color=#008000>我是绿色</font>
+<font color=yellow>我是黄色</font>
+<font color=Blue>我是蓝色</font>
+<font color= #871F78>我是紫色</font>
+<font color= #DCDCDC>我是浅灰色</font>
+<font size=5>我是尺寸</font>
+<font size=10>我是尺寸</font>
+<font face="逐浪立楷" color=green size=10>我是逐浪立楷，绿色，尺寸为5</font>
+```
+
+颜色名 | 十六进制颜色值 |  rgb颜色  
+-|-|-
+黑色（black) | 000000 | 	rgb(0, 0, 0) |
+蓝色（blue） | 0000FF | rgb(0, 0, 255) |
+灰色（grey） | 808080 | rgb(128, 128, 128) |
+绿色（green） | 008000 | rgb(0, 128, 0) |
+橙色（orange） | FFA500 | rgb(255, 165, 0) |
+红色(red) | FF0000 | rgb(255, 0, 0) |
+黄色（yellow） | FFFF00 | rgb(255, 255, 0) |
