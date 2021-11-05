@@ -45,7 +45,15 @@ rm -rf  ~/Library/Containers/com.apple.QuickTimePlayerX/Data/Library/Preferences
 [command] + 鼠标左键拖动
 
 ### 查看端口号
-以8080为例:lsof -i tcp:8080
+1. 查看进程号
+   ps -ef | grep 进程名
+2. 查看端口被哪个进程监听
+   sudo lsof -i :端口 `以8080为例:lsof -i tcp:8080`
+3. 查看进程监听的端口
+   sudo lsof -nP -p 进程号 | grep LISTEN
+   sudo lsof -nP | grep LISTEN | grep 进程号
+4. 查看监听端口的进程
+   sudo lsof -nP | grep LISTEN | grep 端口号
 
 ### 时间机器备份
 打开「终端」输入以下命令，关闭系统对时光机器的限流。
