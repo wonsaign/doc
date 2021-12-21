@@ -68,6 +68,8 @@ IO模型地址:
 ![ChannelHander](../../../Images/programming/component/netty/Netty中Channel.png)
 
 ##### Netty拆包粘包
+> 为什么会有拆包粘包，可以从TCP追溯说起
+> 网络是有带宽的，直接传输超大数据包是无法完成的，所以在马路宽度有限的情况下，这批货物只能分批运送，但是货物是一个恐龙骨架，拆分的时候必须按照顺序标记，才能在目的端按照编号重组。
 * TCP发包的时候,可能会对字符串进行拆包,粘包.如下图
   * D2和D1完整发的时候是正常的,
   * D2和D1一起发的时候是粘包
@@ -78,6 +80,7 @@ IO模型地址:
 * 解决方式
   1. 自己增加分隔符(在业务里)
   2. 继承MessageToByteEncoder抽象类
+  3. LengthFieldBasedFrameDecoder使用netty自带的拆包解包器
 
 ##### Netty心跳检测机制
 * 在`TCP长连接`中,保持有效性.
