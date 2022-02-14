@@ -323,3 +323,6 @@ entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的
     Up for grabs.
   ```
 * 不支持唯一主键，可以使用ReplacingMergeTree，clickhouse会在后台不定时的进行merge操作，对重复的主键进行合并。
+
+#### 使用命令
+* clickhouse-client -h 172.17.186.106 -u default --password=w123$

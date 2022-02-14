@@ -612,8 +612,8 @@ POST /website/log/_bulk
 # 空检索，返回所有 ，keys *
 GET /_search
 
-# 分页
-GET /_search?size=5&from=10
+# 分页 
+GET /_search?size=5&from=10 //注意效率并不好，是找到全部的50后，丢弃前面的45条
 
 # 分析映射类型
 GET /megacorp/_mapping
