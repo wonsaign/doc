@@ -312,6 +312,39 @@ entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的
 7. 数据量太大时应避免使用select * 操作，查询的性能会与查询的字段大小和数量成线性变换；字段越少，消耗的io资源就越少，性能就会越高。
 8. 千万以上数据集进行order by查询时需要搭配where条件和limit语句一起使用
 9. 使用 uniqCombined 替代 distinct 性能可提升10倍以上，uniqCombined 底层采用类似HyperLogLog算法实现，如能接收2%左右的数据误差，可直接使用这种去重方式提升查询性能。
+10. **Join案例**
+    ```sql
+    Hash Join 右表为大表
+    经过优化后，query执行时间从17s降低至0.6s。
+    recorddetail 是一张大表，通过 shuffle 可以将大表数据按照 join key shuffle 到每个 worker 节点，减少了右表构建的压力。
+
+    -- 优化前 17秒
+    SELECT record.BIN_OrganizationID,
+        recorddetail.BarCode,
+        sumKahan(case when SaleType = 'SR' then (-1) * record.Amount else record.Amount end) AS amount,
+        sumKahan(case when SaleType = 'SR' then (-1) * recorddetail.Quantity else recorddetail.Quantity end) AS orderQty
+    from BIN_SaleRecord_all record
+            inner join BIN_SaleRecordDetail_all recorddetail on record.BIN_SaleRecordID = recorddetail.BIN_SaleRecordID
+    WHERE record.SaleType IN ('NS', 'SR')
+    AND record.SaleDate BETWEEN '2022-01-01' AND '2022-09-31'
+    and recorddetail.BarCode in ('6959436323877')
+    group by record.BIN_OrganizationID, recorddetail.BarCode;
+
+    -- 优化后 0.6秒
+    SELECT record.BIN_OrganizationID,
+        recorddetail.BarCode,
+        sumKahan(case when SaleType = 'SR' then (-1) * record.Amount else record.Amount end)     AS amount,
+        sumKahan(case when SaleType = 'SR' then (-1) * recorddetail.Quantity else recorddetail.Quantity end) AS orderQty
+    from BIN_SaleRecord_all record
+            inner join
+        (SELECT BIN_SaleRecordID, Quantity, AmountPortion, BarCode
+        FROM BIN_SaleRecordDetail_all PREWHERE BarCode in ('6959436323877') ) as recorddetail
+        on record.BIN_SaleRecordID = recorddetail.BIN_SaleRecordID
+        prewhere record.SaleType IN ('NS', 'SR') AND record.SaleDate BETWEEN '2022-01-01' AND '2022-09-31'
+    group by record.BIN_OrganizationID, recorddetail.BarCode;
+
+    ```
+
 
 #### Issues
 * 读写分离 Separator the resource for Insert and Query，Keep the insert ability.[#3575](https://github.com/ClickHouse/ClickHouse/issues/3575)
