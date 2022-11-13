@@ -327,3 +327,27 @@
 
 ### MySql5.7安装
 * https://blog.csdn.net/cool_summer_moon/article/details/106090136
+
+### 生产环境实践教训
+1. 使用condA between xxx and yyy And condB in (zzz)
+```sql 
+EXPLAIN SELECT
+  ba_code,
+  elastic_data -> "$[0].id" AS id,
+  sum( elastic_data -> "$[0].qty" ) AS qty,
+  sum( elastic_data -> "$[0].amount" ) AS amount 
+FROM
+  `dp_sales`.`report_performance_ba` 
+WHERE
+  date_int BETWEEN '20220901' AND '20220930' 
+  AND ba_code IN ( 'CH1114' ) 
+GROUP BY
+  ba_code,
+  elastic_data -> "$[0].id"
+
+建立了索引 date_int和ba_code联合索引，但是查询的时候未使用
+索引范围查询是不走索引的
+
+后单独增加ba_code索引正常运行
+
+```
