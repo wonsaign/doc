@@ -351,3 +351,6 @@ GROUP BY
 后单独增加ba_code索引正常运行
 
 ```
+
+### Sql的Join关系图
+![joins](../../Images/programming/sql/sql_joins.png)
