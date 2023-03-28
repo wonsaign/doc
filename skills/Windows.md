@@ -219,6 +219,7 @@ Ctrl + Shift + Alt + V|无格式黏贴
 Ctrl + Shift + Alt + N|前往指定的变量 / 方法
 Ctrl + Shift + Alt + S|打开当前项目设置
 Ctrl + Shift + Alt + C|复制参考信息
+Ctrl + Shift + Alt + T|重构
 
 #### 其他
 快捷键 | 介绍 | 常用
@@ -309,3 +310,9 @@ Alt + Shift + 左键双击|选择被双击的单词 / 中文句，按住不放�
 F2|跳转到下一个高亮错误 或 警告位置 |（必备）
 ESC|从工具窗口进入代码文件窗口|必备 
 连按两次Shift|弹出 Search Everywhere 弹出层|必备
+Ctrl + Shift + Alt + T|重构
+
+
+### 插件快捷键
+插件 Translation
+Ctrl + shift + Y 翻译
