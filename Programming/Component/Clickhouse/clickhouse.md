@@ -314,7 +314,7 @@ entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的
 9. 使用 uniqCombined 替代 distinct 性能可提升10倍以上，uniqCombined 底层采用类似HyperLogLog算法实现，如能接收2%左右的数据误差，可直接使用这种去重方式提升查询性能。
 10. **Join案例**
     ```sql
-    Hash Join 右表为大表
+    Hash Join 右表为大表,clickhouse先计算右边的表，所以右边的数据要小
     经过优化后，query执行时间从17s降低至0.6s。
     recorddetail 是一张大表，通过 shuffle 可以将大表数据按照 join key shuffle 到每个 worker 节点，减少了右表构建的压力。
 

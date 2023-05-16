@@ -87,3 +87,8 @@ JSON 类型。
 支持通过工具从 MySQL 迁移数据到 TiDB。
 
 支持通过工具部署、运维 TiDB。
+
+
+
+### 官方文档
+1. 快速上手 https://docs.pingcap.com/zh/tidb/stable/quick-start-with-tidb
