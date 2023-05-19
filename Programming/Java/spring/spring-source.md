@@ -7,7 +7,7 @@
     1. getSingleton() 从工厂中获取,三级缓存[^1]
     2. getObjectForBeanInstance() // 直接获取
         1. 正确性验证
-        2. getObjectFromFactoryBean() 从工厂获取
+        2. getObjectFromFactoryBean() 从工厂获取，判断当前bean是否是<font color="red">factoryBean</font>[^4]，如果是则往下走，不是直接返回bean。
             1. doGetObjectFromFactoryBean
                 1. factory.getBean()
                 2. postProcessObjectFromFactoryBean() // 后置处理器
@@ -201,3 +201,4 @@ spring mvc本质上还是在使用Servlet处理，并在其基础上进行了封
 [^1]:Bean之间互相依赖,死循环的解决方案:Spring Bean 容器创建单例时,首先会根据无参构造函数创建Bean,并暴露一个ObjectFactory(循环依赖验证,是否循环依赖),并将当前Bean的标识符放到当前创建的Bean池.
 [^2]:主要作用是<b>用来在无参构造方法创建依赖Bean之前,从工厂中获取已经创建好的Bean,解决循环依赖</b>  
 [^3]:有关SPI详情,请见[SPI](../Java%20Core.md)
+[^4]:Mybatis所代理的bean就是factoryBean，通过工厂生产bean，每次都会放入一个session，所以每个请求都会创建一个新的SqlSessionTemplate，用于保证线程安全，成产的bean里包含了对应的mapper执行所需要的信息sqlSession
