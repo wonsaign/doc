@@ -317,6 +317,7 @@ entrypoint.sh....，docker启动会加载这个脚本启动对应的容器里的
     Hash Join 右表为大表,clickhouse先计算右边的表，所以右边的数据要小
     经过优化后，query执行时间从17s降低至0.6s。
     recorddetail 是一张大表，通过 shuffle 可以将大表数据按照 join key shuffle 到每个 worker 节点，减少了右表构建的压力。
+    注意，inner join 右边的部分一定是部分结果集，而不是全集，哪个条件能取到部分结果集，就放在inner join的后面
 
     -- 优化前 17秒
     SELECT record.BIN_OrganizationID,

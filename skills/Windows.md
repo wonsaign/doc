@@ -299,6 +299,7 @@ Ctrl + Shift + N|通过文件名定位 / 打开文件 / 目录，打开目录需
 Ctrl + Shift + U|对选中的代码进行大 / 小写轮流转换 |必备 常量大小写
 Ctrl + Shift + T|对当前类生成单元测试类，如果已经存在的单元测试类则可以进行选择| 必备 快速到测试类上
 Ctrl + Shift + E|显示最近修改的文件列表的弹出层 | 常用 跟 ctrl+e效果类似又不太一样
+Ctrl + Shift + F9|编译选中的文件 / 包 / Module | 配置插件JRebel使用，刷新当前的class文件，常用
 Ctrl + Shift + /|代码块注释 |必备 代码块的注释方式
 Ctrl + Shift + Enter|自动结束代码，行末自动添加分号 |必备 就是帮我写了个分号？
 Ctrl + Shift + 左方向键|在代码文件上，光标跳转到当前单词 / 中文句的左侧开头位置，同时选中该单词 / 中文句|必备
@@ -319,3 +320,4 @@ Ctrl + Shift + Alt + C|复制参考信息 相当于全路径复制
 ### 插件快捷键
 插件 Translation
 Ctrl + shift + Y 翻译
+Ctrl + shift + X 翻译并替换

@@ -88,3 +88,22 @@ Coverage 控制台的缘故,找到对应的快捷键,然后打开,去掉选中�
         Search History 无
         Second Basic Completion ctrl]+[option]+[command]+[空格]
     ```
+
+### Idea插件推荐
+* JRebel 支持热插拔修改
+    ```安装方式
+    https://www.cnblogs.com/sansui6/p/17043448.html
+    ```
+* IDE Eval Reset
+* chapter_reader
+* MyBatisCodeHelperPro
+* PlantUML Parser 和 PlantUMLIntegration
+* RestfulTool
+* Translation
+* SonarLint
+* Key Promoter X
+* Maven helper
+* cosy
+* Auto fill call parameters
+* JPA buddy
+* Code Screenshots
